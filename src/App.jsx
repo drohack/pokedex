@@ -1,18 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import PokemonList from './components/PokemonList/PokemonList'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import { Provider } from 'react-redux';
+import store from './app/store'; // Or './store' depending on your project structure
+import PokemonList from './components/PokemonList/PokemonList';
+import PokemonDetails from './components/PokemonDetails/PokemonDetails'; // Import PokemonDetails
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div>
-     <h1>Pokedex</h1>
-     <PokemonList />
-    </div>
-  )
+    <Provider store={store}>
+      <Router>
+        <div className="App">
+          <h1>Pokedex</h1> {/* Keep your heading */}
+          <Routes>
+            <Route path="/" element={<PokemonList />} />
+            <Route path="/pokemon/:pokemonId" element={<PokemonDetails />} /> {/* Route for details */}
+          </Routes>
+        </div>
+      </Router>
+    </Provider>
+  );
 }
 
-export default App
+export default App;
