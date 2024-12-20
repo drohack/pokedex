@@ -1,0 +1,50 @@
+/* PokemonDetails.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto; /* Center horizontally and add margin */
+    max-width: 600px; /* Limit width for larger screens */
+    padding: 20px; /* Add padding inside the container */
+    border: 1px solid #ddd; /* Add a subtle border */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: relative;
+  }
+  
+  .image {
+    width: 200px; /* Define image width */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 20px; /* Add space below the image */
+  }
+  
+  .types {
+    display: flex;
+    flex-wrap: wrap; /* Allow types to wrap on smaller screens */
+    margin-bottom: 20px; /* Add space below types */
+  }
+  
+  .type {
+    margin: 5px; /* Add margin between each type */
+    padding: 5px 10px; /* Add padding inside each type */
+    border: 1px solid #ccc; /* Add border to each type */
+    border-radius: 4px; /* Rounded corners for types */
+    font-weight: bold; /* Make type names bold */
+    color: #333; /* Text color */
+  }
+
+  .backButton {
+    position: absolute; /* Position in the top left corner */
+    top: 20px; /* Adjust top spacing as needed */
+    left: 20px; /* Adjust left spacing as needed */
+    padding: 8px 16px;
+    background-color: #f0f0f0; /* Example background color */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1; /* Ensure button is above other content */
+  }
+  
+  .backButton:hover {
+    background-color: #e0e0e0; /* Darker background on hover */
+  }

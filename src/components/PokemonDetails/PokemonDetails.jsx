@@ -1,22 +1,59 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { selectSelectedPokemon } from "../../features/pokemon/pokemonSlice";
+import styles from "./PokemonDetails.module.css";
 
 export default function PokemonDetails() {
-  const { pokemonId } = useParams();
+  const { pokemonName } = useParams();
   const selectedPokemon = useSelector(selectSelectedPokemon);
-
-  console.log(selectedPokemon); // This will now log the selected Pokemon or null
+  const types = selectedPokemon.types.map(({ type }) => type.name);
+  const navigate = useNavigate();
 
   // Handle cases where the Pokemon isn't found/loaded yet
-  if (!selectedPokemon || selectedPokemon.id !== parseInt(pokemonId)) {
+  if (!selectedPokemon || selectedPokemon.name !== pokemonName) {
     return <div>Loading... or Pokemon not found</div>;
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  // id, name, height, weight, types, abilities,
   return (
-    <div>
-      <h2>{selectedPokemon.name}</h2>
-      <img src={selectedPokemon.imageUrl} alt={selectedPokemon.name} />
-    </div>
+    <>
+      <button onClick={handleBack} className={styles.backButton}>Go Back</button>
+      <div className={styles.container}>
+        {" "}
+        {/* Apply container style */}
+        <h2>{capitalizeFirstLetter(selectedPokemon.name)}</h2>
+        <img
+          src={selectedPokemon.imageUrl}
+          alt={selectedPokemon.name}
+          className={styles.image}
+        />{" "}
+        {/* Style the image */}
+        <div className={styles.types}>
+          {" "}
+          {/* Container for types */}
+          {selectedPokemon.types.map((type, index) => {
+            return (
+              <p key={index} className={styles.type}>
+                {capitalizeFirstLetter(type.type.name)}
+              </p>
+            );
+          })}
+        </div>
+        <h4>
+          Height: {selectedPokemon.height} | Weight: {selectedPokemon.weight}
+        </h4>
+      </div>
+    </>
   );
 }
+
+const capitalizeFirstLetter = (string) => {
+  if (!string) {
+    return ""; // Handle empty or null strings
+  }
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

@@ -1,0 +1,38 @@
+/* Home.module.css */
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    margin-top: 20px;
+}
+
+.selectContainer {
+    display: flex;
+    align-items: center; /* Vertically align label and select */
+    margin-bottom: 20px; /* Add some space below the select */
+}
+
+.label {
+  margin-right: 10px; /* Space between label and select */
+  font-weight: bold;
+}
+
+.select {
+  padding: 8px 12px; /* Add padding inside the select */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  appearance: none; /* Remove default arrow in some browsers */
+  background-color: white;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>"); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px; /* Adjust padding to make space for arrow */
+  cursor: pointer;
+  outline: none;
+}
+
+.select:focus {
+    border-color: #007bff; /* Highlight on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
