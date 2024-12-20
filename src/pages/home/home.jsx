@@ -6,6 +6,7 @@ import {
 } from "../../features/pokemon/pokemonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PokemonList from "../../components/PokemonList/PokemonList";
+import SearchTerm from "../../features/searchTerm/SearchTerm"
 import styles from './home.module.css';
 
 const entryRange = (limit, offset) => {
@@ -44,15 +45,10 @@ const Home = () => {
 
   return (
     <div className={styles.homeContainer}>
-      {" "}
-      {/* Added container div */}
       <h1>Pokedex</h1>
+
       <div className={styles.selectContainer}>
-        {" "}
-        {/* Added container for label and select */}
         <label htmlFor="region-select" className={styles.label}>
-          {" "}
-          {/* Added label styling */}
           Choose a region:
         </label>
         <select
@@ -69,6 +65,8 @@ const Home = () => {
           ))}
         </select>
       </div>
+
+      <SearchTerm />
       <PokemonList />
     </div>
   );
