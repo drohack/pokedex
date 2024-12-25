@@ -1,31 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { pokemonData } from "../../data/pokemonData";
+import { pokemonData } from "../../data/pokemonData"; // Optional (if used for initial data)
 import { fetchPokemon, fetchPokemonDetails } from "../../api/pokeapi/pokeapi";
+import { Regions } from "../regions/regionsSlice";
+import { useMemo } from "react";
 
 export const getPokemonData = createAsyncThunk(
   "pokemon/getPokemonData",
-  async ({ limit, offset }, thunkAPI) => {
-    const data = await fetchPokemon(limit, offset);
+  async (region, thunkAPI) => {
+    const { limit, offset } = Regions[region]; // Direct lookup - correct and efficient
+    try {
+        const data = await fetchPokemon(limit, offset);
 
-    const detailedPokemon = await Promise.all(
-      data.results.map(async (pokemon) => {
-        const { id, name, height, weight, types, abilities } =
-          await fetchPokemonDetails(pokemon.name);
-
-        const detailedPokemon = {
-          id,
-          name,
-          height,
-          weight,
-          types,
-          abilities,
-          imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
-        };
-        return detailedPokemon;
-      })
-    );
-
-    return detailedPokemon;
+        const detailedPokemon = await Promise.all(
+          data.results.map(async (pokemon) => await fetchPokemonDetails(pokemon.name))
+        );
+    
+        // Filter out any null values (from failed fetches)
+        const validPokemon = detailedPokemon.filter(pokemon => pokemon !== null);
+    
+        return validPokemon;
+      } catch (error) {
+        console.error("Error in getPokemonData", error)
+        return thunkAPI.rejectWithValue(error.message)
+      }
   }
 );
 
@@ -34,7 +31,6 @@ const options = {
   initialState: {
     pokemon: [],
     selectedPokemon: null,
-    region: "KANTO",
     isLoadingPokemon: false,
     errorLoadingPokemon: false,
   },
@@ -42,9 +38,6 @@ const options = {
     setSelectedPokemon: (state, action) => {
       state.selectedPokemon = action.payload;
     },
-    setRegion: (state, action) => {
-      state.region = action.payload
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -60,7 +53,10 @@ const options = {
         state.isLoadingPokemon = false;
         state.errorLoadingPokemon = false;
 
-        state.pokemon = action.payload; //Add index to pokemon
+        state.pokemon = action.payload.map((pokemon, index) => ({ 
+          ...pokemon, 
+          id: index+1 }
+        )); 
       });
   },
 };
@@ -71,7 +67,6 @@ export const selectPokemon = (state) => state.pokemon.pokemon;
 export const isLoadingPokemon = (state) => state.isLoadingPokemon;
 export const errorLoadingPokemon = (state) => state.errorLoadingPokemon;
 export const selectSelectedPokemon = (state) => state.pokemon.selectedPokemon;
-export const selectRegion = (state) => state.pokemon.region;
 
-export const { setSelectedPokemon, setRegion } = pokemonSlice.actions;
+export const { setSelectedPokemon } = pokemonSlice.actions;
 export default pokemonSlice.reducer;

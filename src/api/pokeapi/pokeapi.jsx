@@ -25,9 +25,17 @@ export const fetchPokemonDetails = async (name) => {
       throw new Error(`Response status: ${response.status}`);
     }
 
-    const json = await response.json();
-    return json;
+    const details = await response.json();
+    return {
+      id: details.id,
+      name: details.name,
+      height: details.height,
+      weight: details.weight,
+      types: details.types,
+      abilities: details.abilities,
+      imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${details.id}.png`,
+    };
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching pokemon details:", err);
   }
 };

@@ -1,51 +1,36 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectPokemon,
-  setSelectedPokemon
-} from "../../features/pokemon/pokemonSlice";
-import { Link } from "react-router";
-
+import React from "react";
+import { useDispatch } from "react-redux";
+import { setSelectedPokemon } from "../../features/pokemon/pokemonSlice";
+import { Link } from "react-router-dom";
 import styles from "./PokemonList.module.css";
-import { selectSearchTerm } from "../../features/searchTerm/searchTermSlice";
+import { capitalizeFirstLetter } from "../../utils"; // Import your capitalization function
 
-const PokemonList = () => {
-  const dispatch = useDispatch();
-  const pokemon = useSelector(selectPokemon);
-  const searchTerm = useSelector(selectSearchTerm);
+const PokemonList = ({ pokemon }) => {
+    const dispatch = useDispatch();
 
-  console.log("Pokemon data:", pokemon);
+    const handleClick = (selectedPokemon) => {
+        dispatch(setSelectedPokemon(selectedPokemon));
+    };
 
-  const handleClick = (selectedPokemon) => {
-    dispatch(setSelectedPokemon(selectedPokemon));
-  };
+    if (!pokemon || pokemon.length === 0) {
+        return <p>Loading Pokemon...</p>; // Display loading message if no pokemon
+    }
 
-  const visiblePokemon = getFilteredPokemon(pokemon, searchTerm);
-
-  if (visiblePokemon.length === 0) {
-    return <p> Sorry, no pokemon were found... </p>;
-  }
-
-  return (
-    <div className={styles.grid}>
-      {visiblePokemon.map((p) => (
-        <div key={p.id} className={styles.card}>
-          <Link
-            to={`/pokemon/${p.name}`}
-            onClick={() => {
-              handleClick(p);
-            }}
-          >
-            <img src={p.imageUrl} alt={p.name} />
-            <h3>{p.name}</h3>
-          </Link>
+    return (
+        <div className={styles.grid}>
+            {pokemon.map((p) => (
+                <div key={p.id} className={styles.card}>
+                    <Link
+                        to={`/pokemon/${p.name}`}
+                        onClick={() => handleClick(p)}
+                    >
+                        <img src={p.imageUrl} alt={p.name} />
+                        <h3>{capitalizeFirstLetter(p.name)}</h3>
+                    </Link>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default PokemonList;
-
-function getFilteredPokemon(pokemon, searchTerm) {
-  return pokemon.filter(mon => mon.name.toLowerCase().includes(searchTerm.toLowerCase()))
-}
