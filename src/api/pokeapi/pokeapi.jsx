@@ -1,3 +1,5 @@
+import { Regions } from "../../utils";
+
 const POKEAPI_URL = "https://pokeapi.co/api/v2";
 
 export const fetchPokemon = async (limit = 151, offset = 0) => {
@@ -37,5 +39,12 @@ export const fetchPokemonDetails = async (name) => {
     };
   } catch (err) {
     console.error("Error fetching pokemon details:", err);
+    return null;
   }
 };
+
+export const fetchPokemonData = async (region) => {
+  const { limit, offset } = Regions[region];
+
+  
+}

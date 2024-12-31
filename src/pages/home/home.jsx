@@ -5,7 +5,8 @@ import PokemonList from "../../components/PokemonList/PokemonList";
 import SearchTerm from "../../components/SearchTerm/SearchTerm";
 import styles from "./Home.module.css";
 import { selectSearchTerm, setSearchTerm } from "../../components/SearchTerm/searchTermSlice";
-import { selectRegion, setRegion, Regions } from "../../features/regions/regionsSlice";
+import { selectRegion, setRegion } from "../../features/regions/regionsSlice";
+import { Regions } from "../../utils";
 
 const Home = () => {
     const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { pokemonData } from "../../data/pokemonData"; // Optional (if used for initial data)
 import { fetchPokemon, fetchPokemonDetails } from "../../api/pokeapi/pokeapi";
-import { Regions } from "../regions/regionsSlice";
+import { Regions } from "../../utils";
 import { useMemo } from "react";
 
 export const getPokemonData = createAsyncThunk(
