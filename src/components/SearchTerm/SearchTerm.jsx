@@ -1,11 +1,15 @@
 import React from 'react';
 import styles from './SearchTerm.module.css';
 import { useDispatch } from 'react-redux';
-import { clearSearchTerm } from './searchTermSlice';
+import { setSearchTerm, clearSearchTerm } from './searchTermSlice';
 import { FaTimes } from 'react-icons/fa';
 
-const SearchTerm = ({ searchTerm, onSearchChange }) => {
+const SearchTerm = ({ searchTerm }) => {
     const dispatch = useDispatch();
+
+    const handleSearchChange = ({ target }) => {
+        dispatch(setSearchTerm(target.value));
+    };
 
     const handleClearSearchTerm = () => {
         dispatch(clearSearchTerm());
@@ -15,9 +19,11 @@ const SearchTerm = ({ searchTerm, onSearchChange }) => {
       <div className={styles.searchContainer}>
           <input
               type="text"
+              id='pokemon-search'
+              name='pokemon-search'
               placeholder='Search Pokemon...'
               value={searchTerm}
-              onChange={onSearchChange}
+              onChange={handleSearchChange}
               className={styles.searchInput}
           />
           {searchTerm && (

@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setSelectedPokemon } from "../../features/pokemon/pokemonSlice";
+import { setSelectedPokemon } from "../../features/pokemon/pokemonSliceV1";
 import { Link } from "react-router-dom";
 import styles from "./PokemonList.module.css";
 import { capitalizeFirstLetter } from "../../utils"; // Import your capitalization function

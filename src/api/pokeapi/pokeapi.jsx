@@ -46,5 +46,24 @@ export const fetchPokemonDetails = async (name) => {
 export const fetchPokemonData = async (region) => {
   const { limit, offset } = Regions[region];
 
-  
-}
+  try {
+    const data = await fetchPokemon(limit, offset);
+    if (!data.results) {
+      throw new Error("No results found");
+    }
+
+    const detailedPokemon = await Promise.all(
+      data.results.map(
+        async (pokemon) => await fetchPokemonDetails(pokemon.name)
+      )
+    );
+
+    // Filter out any null values (from failed fetches)
+    const validPokemon = detailedPokemon.filter((pokemon) => pokemon !== null);
+
+    return validPokemon;
+  } catch (err) {
+    console.error("Error fetching pokemon data", err);
+    throw err;
+  }
+};

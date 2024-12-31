@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import { selectSelectedPokemon } from "../../../features/pokemon/pokemonSlice";
+import { selectSelectedPokemon } from "../../../features/pokemon/pokemonSliceV1";
 import styles from "./PokemonDetails.module.css";
 import { capitalizeFirstLetter } from "../../../utils";
 
