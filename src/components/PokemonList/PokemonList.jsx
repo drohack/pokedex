@@ -18,7 +18,7 @@ const PokemonList = ({ pokemon }) => {
   const visiblePokemon =
     pokemon?.filter((p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+    ).sort((a,b) => a.id - b.id) || [];
 
   if (!pokemon) {
     return <p>Loading Pokemon...</p>;
