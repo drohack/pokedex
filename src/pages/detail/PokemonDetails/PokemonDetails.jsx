@@ -1,13 +1,12 @@
 import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import { selectSelectedPokemon } from "../../../features/pokemon/pokemonSliceV1";
+import { selectSelectedPokemon } from "../../../features/pokemon/pokemonSlice";
 import styles from "./PokemonDetails.module.css";
 import { capitalizeFirstLetter } from "../../../utils";
 
 export default function PokemonDetails() {
   const { pokemonName } = useParams();
   const selectedPokemon = useSelector(selectSelectedPokemon);
-  const types = selectedPokemon.types.map(({ type }) => type.name);
   const navigate = useNavigate();
 
   // Handle cases where the Pokemon isn't found/loaded yet

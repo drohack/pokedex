@@ -16,6 +16,7 @@ import styles from "./Home.module.css";
 
 // Other
 import { Regions } from "../../utils";
+import NavBar from "../../components/NavBar/NavBar";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,8 @@ const Home = () => {
   return (
     <div className={styles.homeContainer}>
       <h1>Pokedex</h1>
+
+      <NavBar />
 
       <div className={styles.selectContainer}>
         <label htmlFor="region-select" className={styles.label}>
@@ -70,7 +73,6 @@ const Home = () => {
           <SearchTerm searchTerm={searchTerm} />
           <PokemonList
             pokemon={visiblePokemon}
-            handlePokemonClick={handlePokemonClick}
           />
         </>
       )}
