@@ -30,10 +30,6 @@ const Home = () => {
     dispatch(setRegion(target.value));
   };
 
-  const handlePokemonClick = (pokemon) => {
-    dispatch(setSelectedPokemon(pokemon));
-  };
-
   const visiblePokemon =
     pokemon?.filter((p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -41,10 +37,6 @@ const Home = () => {
 
   return (
     <div className={styles.homeContainer}>
-      <h1>Pokedex</h1>
-
-      <NavBar />
-
       <div className={styles.selectContainer}>
         <label htmlFor="region-select" className={styles.label}>
           Choose a region:

@@ -10,5 +10,6 @@ export default configureStore({
         searchTerm: searchTermReducer,
         regions: regionsReducer,
         favorites: favoritesReducer
-    }
+    },
+    devTools: true
 })

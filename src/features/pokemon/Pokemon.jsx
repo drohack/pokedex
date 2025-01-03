@@ -1,28 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  toggleFavorite,
-  getFavoritePokemon,
-} from "../favorites/favoritesSlice";
+import { toggleFavorite, getFavoritePokemon } from "../favorites/favoritesSlice";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import styles from "./Pokemon.module.css";
 import { capitalizeFirstLetter } from "../../utils";
 import { setSelectedPokemon } from "./pokemonSlice";
 import { Link } from "react-router-dom";
-
+import db from "../../db/db";
 
 const Pokemon = ({ pokemon }) => {
   const dispatch = useDispatch();
-  const favoritePokemon = useSelector(getFavoritePokemon);
+  const favoritePokemon = useSelector(getFavoritePokemon); // Get favorites from store
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  const isFavorite = favoritePokemon.some((fav) => fav.id === pokemon.id);
+  useEffect(() => {
+    const isFavorited = favoritePokemon.some((fav) => fav.id === pokemon.id);
+    setIsFavorite(isFavorited); // Check if favorited
+  }, [favoritePokemon, pokemon.id]); // Track changes in favorites and id
 
   const handleToggleFavorite = () => {
-    dispatch(toggleFavorite(pokemon));
+    dispatch(
+      toggleFavorite(pokemon)
+    );
   };
 
   const handleClick = () => {
-    dispatch(setSelectedPokemon(pokemon));
+    dispatch(
+      setSelectedPokemon({
+        id: pokemon.id,
+        imageUrl: pokemon.imageUrl,
+        name: pokemon.name,
+        types: pokemon.types,
+        height: pokemon.height,
+        weight: pokemon.weight,
+      })
+    );
   };
 
   return (
