@@ -7,7 +7,6 @@ import { capitalizeFirstLetter } from "../../../utils";
 export default function PokemonDetails() {
   const { pokemonName } = useParams();
   const selectedPokemon = useSelector(selectSelectedPokemon);
-  const types = selectedPokemon.types.map(({ type }) => type.name);
   const navigate = useNavigate();
 
   // Handle cases where the Pokemon isn't found/loaded yet

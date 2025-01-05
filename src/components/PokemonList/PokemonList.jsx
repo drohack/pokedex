@@ -3,34 +3,36 @@ import { useDispatch } from "react-redux";
 import { setSelectedPokemon } from "../../features/pokemon/pokemonSlice";
 import { Link } from "react-router-dom";
 import styles from "./PokemonList.module.css";
-import { capitalizeFirstLetter } from "../../utils"; // Import your capitalization function
+import Pokemon from "../../features/pokemon/Pokemon";
+import { useSelector } from "react-redux";
+import { selectSearchTerm } from "../../components/SearchTerm/searchTermSlice";
 
 const PokemonList = ({ pokemon }) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const searchTerm = useSelector(selectSearchTerm);
 
-    const handleClick = (selectedPokemon) => {
-        dispatch(setSelectedPokemon(selectedPokemon));
-    };
+  const handleClick = (selectedPokemon) => {
+    dispatch(setSelectedPokemon(selectedPokemon));
+  };
 
-    if (!pokemon || pokemon.length === 0) {
-        return <p>Loading Pokemon...</p>; // Display loading message if no pokemon
-    }
+  const visiblePokemon =
+    pokemon?.filter((p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ).sort((a,b) => a.id - b.id) || [];
 
-    return (
-        <div className={styles.grid}>
-            {pokemon.map((p) => (
-                <div key={p.id} className={styles.card}>
-                    <Link
-                        to={`/pokemon/${p.name}`}
-                        onClick={() => handleClick(p)}
-                    >
-                        <img src={p.imageUrl} alt={p.name} />
-                        <h3>{capitalizeFirstLetter(p.name)}</h3>
-                    </Link>
-                </div>
-            ))}
+  if (!pokemon) {
+    return <p>Loading Pokemon...</p>;
+  }
+
+  return (
+    <div className={styles.grid}>
+      {visiblePokemon.map((p) => (
+        <div key={p.id} className={styles.card}>
+          <Pokemon pokemon={p} />
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default PokemonList;
