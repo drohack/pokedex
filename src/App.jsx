@@ -19,7 +19,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-      <h1>Pokedex</h1>
+      {/* <h1>Pokedex</h1>*/}
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />

@@ -18,6 +18,7 @@
 }
 
 .select {
+  color: #000000;
   padding: 8px 12px; /* Add padding inside the select */
   border: 1px solid #ccc;
   border-radius: 4px;

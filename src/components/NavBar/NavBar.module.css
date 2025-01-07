@@ -1,23 +1,32 @@
 .nav {
+  position: fixed; /* Fix the navbar at the top */
+  top: 10px;          /* Align it to the top of the screen */
+  left: 50%;          /* Move it to the center */
+  transform: translateX(-50%); /* Offset the left margin to perfectly center it */
+  width: 50%;        /* Optional: adjust width if needed, or leave it auto */
+  background-color: #333; /* Optional: background color */
   display: flex;
   justify-content: space-around;
   padding: 1rem;
-  background-color: #f0f0f0;
-  margin-bottom: 20px;
+  /*background-color: #f0f0f0;*/
+  /*margin-bottom: 20px;*/
+  border: 2px solid rgba(255, 255, 255, 0.87); /* Set border width, style, and color */
+  border-radius: 5px; /* Create rounded corners */
 }
 
 .nav a {
   text-decoration: none;
-  color: #333;
+  /*color: #333;*/
+  color: rgba(255, 255, 255, 0.87);
   padding: 0.5rem 1rem;
   border-radius: 5px;
 }
 
 .nav a:hover {
-  background-color: #ddd;
+  background-color: #8e8e8e;
 }
 
 .active {
-  background-color: #ddd;
+  background-color: #8e8e8e;
   font-weight: bold;
 }

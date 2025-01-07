@@ -6,6 +6,8 @@ import styles from "./PokemonList.module.css";
 import Pokemon from "../../features/pokemon/Pokemon";
 import { useSelector } from "react-redux";
 import { selectSearchTerm } from "../../components/SearchTerm/searchTermSlice";
+import { getTypeBackground } from "../../pages/detail/PokemonDetails/PokemonDetails";
+
 
 const PokemonList = ({ pokemon }) => {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const PokemonList = ({ pokemon }) => {
   return (
     <div className={styles.grid}>
       {visiblePokemon.map((p) => (
-        <div key={p.id} className={styles.card}>
+        <div key={p.id} className={styles.card} style={getTypeBackground(p.types)}>
           <Pokemon pokemon={p} />
         </div>
       ))}

@@ -17,20 +17,29 @@
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 20px; /* Add space below the image */
   }
-  
+
+  /* Container that holds the types */
   .types {
-    display: flex;
-    flex-wrap: wrap; /* Allow types to wrap on smaller screens */
-    margin-bottom: 20px; /* Add space below types */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for the types */
+    gap: 2px; /* Add space between the types */
+    margin-bottom: 2px; /* Add space below types */
   }
-  
+
+  /* Type styling */
   .type {
-    margin: 5px; /* Add margin between each type */
-    padding: 5px 10px; /* Add padding inside each type */
-    border: 1px solid #ccc; /* Add border to each type */
+    margin: 2px; /* Add margin between each type */
+    padding: 2px 4px; /* Add padding inside each type */
+    border: 1px solid #000000; /* Add border to each type */
     border-radius: 4px; /* Rounded corners for types */
-    font-weight: bold; /* Make type names bold */
-    color: #333; /* Text color */
+    color: #000000; /* Text color */
+    font-size: 0.75em; /* 15% smaller than the normal font size */
+    text-align: center; /* Center the text inside each type */
+  }
+
+  /* When there is only one type, make it take up the full width */
+  .types > .type:only-child {
+    grid-column: span 2; /* Make the single type take up both columns */
   }
 
   .backButton {

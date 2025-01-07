@@ -7,6 +7,7 @@ import { capitalizeFirstLetter } from "../../utils";
 import { setSelectedPokemon } from "./pokemonSlice";
 import { Link } from "react-router-dom";
 import db from "../../db/db";
+import type_styles from "../../pages/detail/PokemonDetails/PokemonDetails.module.css";
 
 const Pokemon = ({ pokemon }) => {
   const dispatch = useDispatch();
@@ -31,8 +32,8 @@ const Pokemon = ({ pokemon }) => {
         imageUrl: pokemon.imageUrl,
         name: pokemon.name,
         types: pokemon.types,
-        height: pokemon.height,
-        weight: pokemon.weight,
+        //height: pokemon.height,
+        //weight: pokemon.weight,
       })
     );
   };
@@ -43,6 +44,18 @@ const Pokemon = ({ pokemon }) => {
         <img src={pokemon.imageUrl} alt={pokemon.name} />
         <h3>{capitalizeFirstLetter(pokemon.name)}</h3>
       </Link>
+
+      {/* Display Types */}
+      <div className={type_styles.types}>
+        {pokemon.types && pokemon.types.length > 0
+          ? pokemon.types.map((typeObj, index) => (
+              <span key={index} className={type_styles.type}>
+                {capitalizeFirstLetter(typeObj.type.name)}
+              </span>
+            ))
+          : "No types available"}
+      </div>
+
       <button onClick={handleToggleFavorite} className={styles.favButton}>
         {isFavorite ? <FaHeart fill="red" /> : <FaRegHeart />}
       </button>
