@@ -1,0 +1,34 @@
+.filterContainer {
+  margin: 2px;
+}
+
+.filterLabel {
+  margin: 2px;
+}
+
+.typeLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Left align the label */
+  padding: 5px 10px;
+  border: 1px solid black; /* Black border */
+  border-radius: 15px; /* Make the label rounded */
+  cursor: pointer;
+  transition: background-color 0.3s, border 0.3s; /* Smooth transition */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.typeCheckbox {
+  margin-right: 8px; /* Adds space between checkbox and label text */
+}
+
+.checkboxContainer {
+  display: grid; /* Use grid instead of flex */
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-gap: 8px; /* Space between grid items */
+}
+
+.checkboxContainer .typeLabel {
+  flex: 0 0 45%; /* Each checkbox takes up 45% of the container width */
+}

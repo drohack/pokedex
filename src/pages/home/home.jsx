@@ -17,10 +17,21 @@ const Home = () => {
   const { isLoading, error, data: pokemon } = usePokemonData();
   console.log(`Pokemon data: ${pokemon?.length}`)
 
-  const visiblePokemon =
-    pokemon?.filter((p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const visiblePokemon = pokemon?.filter((p) => {
+    // Get selected types from Redux state
+    const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
+    
+    // Check if the search term matches the Pokémon name
+    const nameMatches = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Check if any selected types match the Pokémon types
+    const typesMatch = selectedTypes.length === 0 || selectedTypes.every((selectedType) =>
+        p.types.some((typeObj) => typeObj.type.name === selectedType)
     );
+
+    // Only include the Pokémon if both conditions are true
+    return nameMatches && typesMatch;
+  });
 
   return (
     <div className={styles.homeContainer}>

@@ -1,28 +1,23 @@
+import { useState } from "react";
 import { Link, NavLink } from "react-router";
-import { useSelector } from "react-redux"; // Import useSelector
+import { useSelector } from "react-redux";
 import styles from "./NavBar.module.css";
 
 import ChooseARegion from "../ChooseARegion/ChooseARegion";
-import SearchTerm from "../../components/SearchTerm/SearchTerm";
-// Redux + React Query
-import { usePokemonData } from "../../hooks/usePokemonData";
-import { selectSearchTerm } from "../../components/SearchTerm/searchTermSlice";
+import SearchTerm from "../SearchTerm/SearchTerm";
+import { selectSearchTerm } from "../SearchTerm/searchTermSlice";
+import TypeFilter from "../TypeFilter/TypeFilter"
 
 function NavBar() {
-  // Get the number of favorite Pokémon from the Redux store
   const favoritePokemon = useSelector((state) => state.favorites.favoritePokemon);
-
-  // Get the length of the favoritePokemon array
   const favoriteCount = favoritePokemon.length;
-
-  // SearchTerm
   const searchTerm = useSelector(selectSearchTerm);
-  const { isLoading, error, data: pokemon } = usePokemonData();
-  console.log(`Pokemon data: ${pokemon?.length}`)
-  const visiblePokemon =
-    pokemon?.filter((p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
 
   return (
     <>
@@ -44,6 +39,17 @@ function NavBar() {
         <div>
           <ChooseARegion />
           <SearchTerm searchTerm={searchTerm} />
+        </div>
+
+        {/* Expandable Row */}
+        <div className={styles.expandable}>
+          <div className={`${styles.expandedContent} ${isExpanded ? styles.expanded : ""}`}>
+            {/* Add content for the expandable row here */}
+            <TypeFilter />
+          </div>
+          <button onClick={toggleExpand} className={styles.expandButton}>
+            {isExpanded ? "Hide Advanced Search ▲" : "Show Advanced Search ▼"}
+          </button>
         </div>
       </nav>
     </>

@@ -5,22 +5,22 @@ import styles from "./PokemonDetails.module.css";
 import { capitalizeFirstLetter } from "../../../utils";
 
 // Map of type to background color
-const typeColors = {
+export const typeColors = {
   normal: "#aab09f",
   fire: "#ea7a3c",
-  fighting: "#cb5f48",
   water: "#539ae2",
-  flying: "#7da6de",
-  grass: "#71c558",
-  poison: "#b468b7",
   electric: "#e5c531",
-  ground: "#cc9f4f",
-  psychic: "#e5709b",
-  rock: "#b2a061",
+  grass: "#71c558",
   ice: "#70cbd4",
+  fighting: "#cb5f48",
+  poison: "#b468b7",
+  ground: "#cc9f4f",
+  flying: "#7da6de",
+  psychic: "#e5709b",
   bug: "#94bc4a",
-  dragon: "#6a7baf",
+  rock: "#b2a061",
   ghost: "#846ab6",
+  dragon: "#6a7baf",
   dark: "#736c75",
   steel: "#89a1b0",
   fairy: "#e397d1",

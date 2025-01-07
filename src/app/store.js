@@ -3,13 +3,15 @@ import pokemonReducer from '../features/pokemon/pokemonSlice';
 import searchTermReducer from '../components/SearchTerm/searchTermSlice';
 import regionsReducer from '../features/regions/regionsSlice';
 import favoritesReducer from "../features/favorites/favoritesSlice";
+import typeFilterReducer from "../components/TypeFilter/typeFilterSlice"
 
 export default configureStore({
     reducer: {
         pokemon: pokemonReducer,
         searchTerm: searchTermReducer,
         regions: regionsReducer,
-        favorites: favoritesReducer
+        favorites: favoritesReducer,
+        typeFilter: typeFilterReducer, // Add the typeFilter reducer to the store
     },
     devTools: true
 })

@@ -3,7 +3,6 @@ import React from "react";
 // Redux + React Query
 import { useDispatch, useSelector } from "react-redux";
 import { selectRegion, setRegion } from "../../features/regions/regionsSlice";
-import { selectSearchTerm } from "../SearchTerm/searchTermSlice";
 
 // Styles
 import styles from "./ChooseARegion.module.css";
@@ -14,7 +13,6 @@ import { Regions } from "../../utils";
 const ChooseARegion = () => {
   const dispatch = useDispatch();
   const selectedRegion = useSelector(selectRegion);
-  const searchTerm = useSelector(selectSearchTerm);
 
   const handleSelect = ({ target }) => {
     dispatch(setRegion(target.value));
