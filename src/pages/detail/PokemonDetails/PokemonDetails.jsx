@@ -68,7 +68,7 @@ export default function PokemonDetails() {
   return (
     <>
       <button onClick={handleBack} className={styles.backButton}>Go Back</button>
-      <div className={styles.container}>
+      <div className={styles.container} style={getTypeBackground(selectedPokemon.types)}>
         {" "}
         {/* Apply container style */}
         <h2>{capitalizeFirstLetter(selectedPokemon.name)}</h2>
@@ -78,7 +78,7 @@ export default function PokemonDetails() {
           className={styles.image}
         />{" "}
         {/* Style the image */}
-        <div className={styles.types}  style={getTypeBackground(selectedPokemon.types)}>
+        <div className={styles.types} style={getTypeBackground(selectedPokemon.types)}>
           {" "}
           {/* Container for types */}
           {selectedPokemon.types.map((type, index) => {

@@ -1,59 +1,60 @@
 /* PokemonDetails.module.css */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px auto; /* Center horizontally and add margin */
-    max-width: 600px; /* Limit width for larger screens */
-    padding: 20px; /* Add padding inside the container */
-    border: 1px solid #ddd; /* Add a subtle border */
-    border-radius: 4px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    position: relative;
-  }
-  
-  .image {
-    width: 200px; /* Define image width */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 20px; /* Add space below the image */
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto; /* Center horizontally and add margin */
+  max-width: 600px; /* Limit width for larger screens */
+  padding: 20px; /* Add padding inside the container */
+  border: 1px solid #ddd; /* Add a subtle border */
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  position: relative;
+}
 
-  /* Container that holds the types */
-  .types {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns for the types */
-    gap: 2px; /* Add space between the types */
-    margin-bottom: 2px; /* Add space below types */
-  }
+.image {
+  width: 200px; /* Define image width */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 20px; /* Add space below the image */
+}
 
-  /* Type styling */
-  .type {
-    margin: 2px; /* Add margin between each type */
-    padding: 2px 4px; /* Add padding inside each type */
-    border: 1px solid #000000; /* Add border to each type */
-    border-radius: 4px; /* Rounded corners for types */
-    color: #000000; /* Text color */
-    font-size: 0.75em; /* 15% smaller than the normal font size */
-    text-align: center; /* Center the text inside each type */
-  }
+/* Container that holds the types */
+.types {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns for the types */
+  gap: 2px; /* Add space between the types */
+  margin-bottom: 2px; /* Add space below types */
+}
 
-  /* When there is only one type, make it take up the full width */
-  .types > .type:only-child {
-    grid-column: span 2; /* Make the single type take up both columns */
-  }
+/* Type styling */
+.type {
+  margin: 2px; /* Add margin between each type */
+  padding: 2px 4px; /* Add padding inside each type */
+  border: 1px solid #000000; /* Add border to each type */
+  border-radius: 4px; /* Rounded corners for types */
+  color: #000000; /* Text color */
+  font-size: 0.75em; /* 15% smaller than the normal font size */
+  text-align: center; /* Center the text inside each type */
+}
 
-  .backButton {
-    position: absolute; /* Position in the top left corner */
-    top: 20px; /* Adjust top spacing as needed */
-    left: 20px; /* Adjust left spacing as needed */
-    padding: 8px 16px;
-    background-color: #f0f0f0; /* Example background color */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    z-index: 1; /* Ensure button is above other content */
-  }
-  
-  .backButton:hover {
-    background-color: #e0e0e0; /* Darker background on hover */
-  }
+/* When there is only one type, make it take up the full width */
+.types > .type:only-child {
+  grid-column: span 2; /* Make the single type take up both columns */
+}
+
+.backButton {
+  position: absolute; /* Position in the top left corner */
+  top: 20px; /* Adjust top spacing as needed */
+  left: 20px; /* Adjust left spacing as needed */
+  padding: 8px 16px;
+  color:#000000;
+  background-color: #f0f0f0; /* Example background color */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1; /* Ensure button is above other content */
+}
+
+.backButton:hover {
+  background-color: #e0e0e0; /* Darker background on hover */
+}

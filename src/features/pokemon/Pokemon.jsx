@@ -32,8 +32,8 @@ const Pokemon = ({ pokemon }) => {
         imageUrl: pokemon.imageUrl,
         name: pokemon.name,
         types: pokemon.types,
-        //height: pokemon.height,
-        //weight: pokemon.weight,
+        height: pokemon.height,
+        weight: pokemon.weight,
       })
     );
   };
@@ -42,7 +42,7 @@ const Pokemon = ({ pokemon }) => {
     <>
       <Link to={`/pokemon/${pokemon.name}`} onClick={handleClick}>
         <img src={pokemon.imageUrl} alt={pokemon.name} />
-        <h3>{capitalizeFirstLetter(pokemon.name)}</h3>
+        <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)}</h3>
       </Link>
 
       {/* Display Types */}
