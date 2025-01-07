@@ -40,7 +40,7 @@ const Pokemon = ({ pokemon }) => {
 
   return (
     <>
-      <Link to={`/pokemon/${pokemon.name}`} onClick={handleClick}>
+      <Link onClick={handleToggleFavorite}>
         <img src={pokemon.imageUrl} alt={pokemon.name} />
         <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)}</h3>
       </Link>
