@@ -11,6 +11,7 @@
   padding: 0.25rem; /* Increase padding to make the navbar taller */
   border: 2px solid rgba(255, 255, 255, 0.87); /* Set border width, style, and color */
   border-radius: 5px; /* Create rounded corners */
+  z-index: 1000; /* High z-index to keep it on top */
 }
 
 .navDiv {

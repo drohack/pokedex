@@ -31,6 +31,8 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease; /* Combined transitions */
   overflow: hidden;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Added a subtle base shadow */
+  position: relative; /* Add position relative to make z-index work */
+  z-index: 1; /* Lower z-index to be below NavBar */
 }
 
 .card:hover {
