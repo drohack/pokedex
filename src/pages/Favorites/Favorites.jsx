@@ -1,12 +1,13 @@
+import { useDispatch, useSelector } from 'react-redux';
 import styles from "./Favorites.module.css";
 import PokemonList from "../../components/PokemonList/PokemonList";
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "../../db/db";
-import { useSelector } from "react-redux";
-import { getFavoritePokemon } from "../../features/favorites/favoritesSlice";
+import { getFavoritePokemon, clearAllFavorites } from "../../features/favorites/favoritesSlice";
 import { StartersAndEvolutions, PseudoLegendaries, SubLegendaries, Legendaries, Mythical } from "../../utils/index";
 
 function Favorites() {
+    const dispatch = useDispatch();
     const favoritePokemon = useSelector(getFavoritePokemon);
 
     const emptyFavorites = <p>No favorite Pokemon</p>
@@ -31,7 +32,14 @@ function Favorites() {
 
     // Combine all legendary-related IDs into a single array
     const allLegendaryIds = [...pseudoLegendaryIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
-    
+
+
+    const handleClearFavorites = () => {
+        if (window.confirm('Do you want to clear all favorites?')) {
+            dispatch(clearAllFavorites());
+        }
+    };
+
 
     // Filter Pokemon based on Search Filter and selected Types
     const visibleFavoritePokemon = favoritePokemon?.filter((p) => {
@@ -49,29 +57,34 @@ function Favorites() {
         const starterMatches =
             selectedStarters.length === 0 ||
             selectedStarters.includes(p.id);
-        
+
         // Check if the Pokémon's ID is in the StartersAndEvolutions list if "Starters" is in selectedExclusions
-        const isStarterExcluded = 
-            selectedExclusions.includes("Starters") && 
+        const isStarterExcluded =
+            selectedExclusions.includes("Starters") &&
             starterIds.includes(p.id);
 
         // Check if the Pokémon's ID is in the allLegendaryIds list if "Legendaries" is in selectedExclusions
-        const isLegendaryExcluded = 
-            selectedExclusions.includes("Legendaries") && 
+        const isLegendaryExcluded =
+            selectedExclusions.includes("Legendaries") &&
             allLegendaryIds.includes(p.id);
 
         // Check if any of the Pokémon's types match the types in the selectedExclusions list
-        const isTypeExcluded = 
-        selectedExclusions.some((excludedType) =>
-            p.types.some((typeObj) => typeObj.type.name === excludedType)
-        );
+        const isTypeExcluded =
+            selectedExclusions.some((excludedType) =>
+                p.types.some((typeObj) => typeObj.type.name === excludedType)
+            );
 
         return typesMatch && legendaryMatches && starterMatches && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded;
     });
 
     return (
         <div className={styles.favoriteContainer}>
-            <h1>Favorites</h1>
+            <div className={styles.favoriteHeader}>
+                <p className={styles.favoriteLabel}>
+                    Showing: {visibleFavoritePokemon.length}
+                </p>
+                <button onClick={handleClearFavorites} className={styles.clearButton}>Clear Favorites</button>
+            </div>
             {favoritePokemon.length === 0 ? emptyFavorites : <PokemonList pokemon={visibleFavoritePokemon} />}
         </div>
     )

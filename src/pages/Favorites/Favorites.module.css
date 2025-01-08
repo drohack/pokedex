@@ -3,5 +3,24 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* Center horizontally */
-    margin-top: 60px;
+    margin-top: 80px;
+}
+
+.favoriteHeader {
+    display: flex;
+    justify-content: space-between; /* Space items apart */
+    width: 90%; /* Ensure the header takes the full width */
+    padding: 0 20px; /* Optional: Add padding to the sides */
+}
+
+.favoriteLabel {
+    margin: 10px 0px;
+}
+
+.clearButton {
+    background-color: grey;
+    border: 1px solid black;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, border 0.3s;
 }

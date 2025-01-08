@@ -48,6 +48,11 @@ const options = {
       );
       db.favorites.delete(pokemonToRemove.id);
     },
+    clearAllFavorites: (state) => {
+      state.favoritePokemon = [];
+      db.favorites.clear();
+      console.log("Cleared all favorites"); // Debugging log
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,5 +75,5 @@ const options = {
 
 export const favoritesSlice = createSlice(options);
 export const getFavoritePokemon = (state) => state.favorites.favoritePokemon;
-export const { toggleFavorite, removeFavorite } = favoritesSlice.actions;
+export const { toggleFavorite, removeFavorite, clearAllFavorites } = favoritesSlice.actions;
 export default favoritesSlice.reducer;
