@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedStarters } from './starterFilterSlice';
 import styles from './StarterFilter.module.css';
+import { clearStartersFromExclusions } from '../ExclusionFilter/exclusionFilterSlice';
 import { Starters, StartersAndEvolutions } from '../../utils/index';
 
 export const StarterFilter = () => {
@@ -34,6 +35,11 @@ export const StarterFilter = () => {
 
     const handleStarterChange = (event) => {
         const starterGroup = event.target.value;
+
+        // Clear legendaries from exclusions if any are selected
+        if (event.target.checked) {
+            dispatch(clearStartersFromExclusions());
+        }
 
         if (starterGroup === 'Starters') {
             if (!isStartersChecked) {

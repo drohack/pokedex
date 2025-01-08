@@ -11,6 +11,12 @@ import PokemonList from "../../components/PokemonList/PokemonList";
 // Styles
 import styles from "./Home.module.css";
 
+// Import the Pokemon lists
+import { StartersAndEvolutions, PseudoLegendaries, SubLegendaries, Legendaries, Mythical } from "../../utils/index";
+
+// Get the favorite Pokemon from the Redux state
+import { getFavoritePokemon } from "../../features/favorites/favoritesSlice";
+
 const Home = () => {
   const searchTerm = useSelector(selectSearchTerm);
 
@@ -23,6 +29,26 @@ const Home = () => {
   const selectedLegendaries = useSelector((state) => state.legendaryFilter?.selectedLegendaries || []);
   // Get selected starters from Redux state
   const selectedStarters = useSelector((state) => state.starterFilter?.selectedStarters || []);
+  // Get selected exclusions from Redux state
+  const selectedExclusions = useSelector((state) => state.exclusionFilter?.selectedExclusions || []);
+
+  // Get the favorite Pokemon from the Redux state
+  const favoritePokemon = useSelector(getFavoritePokemon);
+  // Convert favoritePokemon to an array of IDs
+  const favoriteIds = favoritePokemon.map(fav => fav.id);
+
+  // Convert StartersAndEvolutions object to an array of IDs
+  const starterIds = Object.values(StartersAndEvolutions).map(starter => starter.id);
+
+  // Convert PseudoLegendaries, SubLegendaries, Legendaries, and Mythical objects to arrays of IDs
+  const pseudoLegendaryIds = Object.values(PseudoLegendaries).map(pseudoLegendary => pseudoLegendary.id);
+  const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
+  const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
+  const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
+
+  // Combine all legendary-related IDs into a single array
+  const allLegendaryIds = [...pseudoLegendaryIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+
 
   // Filter Pokemon based on Search Filter, selected Types, and selected Legendaries
   const visiblePokemon = pokemon?.filter((p) => {
@@ -46,8 +72,23 @@ const Home = () => {
         selectedStarters.length === 0 || 
         selectedStarters.includes(p.id);
 
+    // Check if the Pokémon's ID is in the StartersAndEvolutions list if "Starters" is in selectedExclusions
+    const isStarterExcluded = 
+        selectedExclusions.includes("Starters") && 
+        starterIds.includes(p.id);
+
+    // Check if the Pokémon's ID is in the allLegendaryIds list if "Legendaries" is in selectedExclusions
+    const isLegendaryExcluded = 
+        selectedExclusions.includes("Legendaries") && 
+        allLegendaryIds.includes(p.id);
+    
+    // Check if the Pokémon's ID is in the favoriteIds list if "Favorites" is in selectedExclusions
+    const isFavoriteExcluded = 
+        selectedExclusions.includes("Favorites") && 
+        favoriteIds.includes(p.id);
+
     // Only include the Pokémon if all conditions are true
-    return nameMatches && typesMatch && legendaryMatches && starterMatches;
+    return nameMatches && typesMatch && legendaryMatches && starterMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded;
   });
 
   return (

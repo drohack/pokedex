@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedLegendaries } from './legendaryFilterSlice';
 import styles from './LegendaryFilter.module.css';
+import { clearLegendariesFromExclusions } from '../ExclusionFilter/exclusionFilterSlice';
 import { SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from '../../utils/index';
 
 export const LegendaryFilter = () => {
@@ -15,9 +16,12 @@ export const LegendaryFilter = () => {
     const mythicalIDs = Object.values(Mythical).map((p) => p.id);
 
     const handleLegendaryChange = (event) => {
-        // console.log('Before:', selectedLegendaries);
         const legendaryGroup = event.target.value;
-        // console.log('legendaryGroup:', legendaryGroup);
+
+        // Clear legendaries from exclusions if any are selected
+        if (event.target.checked) {
+            dispatch(clearLegendariesFromExclusions());
+        }
 
         // Determine which list of IDs to add/remove
         let idsToToggle = [];
@@ -33,8 +37,6 @@ export const LegendaryFilter = () => {
         const updatedSelectedLegendaries = groupIsSelected
             ? selectedLegendaries.filter((id) => !idsToToggle.includes(id)) // Remove only this group's IDs
             : [...selectedLegendaries, ...idsToToggle]; // Add this group's IDs
-
-        // console.log('After:', updatedSelectedLegendaries);
 
         dispatch(setSelectedLegendaries(updatedSelectedLegendaries)); // Update Redux state
     };
@@ -52,6 +54,8 @@ export const LegendaryFilter = () => {
         if (selectedLegendaries.length === allIDs.length) {
             dispatch(setSelectedLegendaries([])); // Deselect all
         } else {
+            // Clear legendaries from exclusions if any are selected
+            dispatch(clearLegendariesFromExclusions());
             dispatch(setSelectedLegendaries(allIDs)); // Select all
         }
     };
