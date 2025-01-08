@@ -10,6 +10,8 @@ import TypeFilter from "../TypeFilter/TypeFilter";
 import { setSelectedTypes } from "../TypeFilter/typeFilterSlice";
 import LegendaryFilter from "../LegendaryFilter/LegendaryFilter";
 import { setSelectedLegendaries } from "../LegendaryFilter/legendaryFilterSlice";
+import StarterFilter from "../StarterFilter/StarterFilter";
+import { setSelectedStarters } from "../StarterFilter/starterFilterSlice";
 
 function NavBar() {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ function NavBar() {
     dispatch(setSearchTerm("")); // Clear search term
     dispatch(setSelectedTypes([])); // Clear selected types
     dispatch(setSelectedLegendaries([])); // Clear selected legendaries
+    dispatch(setSelectedStarters([])); // Clear selected starters
   };
 
   return (
@@ -61,6 +64,7 @@ function NavBar() {
             <div  className={styles.navDiv}>
               <TypeFilter />
               <LegendaryFilter />
+              <StarterFilter />
             </div>
           </div>
           <button onClick={toggleExpand} className={styles.expandButton}>

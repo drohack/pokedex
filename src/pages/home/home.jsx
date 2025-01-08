@@ -21,6 +21,8 @@ const Home = () => {
   const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
   // Get selected legendaries from Redux state
   const selectedLegendaries = useSelector((state) => state.legendaryFilter?.selectedLegendaries || []);
+  // Get selected starters from Redux state
+  const selectedStarters = useSelector((state) => state.starterFilter?.selectedStarters || []);
 
   // Filter Pokemon based on Search Filter, selected Types, and selected Legendaries
   const visiblePokemon = pokemon?.filter((p) => {
@@ -38,9 +40,14 @@ const Home = () => {
     const legendaryMatches = 
         selectedLegendaries.length === 0 || 
         selectedLegendaries.includes(p.id);
+    
+    // Check if the Pokémon's ID is in the selected starters list (or if none are selected)
+    const starterMatches = 
+        selectedStarters.length === 0 || 
+        selectedStarters.includes(p.id);
 
     // Only include the Pokémon if all conditions are true
-    return nameMatches && typesMatch && legendaryMatches;
+    return nameMatches && typesMatch && legendaryMatches && starterMatches;
   });
 
   return (

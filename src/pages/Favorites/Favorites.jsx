@@ -12,21 +12,35 @@ function Favorites() {
 
     // Get selected types from Redux state
     const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
-    
+    // Get selected legendaries from Redux state
+    const selectedLegendaries = useSelector((state) => state.legendaryFilter?.selectedLegendaries || []);
+    // Get selected starters from Redux state
+    const selectedStarters = useSelector((state) => state.starterFilter?.selectedStarters || []);
+
     // Filter Pokemon based on Search Filter and selected Types
-    const visibleFavoritePokemon = favoritePokemon?.filter((p) => {        
+    const visibleFavoritePokemon = favoritePokemon?.filter((p) => {
         // Check if any selected types match the Pokémon types
         const typesMatch = selectedTypes.length === 0 || selectedTypes.every((selectedType) =>
             p.types.some((typeObj) => typeObj.type.name === selectedType)
         );
 
-        return typesMatch;
+        // Check if the Pokémon's ID is in the selected legendaries list (or if none are selected)
+        const legendaryMatches =
+            selectedLegendaries.length === 0 ||
+            selectedLegendaries.includes(p.id);
+
+        // Check if the Pokémon's ID is in the selected starters list (or if none are selected)
+        const starterMatches =
+            selectedStarters.length === 0 ||
+            selectedStarters.includes(p.id);
+
+        return typesMatch && legendaryMatches && starterMatches;
     });
 
     return (
         <>
             <h1>Favorites</h1>
-            {favoritePokemon.length === 0 ? emptyFavorites : <PokemonList pokemon={ visibleFavoritePokemon } />}
+            {favoritePokemon.length === 0 ? emptyFavorites : <PokemonList pokemon={visibleFavoritePokemon} />}
         </>
     )
 }

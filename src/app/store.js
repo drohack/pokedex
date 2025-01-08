@@ -5,6 +5,7 @@ import regionsReducer from '../features/regions/regionsSlice';
 import favoritesReducer from "../features/favorites/favoritesSlice";
 import typeFilterReducer from "../components/TypeFilter/typeFilterSlice"
 import legendaryFilterReducer from "../components/LegendaryFilter/legendaryFilterSlice"
+import starterFilterReducer from "../components/StarterFilter/starterFilterSlice"
 
 export default configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export default configureStore({
         favorites: favoritesReducer,
         typeFilter: typeFilterReducer, // Add the typeFilter reducer to the store
         legendaryFilter: legendaryFilterReducer,
+        starterFilter: starterFilterReducer,
     },
     devTools: true
 })
