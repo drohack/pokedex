@@ -42,7 +42,7 @@ const Pokemon = ({ pokemon }) => {
     <>
       <Link onClick={handleToggleFavorite}>
         <img src={pokemon.imageUrl} alt={pokemon.name} />
-        <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)}</h3>
+        <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)} ({pokemon.id})</h3>
       </Link>
 
       {/* Display Types */}

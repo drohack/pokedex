@@ -13,7 +13,7 @@
   border-radius: 5px; /* Create rounded corners */
 }
 
-.nav > div {
+.navDiv {
   padding: 4px; /* Add padding around all divs in the nav */
   width: 100%; /* Ensure the div spans the full width */
   box-sizing: border-box; /* Ensures padding is included in the total width */
@@ -68,5 +68,5 @@
   font-size: 12px;
   text-align: center;
   display: inline-block; /* Ensures it only takes up as much width as the text */
-  margin-top: 2px;
+  margin-top: 4px;
 }
