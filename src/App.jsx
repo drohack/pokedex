@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PokemonDetails from "./pages/detail/PokemonDetails/PokemonDetails"; // Import PokemonDetails
 import "./App.css";
-import Home from "./pages/Home/Home";
+import Home from "./pages/home/home";
 import Favorites from "./pages/Favorites/Favorites"
 import NavBar from "./components/NavBar/NavBar";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeFavorites())
-  }, [])
+  }, [dispatch])
 
   return (
     <BrowserRouter>

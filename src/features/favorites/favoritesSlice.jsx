@@ -5,7 +5,9 @@ export const initializeFavorites = createAsyncThunk(
   "favorites/initializeFavorites",
   async () => {
     try {
+      console.log("Start favorite init"); // Debugging log
       const favoritesFromDb = await db.favorites.toArray();
+      console.log("Favorites from DB:", favoritesFromDb); // Debugging log
       return favoritesFromDb;
     } catch (error) {
       console.error("Error initializing favorites:", error);
@@ -23,6 +25,7 @@ const options = {
   },
   reducers: {
     toggleFavorite: (state, action) => {
+      // console.log(`Toggling favorite ${action}`);
       const pokemonToToggle = action.payload;
       const index = state.favoritePokemon.findIndex(
         (pokemon) => pokemonToToggle.id === pokemon.id
