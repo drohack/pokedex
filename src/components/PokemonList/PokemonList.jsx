@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { setSelectedPokemon } from "../../features/pokemon/pokemonSlice";
+import { toggleFavorite } from "../../features/favorites/favoritesSlice";
 import { Link } from "react-router-dom";
 import styles from "./PokemonList.module.css";
 import Pokemon from "../../features/pokemon/Pokemon";
@@ -17,6 +18,12 @@ const PokemonList = ({ pokemon }) => {
     dispatch(setSelectedPokemon(selectedPokemon));
   };
 
+  const handleToggleFavorite = (pokemon) => {
+    dispatch(
+      toggleFavorite(pokemon)
+    );
+  };
+
   const visiblePokemon =
     pokemon?.filter((p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -29,9 +36,9 @@ const PokemonList = ({ pokemon }) => {
   return (
     <div className={styles.grid}>
       {visiblePokemon.map((p) => (
-        <div key={p.id} className={styles.card} style={getTypeBackground(p.types)}>
+        <button key={p.id} className={styles.card} style={getTypeBackground(p.types)} onClick={() => handleToggleFavorite(p)}>
           <Pokemon pokemon={p} />
-        </div>
+        </button>
       ))}
     </div>
   );

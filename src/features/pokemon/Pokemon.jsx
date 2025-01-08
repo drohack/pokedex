@@ -19,12 +19,6 @@ const Pokemon = ({ pokemon }) => {
     setIsFavorite(isFavorited); // Check if favorited
   }, [favoritePokemon, pokemon.id]); // Track changes in favorites and id
 
-  const handleToggleFavorite = () => {
-    dispatch(
-      toggleFavorite(pokemon)
-    );
-  };
-
   const handleClick = () => {
     dispatch(
       setSelectedPokemon({
@@ -39,11 +33,9 @@ const Pokemon = ({ pokemon }) => {
   };
 
   return (
-    <>
-      <Link onClick={handleToggleFavorite}>
-        <img src={pokemon.imageUrl} alt={pokemon.name} />
-        <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)} ({pokemon.id})</h3>
-      </Link>
+    <div>
+      <img src={pokemon.imageUrl} alt={pokemon.name} />
+      <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)} ({pokemon.id})</h3>
 
       {/* Display Types */}
       <div className={type_styles.types}>
@@ -56,10 +48,10 @@ const Pokemon = ({ pokemon }) => {
           : "No types available"}
       </div>
 
-      <button onClick={handleToggleFavorite} className={styles.favButton}>
+      <div className={styles.favDiv}>
         {isFavorite ? <FaHeart fill="red" /> : <FaRegHeart />}
-      </button>
-    </>
+      </div>
+    </div>
   );
 };
 

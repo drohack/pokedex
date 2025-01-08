@@ -64,10 +64,10 @@ function Favorites() {
     });
 
     return (
-        <>
+        <div className={styles.favoriteContainer}>
             <h1>Favorites</h1>
             {favoritePokemon.length === 0 ? emptyFavorites : <PokemonList pokemon={visibleFavoritePokemon} />}
-        </>
+        </div>
     )
 }
 
