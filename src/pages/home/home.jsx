@@ -72,6 +72,11 @@ const Home = () => {
         selectedStarters.length === 0 || 
         selectedStarters.includes(p.id);
 
+    // Check if the Pokémon's ID is in the favoriteIds list if "Favorites" is in selectedExclusions
+    const isFavoriteExcluded = 
+        selectedExclusions.includes("Favorites") && 
+        favoriteIds.includes(p.id);
+
     // Check if the Pokémon's ID is in the StartersAndEvolutions list if "Starters" is in selectedExclusions
     const isStarterExcluded = 
         selectedExclusions.includes("Starters") && 
@@ -82,13 +87,14 @@ const Home = () => {
         selectedExclusions.includes("Legendaries") && 
         allLegendaryIds.includes(p.id);
     
-    // Check if the Pokémon's ID is in the favoriteIds list if "Favorites" is in selectedExclusions
-    const isFavoriteExcluded = 
-        selectedExclusions.includes("Favorites") && 
-        favoriteIds.includes(p.id);
+    // Check if any of the Pokémon's types match the types in the selectedExclusions list
+    const isTypeExcluded = 
+        selectedExclusions.some((excludedType) =>
+            p.types.some((typeObj) => typeObj.type.name === excludedType)
+        );
 
     // Only include the Pokémon if all conditions are true
-    return nameMatches && typesMatch && legendaryMatches && starterMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded;
+    return nameMatches && typesMatch && legendaryMatches && starterMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded;
   });
 
   return (

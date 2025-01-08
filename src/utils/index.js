@@ -12,6 +12,47 @@ const entryRange = (limit, offset) => {
   };
 };
 
+export const Regions = {
+  ALL: entryRange(-1, 0),
+  KANTO: entryRange(151, 0),
+  JOHTO: entryRange(100, 151),
+  HOENN: entryRange(135, 251),
+  SINNOH: entryRange(107, 386),
+  UNOVA: entryRange(156, 493),
+  KALOS: entryRange(72, 649),
+  ALOLA: entryRange(88, 721),
+  GALAR: entryRange(96, 809),
+  PALDEA: entryRange(120, 905),
+  MEGA: entryRange(58, 1057),
+  ALOLA_form: entryRange(25, 1115),
+  GALAR_form: entryRange(20, 1185),
+  GMAX: entryRange(34, 1219),
+  HISUI_form: entryRange(16, 1253)
+};
+
+// Map of type to background color
+export const typeColors = {
+  normal: "#aab09f",
+  fire: "#ea7a3c",
+  water: "#539ae2",
+  electric: "#e5c531",
+  grass: "#71c558",
+  ice: "#70cbd4",
+  fighting: "#cb5f48",
+  poison: "#b468b7",
+  ground: "#cc9f4f",
+  flying: "#7da6de",
+  psychic: "#e5709b",
+  bug: "#94bc4a",
+  rock: "#b2a061",
+  ghost: "#846ab6",
+  dragon: "#6a7baf",
+  dark: "#736c75",
+  steel: "#89a1b0",
+  fairy: "#e397d1",
+};
+
+
 export const Starters = {
   bulbasaur: {"id": 1},
   charmander: {"id": 4},
@@ -125,24 +166,6 @@ export const StartersAndEvolutions = {
   quaxwell: {"id": 913},
   quaquaval: {"id": 914},
 }
-
-export const Regions = {
-  ALL: entryRange(-1, 0),
-  KANTO: entryRange(151, 0),
-  JOHTO: entryRange(100, 151),
-  HOENN: entryRange(135, 251),
-  SINNOH: entryRange(107, 386),
-  UNOVA: entryRange(156, 493),
-  KALOS: entryRange(72, 649),
-  ALOLA: entryRange(88, 721),
-  GALAR: entryRange(96, 809),
-  PALDEA: entryRange(120, 905),
-  MEGA: entryRange(58, 1057),
-  ALOLA_form: entryRange(25, 1115),
-  GALAR_form: entryRange(20, 1185),
-  GMAX: entryRange(34, 1219),
-  HISUI_form: entryRange(16, 1253)
-};
 
 export const PseudoLegendaries = {
   dragonite: {"id": 149},

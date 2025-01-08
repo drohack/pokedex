@@ -4,11 +4,13 @@ import { setSelectedExclusions } from './exclusionFilterSlice';
 import styles from './ExclusionFilter.module.css';
 import { setSelectedLegendaries } from "../LegendaryFilter/legendaryFilterSlice";
 import { setSelectedStarters } from "../StarterFilter/starterFilterSlice";
-import { SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from '../../utils/index';
+import { setSelectedTypes } from '../TypeFilter/typeFilterSlice';
+import { typeColors, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from '../../utils/index';
 
 export const ExclusionFilter = () => {
     const dispatch = useDispatch();
     const selectedExclusions = useSelector((state) => state.exclusionFilter.selectedExclusions);
+    const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
 
     const handleExclusionChange = (event) => {
         const exclusionGroup = event.target.value;
@@ -23,6 +25,11 @@ export const ExclusionFilter = () => {
                 dispatch(setSelectedLegendaries([])); // Clear selected legendaries
             } else if (exclusionGroup === "Starters") {
                 dispatch(setSelectedStarters([])); // Clear selected starters
+            } else if (exclusionGroup === "Favorites") {
+                // Do nothing
+            } else {
+                // Remove the type from selected types
+                dispatch(setSelectedTypes(selectedTypes.filter(type => type !== exclusionGroup)));
             }
         } else {
             updatedExclusions = updatedExclusions.filter(exclusion => exclusion !== exclusionGroup); // Remove exclusion if unchecked
@@ -65,6 +72,23 @@ export const ExclusionFilter = () => {
                     />
                     Legendaries
                 </label>
+            </div>
+            <div>
+                <p className={styles.filterLabel}>Exclude Types</p>
+                <div className={styles.typeCheckboxContainer}>
+                    {Object.keys(typeColors).map((type) => (
+                        <label key={type} className={styles.typeLabel} style={{ backgroundColor: typeColors[type] }}>
+                            <input
+                                type="checkbox"
+                                value={type}
+                                checked={selectedExclusions.includes(type)}
+                                onChange={handleExclusionChange}
+                                className={styles.typeCheckbox}
+                            />
+                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </label>
+                    ))}
+                </div>
             </div>
         </div>
     );

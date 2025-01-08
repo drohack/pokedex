@@ -3,28 +3,7 @@ import { useSelector } from "react-redux";
 import { selectSelectedPokemon } from "../../../features/pokemon/pokemonSlice";
 import styles from "./PokemonDetails.module.css";
 import { capitalizeFirstLetter } from "../../../utils";
-
-// Map of type to background color
-export const typeColors = {
-  normal: "#aab09f",
-  fire: "#ea7a3c",
-  water: "#539ae2",
-  electric: "#e5c531",
-  grass: "#71c558",
-  ice: "#70cbd4",
-  fighting: "#cb5f48",
-  poison: "#b468b7",
-  ground: "#cc9f4f",
-  flying: "#7da6de",
-  psychic: "#e5709b",
-  bug: "#94bc4a",
-  rock: "#b2a061",
-  ghost: "#846ab6",
-  dragon: "#6a7baf",
-  dark: "#736c75",
-  steel: "#89a1b0",
-  fairy: "#e397d1",
-};
+import { typeColors } from "../../../utils";
 
 export const getTypeBackground = (types) => {
   if (types.length === 1) {

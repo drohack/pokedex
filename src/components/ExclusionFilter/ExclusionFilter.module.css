@@ -33,3 +33,15 @@
   display: flex;
   align-items: center; /* Center-align checkbox and label text */
 }
+
+.typeCheckboxContainer {
+  display: grid; /* Use grid instead of flex */
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-gap: 4px; /* Space between grid items */
+}
+
+.typeCheckboxContainer .typeLabel {
+  flex: 0 0 45%; /* Each checkbox takes up 45% of the container width */
+  padding: 2.5px 5px;
+  font-size: 0.6rem;
+}

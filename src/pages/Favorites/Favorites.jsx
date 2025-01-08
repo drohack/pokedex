@@ -60,7 +60,13 @@ function Favorites() {
             selectedExclusions.includes("Legendaries") && 
             allLegendaryIds.includes(p.id);
 
-        return typesMatch && legendaryMatches && starterMatches && !isStarterExcluded && !isLegendaryExcluded;
+        // Check if any of the Pokémon's types match the types in the selectedExclusions list
+        const isTypeExcluded = 
+        selectedExclusions.some((excludedType) =>
+            p.types.some((typeObj) => typeObj.type.name === excludedType)
+        );
+
+        return typesMatch && legendaryMatches && starterMatches && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded;
     });
 
     return (
