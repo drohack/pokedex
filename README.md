@@ -1,6 +1,8 @@
 # Pokedex App
 
-A simple Pokedex application built with React, React Query, Redux Toolkit, React Router, and Dexie.js for persistent data.
+A simple Pokedex application built with React, React Query, Redux Toolkit, React Router, and Dexie.js for persistent data. Uses data from PokeAPI https://pokeapi.co/.
+
+This has been updated by drohack to allow a more detailed filtering of pokemon. A larger list of pokemon to search. And to export the Favorites list to either a text file OR for a Pokemon Emerald Extended ROM. This was made for GACKcon 2025 panel "Narrowing down to the ultimate 151 pokemon" (There are so many pokemon, there must be some good ones in every generation. During this panel we will narrow down the 1000+ pokemon into the perfect 151. Come let your voice and terrible opinions be heard).
 
 ## Screenshots
 
@@ -10,11 +12,65 @@ A simple Pokedex application built with React, React Query, Redux Toolkit, React
 
 * **Browse Pokemon:** View a paginated list of Pokemon, fetched from the PokeAPI.
 * **Search Pokemon:** Filter the Pokemon list by name (case-insensitive).
-* **Pokemon Details:** View detailed information about each Pokemon.
+* **Pokemon Details (REMOVED):** View detailed information about each Pokemon.
 * **Favorites:** Add and remove Pokemon from your favorites list, persisted locally using Dexie.js.
 * **Navigation:** Seamless navigation between Home, Favorites, and Pokemon Details pages.
 * **Loading and Error Handling:** Clear visual feedback during data loading and error states.
 * **Responsive Design:** Works well on different screen sizes.
+
+## Updated Features (by drohack)
+
+* **Removed Details page:** The page only showed size and weight. And isn't needed for our use for picking the best 151 pokemon. Made the whole pokemon card clickable to Favorite/UnFavorite.
+* **Cleaned up Navigation:** Removed extra titles, and shrunk down the Nav Bar. The Nav Bar now floats at the top.
+* **Additional "Regions:** Added the following Regions for filtering
+    * ALL: show all pokemon available from PokeAPI (including forms, region specific, hats, totems... etc.)
+    * Mega
+    * Alola Form
+    * Galar Form
+    * GMax
+    * Hisui Form
+* **Advance Search:** Additional dropdown to filter even more
+    * Types: Only show pokemon that match the given type(s) selected
+    * Legendaries: Broken down into Sub Legendaries, Legendaries, Mythical, and Pseudo Legendaries
+    * Starters: Broken down into just base Starters, or Starters and their Evolutions
+    * Exclusions: Remove these options from your list
+        * Favorites
+        * Starters (and Evolutions)
+        * Legendaries (not including Pseudo Legendaries)
+        * Types
+* **Clear Filters:** Add a button to clear all filters
+* **Show Types:** The main page now shows the pokemon's type(s) including having a colored background to match
+* **Favorite Page Updates:**
+    * Counter for number of Favorites
+    * Counter for number of favorites on the current page (useful when filtered down)
+    * Clear Favorites button (with confirmation)
+    * Filters work on Favorites page
+    * Export List: Exports a simple text file with all of your favorite pokemon, each on their own line
+    * Export Emerald ROM (see below for more details)
+
+## Export Emerald ROM
+
+If you want to play a custom ROM of Pokemon Emerald (Expansion) (https://github.com/rh-hideout/pokeemerald-expansion) of your selected Favorites there's no easy way to do it. But if you use this feature you'll get a .zip file with the nessesary files to change all Wild Encounters, Legendary Encounters, and your Starters into your selected Favorite pokemon. There are some caveats:
+
+* It will only replace your Starter pokemon with other base Starter Favorites (else default back to Emerald Starters)
+* It will only replace Legendary encounters with Sub Legendarys, Legendary, Mythics, and Pseudo Legendaries (if there's room). It'll fill extra slots with duplicate legendaries (default to base Emerald Legendaries if you didn't favorite any)
+* It will randomize Wild Encounters from your Favorites list (excluding base Starters and Sub Legendaries/Legendaries/Mythics) (levels and encounter rates are the same as base Emerald)
+* No other changes have been made (i.e. Moves, Trainers, Gyms, Events... etc.)
+
+Steps:
+
+1. Choose your favorites (hopefully at least 3 of the different type of base Starters, a few Legendaries, and some extra pokemon)
+2. Go to the Favorites tab and click "Export Emerald ROM". This will download a EmeraldROMFiles.zip with your custom files. Unzip the folder.
+3. Setup PokeEmerald Extension (https://github.com/rh-hideout/pokeemerald-expansion) (Full install instructions can be found here: https://rh-hideout.github.io/pokeemerald-expansion/INSTALL.html but I'll go over base setup for Windows) (do only once)
+    1. Open command prompt/power shell and navigate to a folder you want to download the PokeEmerald Expansion to
+    2. Download `git clone https://github.com/rh-hideout/pokeemerald-expansion`
+    3. Change directory `cd pokeemerald-expansion`
+    4. Install WSL on Windows (https://learn.microsoft.com/en-us/windows/wsl/install). Run `wsl --install`. Follow instructions (make username/password). This should start the WSL instance right away. Run the following command to install everything you need `sudo apt update && sudo apt install build-essential` (this allows you to run the `make` command).
+    5. Keep this window open
+4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 14 files.
+5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokeemerald.gba" file. This takes between 5 - 10 minutes to compile.
+
+And you should be good to go! Have fun playing your custom Emerald Rom.
 
 ## Technologies Used
 
