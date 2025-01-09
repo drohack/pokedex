@@ -17,7 +17,7 @@ function App() {
   }, [dispatch])
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/pokedex">
       <div className="App">
       {/* <h1>Pokedex</h1>*/}
         <NavBar />
