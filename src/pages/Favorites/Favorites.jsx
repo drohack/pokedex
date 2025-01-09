@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import styles from "./Favorites.module.css";
 import PokemonList from "../../components/PokemonList/PokemonList";
+import ExportFavorites from './ExportFavorites';
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "../../db/db";
 import { getFavoritePokemon, clearAllFavorites } from "../../features/favorites/favoritesSlice";
@@ -82,6 +83,7 @@ function Favorites() {
                 <p className={styles.favoriteLabel}>
                     Showing: {visibleFavoritePokemon.length}
                 </p>
+                <ExportFavorites />
                 <button onClick={handleClearFavorites} className={styles.clearButton}>Clear Favorites</button>
             </div>
             {favoritePokemon.length === 0 ? emptyFavorites : <PokemonList pokemon={visibleFavoritePokemon} />}
