@@ -229,6 +229,7 @@ export const ExportFavorites = () => {
 
         // Manually grab each file to be copied to the zip
         const folderStructure = [
+            'EmeraldExportREADME.txt',
             'EmeraldExportFiles/',
             'EmeraldExportFiles/data/maps/AncientTomb/scripts.inc',
             'EmeraldExportFiles/data/maps/BirthIsland_Exterior/scripts.inc',
