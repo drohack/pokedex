@@ -14,6 +14,8 @@ import StarterFilter from "../StarterFilter/StarterFilter";
 import { setSelectedStarters } from "../StarterFilter/starterFilterSlice";
 import ExclusionFilter from "../ExclusionFilter/ExclusionFilter";
 import { setSelectedExclusions } from "../ExclusionFilter/exclusionFilterSlice";
+import PseudoLegendaryFilter from "../PseudoLegendaryFilter/PseudoLegendaryFilter";
+import { setSelectedPseudoLegendaries } from "../PseudoLegendaryFilter/pseudoLegendaryFilterSlice";
 
 function NavBar() {
   const dispatch = useDispatch();
@@ -33,6 +35,7 @@ function NavBar() {
     dispatch(setSelectedLegendaries([])); // Clear selected legendaries
     dispatch(setSelectedStarters([])); // Clear selected starters
     dispatch(setSelectedExclusions([])); // Clear selected exclusions
+    dispatch(setSelectedPseudoLegendaries([])); // Clear selected pseudo-legendaries
   };
 
   return (
@@ -66,7 +69,10 @@ function NavBar() {
             {/* Add content for the expandable row here */}
             <div  className={styles.navDiv}>
               <TypeFilter />
-              <LegendaryFilter />
+              <div>
+                <LegendaryFilter />
+                <PseudoLegendaryFilter />
+              </div>
               <StarterFilter />
               <ExclusionFilter />
             </div>

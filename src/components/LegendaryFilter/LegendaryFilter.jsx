@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedLegendaries } from './legendaryFilterSlice';
 import styles from './LegendaryFilter.module.css';
 import { clearLegendariesFromExclusions } from '../ExclusionFilter/exclusionFilterSlice';
-import { SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from '../../utils/index';
+import { SubLegendaries, Legendaries, Mythical } from '../../utils/index';
 
 export const LegendaryFilter = () => {
     const dispatch = useDispatch();
     const selectedLegendaries = useSelector((state) => state.legendaryFilter.selectedLegendaries);
 
     // Convert objects to arrays of IDs
-    const pseudoLegendariesIDs = Object.values(PseudoLegendaries).map((p) => p.id);
     const subLegendariesIDs = Object.values(SubLegendaries).map((p) => p.id);
     const legendariesIDs = Object.values(Legendaries).map((p) => p.id);
     const mythicalIDs = Object.values(Mythical).map((p) => p.id);
@@ -25,8 +24,7 @@ export const LegendaryFilter = () => {
 
         // Determine which list of IDs to add/remove
         let idsToToggle = [];
-        if (legendaryGroup === 'PseudoLegendaries') idsToToggle = pseudoLegendariesIDs;
-        else if (legendaryGroup === 'SubLegendaries') idsToToggle = subLegendariesIDs;
+        if (legendaryGroup === 'SubLegendaries') idsToToggle = subLegendariesIDs;
         else if (legendaryGroup === 'Legendaries') idsToToggle = legendariesIDs;
         else if (legendaryGroup === 'Mythical') idsToToggle = mythicalIDs;
 
@@ -44,7 +42,6 @@ export const LegendaryFilter = () => {
     const handleSelectAll = () => {
         // Combine all IDs
         const allIDs = [
-            ...pseudoLegendariesIDs,
             ...subLegendariesIDs,
             ...legendariesIDs,
             ...mythicalIDs,
@@ -70,7 +67,6 @@ export const LegendaryFilter = () => {
                         value="SelectAll"
                         checked={
                             selectedLegendaries.length ===
-                            pseudoLegendariesIDs.length +
                                 subLegendariesIDs.length +
                                 legendariesIDs.length +
                                 mythicalIDs.length
@@ -79,16 +75,6 @@ export const LegendaryFilter = () => {
                         className={styles.typeCheckbox}
                     />
                     Select All
-                </label>
-                <label key="PseudoLegendaries" className={styles.typeLabel}>
-                    <input
-                        type="checkbox"
-                        value="PseudoLegendaries"
-                        checked={pseudoLegendariesIDs.every((id) => selectedLegendaries.includes(id))}
-                        onChange={handleLegendaryChange}
-                        className={styles.typeCheckbox}
-                    />
-                    Pseudo Legendaries
                 </label>
                 <label key="SubLegendaries" className={styles.typeLabel}>
                     <input

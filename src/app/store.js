@@ -7,6 +7,7 @@ import typeFilterReducer from "../components/TypeFilter/typeFilterSlice"
 import legendaryFilterReducer from "../components/LegendaryFilter/legendaryFilterSlice"
 import starterFilterReducer from "../components/StarterFilter/starterFilterSlice"
 import exclusionFilterReducer from "../components/ExclusionFilter/exclusionFilterSlice"
+import pseudoLegendaryFilterReducer from '../components/PseudoLegendaryFilter/pseudoLegendaryFilterSlice';
 
 export default configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export default configureStore({
         favorites: favoritesReducer,
         typeFilter: typeFilterReducer, // Add the typeFilter reducer to the store
         legendaryFilter: legendaryFilterReducer,
+        pseudoLegendaryFilter: pseudoLegendaryFilterReducer,
         starterFilter: starterFilterReducer,
         exclusionFilter: exclusionFilterReducer,
     },

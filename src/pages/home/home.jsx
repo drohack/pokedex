@@ -12,7 +12,7 @@ import PokemonList from "../../components/PokemonList/PokemonList";
 import styles from "./Home.module.css";
 
 // Import the Pokemon lists
-import { StartersAndEvolutions, PseudoLegendaries, SubLegendaries, Legendaries, Mythical } from "../../utils/index";
+import { StartersAndEvolutions, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from "../../utils/index";
 
 // Get the favorite Pokemon from the Redux state
 import { getFavoritePokemon } from "../../features/favorites/favoritesSlice";
@@ -27,6 +27,8 @@ const Home = () => {
   const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
   // Get selected legendaries from Redux state
   const selectedLegendaries = useSelector((state) => state.legendaryFilter?.selectedLegendaries || []);
+  // Get selected legendaries from Redux state
+  const selectedPseudoLegendaries = useSelector((state) => state.pseudoLegendaryFilter?.selectedPseudoLegendaries || []);
   // Get selected starters from Redux state
   const selectedStarters = useSelector((state) => state.starterFilter?.selectedStarters || []);
   // Get selected exclusions from Redux state
@@ -41,13 +43,15 @@ const Home = () => {
   const starterIds = Object.values(StartersAndEvolutions).map(starter => starter.id);
 
   // Convert PseudoLegendaries, SubLegendaries, Legendaries, and Mythical objects to arrays of IDs
-  const pseudoLegendaryIds = Object.values(PseudoLegendaries).map(pseudoLegendary => pseudoLegendary.id);
   const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
   const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
   const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
 
   // Combine all legendary-related IDs into a single array
-  const allLegendaryIds = [...pseudoLegendaryIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+  const allLegendaryIds = [...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+
+  // Check if any selected legendaries are in the SubLegendaries list
+  const combinedLegendariesPseudoStarterIds = [ ...selectedLegendaries, ...selectedPseudoLegendaries, ...selectedStarters ];
 
 
   // Filter Pokemon based on Search Filter, selected Types, and selected Legendaries
@@ -63,14 +67,9 @@ const Home = () => {
         );
 
     // Check if the Pokémon's ID is in the selected legendaries list (or if none are selected)
-    const legendaryMatches = 
-        selectedLegendaries.length === 0 || 
-        selectedLegendaries.includes(p.id);
-    
-    // Check if the Pokémon's ID is in the selected starters list (or if none are selected)
-    const starterMatches = 
-        selectedStarters.length === 0 || 
-        selectedStarters.includes(p.id);
+    const combinedLegendaryPseudoStarterMatches = 
+        combinedLegendariesPseudoStarterIds.length === 0 || 
+        combinedLegendariesPseudoStarterIds.includes(p.id);
 
     // Check if the Pokémon's ID is in the favoriteIds list if "Favorites" is in selectedExclusions
     const isFavoriteExcluded = 
@@ -94,7 +93,7 @@ const Home = () => {
         );
 
     // Only include the Pokémon if all conditions are true
-    return nameMatches && typesMatch && legendaryMatches && starterMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded;
+    return nameMatches && typesMatch && combinedLegendaryPseudoStarterMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded;
   });
 
   return (
