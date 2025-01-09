@@ -5,9 +5,9 @@ export const initializeFavorites = createAsyncThunk(
   "favorites/initializeFavorites",
   async () => {
     try {
-      console.log("Start favorite init"); // Debugging log
+      //console.log("Start favorite init"); // Debugging log
       const favoritesFromDb = await db.favorites.toArray();
-      console.log("Favorites from DB:", favoritesFromDb); // Debugging log
+      //console.log("Favorites from DB:", favoritesFromDb); // Debugging log
       return favoritesFromDb;
     } catch (error) {
       console.error("Error initializing favorites:", error);
@@ -59,16 +59,16 @@ const options = {
       .addCase(initializeFavorites.pending, (state) => {
         state.isLoading = true;
         state.error = false;
-        console.log("Loading favorite pokemon");
+        //console.log("Loading favorite pokemon");
       })
       .addCase(initializeFavorites.rejected, (state) => {
         state.isLoading = false;
         state.error = true;
-        console.log("Failed to load favorite pokemon");
+        console.error("Failed to load favorite pokemon");
       })
       .addCase(initializeFavorites.fulfilled, (state, action) => {
         state.favoritePokemon = action.payload;
-        console.log("Succesfully loaded favorite pokemon");
+        //console.log("Succesfully loaded favorite pokemon");
       });
   },
 };

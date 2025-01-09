@@ -77,7 +77,7 @@ export const Starters = {
   popplio: {"id": 728},
   grookey: {"id": 810},
   scorbunny: {"id": 813},
-  sobble: {"id": 815},
+  sobble: {"id": 816},
   sprigatito: {"id": 906},
   fuecoco: {"id": 909},
   quaxly: {"id": 912},
