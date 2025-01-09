@@ -121,7 +121,7 @@ This combined approach provides optimal performance and a clean separation of co
 1. Start the development server:
 
     ```bash
-    npm start
+    npm run dev
     # or
     yarn start
     # or
