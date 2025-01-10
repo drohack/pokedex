@@ -72,7 +72,7 @@ Steps:
     3. Change directory `cd pokeemerald-expansion`
     4. Install WSL on Windows (https://learn.microsoft.com/en-us/windows/wsl/install). Run `wsl --install`. Follow instructions (make username/password). This should start the WSL instance right away. Run the following command to install everything you need `sudo apt update && sudo apt install build-essential` (this allows you to run the `make` command).
     5. Keep this window open
-4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 14 files.
+4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 23 files.
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokeemerald.gba" file. This takes between 5 - 10 minutes to compile.
 
 And you should be good to go! Have fun playing your custom Emerald Rom.
