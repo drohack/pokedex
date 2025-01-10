@@ -2,9 +2,16 @@
 
 If you want to play a custom ROM of Pokemon Emerald (Expansion) (https://github.com/rh-hideout/pokeemerald-expansion) of your selected Favorites there's no easy way to do it. But if you use this feature you'll get a .zip file with the nessesary files to change all Wild Encounters, Legendary Encounters, and your Starters into your selected Favorite pokemon. There are some caveats:
 
-* It will only replace your Starter pokemon with other base Starter Favorites (else default back to Emerald Starters)
-* It will only replace Legendary encounters with Sub Legendarys, Legendary, Mythics, and Pseudo Legendaries (if there's room). It'll fill extra slots with duplicate legendaries (default to base Emerald Legendaries if you didn't favorite any)
-* It will randomize Wild Encounters from your Favorites list (excluding base Starters and Sub Legendaries/Legendaries/Mythics) (levels and encounter rates are the same as base Emerald)
+* Replace your Starter pokemon with other base Starter Favorites of the same type (else default back to Emerald Starters)
+* Replace Legendary encounters with Sub Legendarys, Legendary, Mythics, and Pseudo Legendaries (if there's room). It'll fill extra slots with duplicate legendaries (default to base Emerald Legendaries if you didn't favorite any)
+* Randomize Wild Encounters from your Favorites list (excluding base Starters and Sub Legendaries/Legendaries/Mythics) (levels and encounter rates are the same as base Emerald)
+* Randomize Trainer pokemon (keep levels and stats)
+* Randomize Gym Leader and Elite Four pokemon, but within their type. (if you did not favorite that type, then they get fully randomized)
+* Evolutions are limited to what you have Favorited. This has some unique behaviour.
+    * Starters will follow the path of your favorited starters. Meaning if you choose Mudkip as your base water starter, and Wartortal as your 2nd stage, and Primarina as your 3rd, Mudkip will evolve into Wartortal who will evolve into Primarina. This goes for all 3 stages of your 3 different typed starters (if there's multiple options it'll randomly choose a path).
+    * Evolutions not favorited will be removed. i.e. if you have an Onyx as a favorite, but not a Steelix, the option to evolve Onyx will be removed from the game.
+        * This includes branching Evolutions. i.e. if you have Slowpoke and Slowbrow favorited, but not Slowking, the option to evolve Slowpoke to Slowking will be removed.
+    * If you skip a stage they will be removed, but the next stage will also be moved down. i.e. If you have Gastly and Gengar favorited, but not Haunter. Then Gastly will be updated so that when it would evolve into Haunter it will instead evolve into Gengar.
 * No other changes have been made (i.e. Moves, Trainers, Gyms, Events... etc.)
 
 Steps:
@@ -17,7 +24,7 @@ Steps:
     3. Change directory `cd pokeemerald-expansion`
     4. Install WSL on Windows (https://learn.microsoft.com/en-us/windows/wsl/install). Run `wsl --install`. Follow instructions (make username/password). This should start the WSL instance right away. Run the following command to install everything you need `sudo apt update && sudo apt install build-essential` (this allows you to run the `make` command).
     5. Keep this window open
-4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 14 files.
+4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 25 files.
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokeemerald.gba" file. This takes between 5 - 10 minutes to compile.
 
 And you should be good to go! Have fun playing your custom Emerald Rom.
