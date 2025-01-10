@@ -212,7 +212,7 @@ const modifyAndZipLegendaries = async (zip, favoritePokemon) => {
     return;
 };
 
-async function modifyEvolutions(zip, favoritePokemon) {
+async function modifyAndZipEvolutions(zip, favoritePokemon) {
     let gen_1_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_1_families.h').then(response => response.text());
     let gen_2_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_2_families.h').then(response => response.text());
     let gen_3_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_3_families.h').then(response => response.text());
@@ -559,11 +559,58 @@ async function modifyEvolutions(zip, favoritePokemon) {
     }
 }
 
+const createAndZipTrainers = async (zip, favoritePokemon) => {
+    // Function to get a random favorite Pokémon species
+    const getRandomSpecies = (pokemonList) => {
+        const randomIndex = Math.floor(Math.random() * pokemonList.length);
+        return emeraldSpeciesConversionArray[pokemonList[randomIndex].name].species;
+    };
+
+    // Function to replace Pokémon for a specific type
+    const replacePokemonForType = async (filePath, type) => {
+        // Get a list of favorite Pokémon of the specified type
+        let favoriteTypePokemon = favoritePokemon.filter(pokemon => pokemon.types.some(typeObj => typeObj.type.name === type));
+        // If none exists just grab a random favorite pokemon
+        if (favoriteTypePokemon.length === 0) {
+            favoriteTypePokemon = favoritePokemon;
+        }
+        let fileText = await fetch(basePath + filePath).then(response => response.text());
+        fileText = fileText.replace(/SPECIES_\w+/g, () => getRandomSpecies(favoriteTypePokemon));
+        return fileText;
+    };
+
+    // Replace each instance of SPECIES_xxx with a random favorite Pokémon species
+    let trainers_text = await fetch(basePath + '/src/data/trainers.h').then(response => response.text());
+    trainers_text = trainers_text.replace(/SPECIES_\w+/g, () => getRandomSpecies(favoritePokemon));
+
+    // Replace Pokémon for each gym leader and elite four member based on their type and append to trainers_text
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_roxanne_rock.h', 'rock');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_brawly_fighting.h', 'fighting');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_watson_electric.h', 'electric');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_flannery_fire.h', 'fire');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_norman_normal.h', 'normal');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_winona_flying.h', 'flying');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_tate_and_liza_psychic.h', 'psychic');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/gym_leader_juan_water.h', 'water');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/elite_4_sidney_dark.h', 'dark');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/elite_4_phoebe_ghost.h', 'ghost');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/elite_4_glacia_ice.h', 'ice');
+    trainers_text += '\n' + await replacePokemonForType('/src/data/elite_4_drake_dragon.h', 'dragon');
+
+
+    // Add the modified trainers_text to the zip file
+    zip.file(removeLeadingSlash(basePath) + '/src/data/trainers.h', trainers_text, { date: localDate });
+};
+
 
 export const ExportFavorites = () => {
     const favoritePokemon = useSelector(getFavoritePokemon);
 
     const handleExportList = () => {
+        if (favoritePokemon.length === 0) {
+            alert('Please add some favorite Pokémon before exporting the text file.');
+            return;
+        }
         console.log(favoritePokemon);
         // Create a string with each favorite Pokémon on a new line
         const favoriteList = favoritePokemon.map(pokemon => `${capitalizeFirstLetter(pokemon.name)}`).join('\n');
@@ -587,12 +634,18 @@ export const ExportFavorites = () => {
     };
 
     const handleExportEmeraldROM = async () => {
+        if (favoritePokemon.length === 0) {
+            alert('Please add some favorite Pokémon before exporting the ROM.');
+            return;
+        }
+
         const zip = new JSZip();
 
         // Manually grab each file to be copied to the zip
         const folderStructure = [
             '/pokedex/EmeraldExportREADME.txt',
             basePath + '/',
+            basePath + '/include/config/general.h',
             basePath + '/data/maps/AncientTomb/scripts.inc',
             basePath + '/data/maps/BirthIsland_Exterior/scripts.inc',
             basePath + '/data/maps/DesertRuins/scripts.inc',
@@ -628,7 +681,10 @@ export const ExportFavorites = () => {
         await modifyAndZipLegendaries(zip, favoritePokemon);
 
         // Modify the evolutions to use the favorite's pokemon
-        await modifyEvolutions(zip, favoritePokemon);
+        await modifyAndZipEvolutions(zip, favoritePokemon);
+
+        // Create the trainers.h with random trainer pokemon, and gymleader/eliet 4 having random but same type pokemon
+        await createAndZipTrainers(zip, favoritePokemon);
 
         // Generate the zip file
         const content = await zip.generateAsync({ type: "blob" });
