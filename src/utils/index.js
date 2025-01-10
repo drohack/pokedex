@@ -1,3 +1,5 @@
+import evolutions from './evolutions.json';
+
 export const capitalizeFirstLetter = (string) => {
   if (!string) {
     return ""; // Handle empty or null strings
@@ -10,6 +12,20 @@ const entryRange = (limit, offset) => {
     limit: limit,
     offset: offset,
   };
+};
+
+export const getEvolutions = (name, depth = 1) => {
+  let result = [];
+  for (const evolution of evolutions) {
+    if (evolution[name]) {
+      const nextEvolutions = Object.keys(evolution[name]);
+      result = result.concat(nextEvolutions.map(evo => ({ name: evo, depth })));
+      nextEvolutions.forEach(nextEvolution => {
+        result = result.concat(getEvolutions(nextEvolution, depth + 1));
+      });
+    }
+  }
+  return result;
 };
 
 export const Regions = {
@@ -166,6 +182,66 @@ export const StartersAndEvolutions = {
   quaxwell: {"id": 913},
   quaquaval: {"id": 914},
 }
+
+export const StartersLvl1 = {
+  ivysaur: {"id": 2},
+  charmeleon: {"id": 5},
+  wartortle: {"id": 8},
+  bayleef: {"id": 153},
+  quilava: {"id": 156},
+  croconaw: {"id": 159},
+  grovyle: {"id": 253},
+  combusken: {"id": 256},
+  marshtomp: {"id": 259},
+  grotle: {"id": 388},
+  monferno: {"id": 391},
+  prinplup: {"id": 394},
+  servine: {"id": 496},
+  pignite: {"id": 499},
+  dewott: {"id": 502},
+  quilladin: {"id": 651},
+  braixen: {"id": 654},
+  frogadier: {"id": 657},
+  dartrix: {"id": 723},
+  torracat: {"id": 726},
+  brionne: {"id": 729},
+  thwackey: {"id": 811},
+  raboot: {"id": 814},
+  drizzile: {"id": 817},
+  floragato: {"id": 907},
+  crocalor: {"id": 910},
+  quaxwell: {"id": 913},
+};
+
+export const StartersLvl2 = {
+  venusaur: {"id": 3},
+  charizard: {"id": 6},
+  blastoise: {"id": 9},
+  meganium: {"id": 154},
+  typhlosion: {"id": 157},
+  feraligatr: {"id": 160},
+  sceptile: {"id": 254},
+  blaziken: {"id": 257},
+  swampert: {"id": 260},
+  torterra: {"id": 389},
+  infernape: {"id": 392},
+  empoleon: {"id": 395},
+  serperior: {"id": 497},
+  emboar: {"id": 500},
+  samurott: {"id": 503},
+  chesnaught: {"id": 652},
+  delphox: {"id": 655},
+  greninja: {"id": 658},
+  decidueye: {"id": 724},
+  incineroar: {"id": 727},
+  primarina: {"id": 730},
+  rillaboom: {"id": 812},
+  cinderace: {"id": 815},
+  inteleon: {"id": 818},
+  meowscarada: {"id": 908},
+  skeledirge: {"id": 911},
+  quaquaval: {"id": 914},
+};
 
 export const PseudoLegendaries = {
   dragonite: {"id": 149},

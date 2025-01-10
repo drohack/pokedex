@@ -4,9 +4,25 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import styles from './Favorites.module.css';
 import { getFavoritePokemon } from "../../features/favorites/favoritesSlice";
-import { capitalizeFirstLetter, Starters, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from "../../utils/index";
+import { capitalizeFirstLetter, getEvolutions, Starters, StartersLvl1, StartersLvl2, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from "../../utils/index";
 import { emeraldSpeciesConversionArray } from "../../utils/EmeraldSpeciesConversion";
 import { emeraldUniqueWildEncounters } from '../../utils/EmeraldUniqueWildEncounters';
+
+const basePath = '/pokedex/EmeraldExportFiles';
+
+// Get the current time in local timezone (CST)
+const currentDate = new Date();
+
+// Convert to UTC by adjusting for local timezone offset
+const localOffset = currentDate.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
+const localDate = new Date(currentDate.getTime() - localOffset);
+
+const removeLeadingSlash = (path) => {
+    if (path.startsWith('/pokedex/')) {
+        return path.replace(/^\/pokedex\//, '');
+    }
+    return path.replace(/^\/+/, '');
+};
 
 // Shuffle the unique wild encounters array
 const shuffleArray = (array) => {
@@ -18,7 +34,7 @@ const shuffleArray = (array) => {
 
 const getModifiedStarterText = async (favoritePokemon) => {
     // Read the original starter_choose.c file (from public/ folder)
-    let starter_choose_text = await fetch('/EmeraldExportFiles/src/starter_choose.c').then(response => response.text());
+    let starter_choose_text = await fetch(basePath + '/src/starter_choose.c').then(response => response.text());
 
     // Filter the list of favorite Pokémon to include only starters
     const starterIds = Object.values(Starters).map(starter => starter.id);
@@ -28,7 +44,7 @@ const getModifiedStarterText = async (favoritePokemon) => {
     const favoriteGrassStarters = favoriteStarters.filter(pokemon =>
         pokemon.types.some(typeObj => typeObj.type.name === "grass")
     );
-    const grassStarterFavorite = favoriteGrassStarters.length > 0 ? favoriteGrassStarters[0].name : "treecko";
+    const grassStarterFavorite = favoriteGrassStarters.length > 0 ? favoriteGrassStarters[Math.floor(Math.random() * favoriteGrassStarters.length)].name : "treecko";
     const grassStarterSpecies = emeraldSpeciesConversionArray[grassStarterFavorite];
     const grassStarterSpeciesName = grassStarterSpecies ? grassStarterSpecies.species : "SPECIES_TREECKO";
     starter_choose_text = starter_choose_text.replace("SPECIES_TREECKO", grassStarterSpeciesName);
@@ -37,7 +53,7 @@ const getModifiedStarterText = async (favoritePokemon) => {
     const favoriteFireStarters = favoriteStarters.filter(pokemon =>
         pokemon.types.some(typeObj => typeObj.type.name === "fire")
     );
-    const fireStarterFavorite = favoriteFireStarters.length > 0 ? favoriteFireStarters[0].name : "torchic";
+    const fireStarterFavorite = favoriteFireStarters.length > 0 ? favoriteFireStarters[Math.floor(Math.random() * favoriteFireStarters.length)].name : "torchic";
     const fireStarterSpecies = emeraldSpeciesConversionArray[fireStarterFavorite];
     const fireStarterSpeciesName = fireStarterSpecies ? fireStarterSpecies.species : "SPECIES_TORCHIC";
     starter_choose_text = starter_choose_text.replace("SPECIES_TORCHIC", fireStarterSpeciesName);
@@ -46,7 +62,7 @@ const getModifiedStarterText = async (favoritePokemon) => {
     const favoriteWaterStarters = favoriteStarters.filter(pokemon =>
         pokemon.types.some(typeObj => typeObj.type.name === "water")
     );
-    const waterStarterFavorite = favoriteWaterStarters.length > 0 ? favoriteWaterStarters[0].name : "mudkip";
+    const waterStarterFavorite = favoriteWaterStarters.length > 0 ? favoriteWaterStarters[Math.floor(Math.random() * favoriteWaterStarters.length)].name : "mudkip";
     const waterStarterSpecies = emeraldSpeciesConversionArray[waterStarterFavorite];
     const waterStarterSpeciesName = waterStarterSpecies ? waterStarterSpecies.species : "SPECIES_MUDKIP";
     starter_choose_text = starter_choose_text.replace("SPECIES_MUDKIP", waterStarterSpeciesName);
@@ -56,7 +72,7 @@ const getModifiedStarterText = async (favoritePokemon) => {
 
 const getModifiedWildEncountersText = async (favoritePokemon) => {
     // Read the original wild_encounters_text.json file (from public/ folder)
-    let wild_encounters_text = await fetch('/EmeraldExportFiles/src/data/wild_encounters.json').then(response => response.text());
+    let wild_encounters_text = await fetch(basePath + '/src/data/wild_encounters.json').then(response => response.text());
 
     // Combine all IDs to be excluded
     const starterIds = Object.values(Starters).map(starter => starter.id);
@@ -67,7 +83,7 @@ const getModifiedWildEncountersText = async (favoritePokemon) => {
 
     // Filter out the excluded Pokémon from the favorites list
     const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
-    
+
     // Get the list of unique wild encounters
     const uniqueWildEncounters = emeraldUniqueWildEncounters;
 
@@ -114,8 +130,8 @@ const modifyAndZipLegendaries = async (zip, favoritePokemon) => {
     const pseudoLegendaryIds = Object.values(PseudoLegendaries).map(pseudoLegendary => pseudoLegendary.id);
     // Filter the list of favorite Pokémon to include only pseudo legendaries
     const favoritePseudoLegendaries = favoritePokemon.filter(pokemon => pseudoLegendaryIds.includes(pokemon.id));
-    shuffleArray(favoritePseudoLegendaries);  
-    
+    shuffleArray(favoritePseudoLegendaries);
+
     // There are 12 unique legendary encounters in Emerald, Fill them first with Favorite Legendaries
     // Fill the remaining encounters with pseudo legendaries and duplicate legendaries (or pair down legendaries if over)
     if (favoriteLegendaries.length === 0 && favoritePseudoLegendaries.length === 0) {
@@ -156,53 +172,399 @@ const modifyAndZipLegendaries = async (zip, favoritePokemon) => {
         return;
     }
 
-    console.log(favoriteLegendaries);
-
-    const replaceLegendary = async(zip, path, replaceText, legendaryId, default_species) => {
-        let script_text = await fetch('/'+path).then(response => response.text());
+    const replaceLegendary = async (zip, path, replaceText, legendaryId, default_species) => {
+        let script_text = await fetch(path).then(response => response.text());
         const conversionPokemon = emeraldSpeciesConversionArray[favoriteLegendaries[legendaryId].name];
         const favoriteSpecies = conversionPokemon ? conversionPokemon.species : default_species;
         const newText = replaceText.replace(default_species, favoriteSpecies);
         script_text = script_text.replace(replaceText, newText);
-        zip.file(path, script_text);
+        zip.file(removeLeadingSlash(path), script_text, { date: localDate });
     };
 
     // Replace legendary encounters with favorite Legendaries
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/MarineCave_End/scripts.inc', "setwildbattle SPECIES_KYOGRE", 0, "SPECIES_KYOGRE");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/TerraCave_End/scripts.inc', "setwildbattle SPECIES_GROUDON", 1, "SPECIES_GROUDON");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/DesertRuins/scripts.inc', "setwildbattle SPECIES_REGIROCK", 2, "SPECIES_REGIROCK");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/IslandCave/scripts.inc', "setwildbattle SPECIES_REGICE", 3, "SPECIES_REGICE");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/AncientTomb/scripts.inc', "setwildbattle SPECIES_REGISTEEL", 4, "SPECIES_REGISTEEL");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/SkyPillar_Top/scripts.inc', "setwildbattle SPECIES_RAYQUAZA", 5, "SPECIES_RAYQUAZA");
+    await replaceLegendary(zip, basePath + '/data/maps/MarineCave_End/scripts.inc', "setwildbattle SPECIES_KYOGRE", 0, "SPECIES_KYOGRE");
+    await replaceLegendary(zip, basePath + '/data/maps/TerraCave_End/scripts.inc', "setwildbattle SPECIES_GROUDON", 1, "SPECIES_GROUDON");
+    await replaceLegendary(zip, basePath + '/data/maps/DesertRuins/scripts.inc', "setwildbattle SPECIES_REGIROCK", 2, "SPECIES_REGIROCK");
+    await replaceLegendary(zip, basePath + '/data/maps/IslandCave/scripts.inc', "setwildbattle SPECIES_REGICE", 3, "SPECIES_REGICE");
+    await replaceLegendary(zip, basePath + '/data/maps/AncientTomb/scripts.inc', "setwildbattle SPECIES_REGISTEEL", 4, "SPECIES_REGISTEEL");
+    await replaceLegendary(zip, basePath + '/data/maps/SkyPillar_Top/scripts.inc', "setwildbattle SPECIES_RAYQUAZA", 5, "SPECIES_RAYQUAZA");
     // Latias and Latios
     const latiasReplacementPokemon = emeraldSpeciesConversionArray[favoriteLegendaries[6].name];
     const latiasReplacementSpecies = latiasReplacementPokemon ? latiasReplacementPokemon.species : "SPECIES_LATIAS";
     const latiosReplacementPokemon = emeraldSpeciesConversionArray[favoriteLegendaries[7].name];
     const latiosReplacementSpecies = latiosReplacementPokemon ? latiosReplacementPokemon.species : "SPECIES_LATIOS";
     // Set the roaming encounter for Latias and Latios
-    let roamer_text = await fetch('/EmeraldExportFiles/src/roamer.c').then(response => response.text());
+    let roamer_text = await fetch(basePath + '/src/roamer.c').then(response => response.text());
     roamer_text = roamer_text.replace("SPECIES_LATIAS", latiasReplacementSpecies);
     roamer_text = roamer_text.replace("SPECIES_LATIOS", latiosReplacementSpecies);
-    zip.file('EmeraldExportFiles/src/roamer.c', roamer_text);
+    zip.file(removeLeadingSlash(basePath) + '/src/roamer.c', roamer_text, { date: localDate });
     // Set static encounter for Latias and Latios
-    let SouthernIsland_Interior_text = await fetch('/EmeraldExportFiles/data/maps/SouthernIsland_Interior/scripts.inc').then(response => response.text());
+    let SouthernIsland_Interior_text = await fetch(basePath + '/data/maps/SouthernIsland_Interior/scripts.inc').then(response => response.text());
     SouthernIsland_Interior_text = SouthernIsland_Interior_text.replace("seteventmon SPECIES_LATIAS", "seteventmon " + latiasReplacementSpecies);
     SouthernIsland_Interior_text = SouthernIsland_Interior_text.replace("seteventmon SPECIES_LATIOS", "seteventmon " + latiosReplacementSpecies);
-    zip.file('EmeraldExportFiles/data/maps/SouthernIsland_Interior/scripts.inc', SouthernIsland_Interior_text);
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SouthernIsland_Interior/scripts.inc', SouthernIsland_Interior_text, { date: localDate });
     // Set event legendary encounters with favorite Legendaries
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/FarawayIsland_Interior/scripts.inc', "seteventmon SPECIES_MEW", 8, "SPECIES_MEW");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/NavelRock_Bottom/scripts.inc', "seteventmon SPECIES_LUGIA", 9, "SPECIES_LUGIA");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/NavelRock_Top/scripts.inc', "seteventmon SPECIES_HO_OH", 10, "SPECIES_HO_OH");
-    await replaceLegendary(zip, 'EmeraldExportFiles/data/maps/BirthIsland_Exterior/scripts.inc', "seteventmon SPECIES_DEOXYS_NORMAL", 11, "SPECIES_DEOXYS_NORMAL");
+    await replaceLegendary(zip, basePath + '/data/maps/FarawayIsland_Interior/scripts.inc', "seteventmon SPECIES_MEW", 8, "SPECIES_MEW");
+    await replaceLegendary(zip, basePath + '/data/maps/NavelRock_Bottom/scripts.inc', "seteventmon SPECIES_LUGIA", 9, "SPECIES_LUGIA");
+    await replaceLegendary(zip, basePath + '/data/maps/NavelRock_Top/scripts.inc', "seteventmon SPECIES_HO_OH", 10, "SPECIES_HO_OH");
+    await replaceLegendary(zip, basePath + '/data/maps/BirthIsland_Exterior/scripts.inc', "seteventmon SPECIES_DEOXYS_NORMAL", 11, "SPECIES_DEOXYS_NORMAL");
 
     return;
 };
+
+async function modifyEvolutions(zip, favoritePokemon) {
+    let gen_1_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_1_families.h').then(response => response.text());
+    let gen_2_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_2_families.h').then(response => response.text());
+    let gen_3_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_3_families.h').then(response => response.text());
+    let gen_4_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_4_families.h').then(response => response.text());
+    let gen_5_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_5_families.h').then(response => response.text());
+    let gen_6_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_6_families.h').then(response => response.text());
+    let gen_7_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_7_families.h').then(response => response.text());
+    let gen_8_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_8_families.h').then(response => response.text());
+    let gen_9_families_text = await fetch(basePath + '/src/data/pokemon/species_info/gen_9_families.h').then(response => response.text());
+
+    let familiesTexts = [
+        { text: gen_1_families_text, path: basePath + '/src/data/pokemon/species_info/gen_1_families.h' },
+        { text: gen_2_families_text, path: basePath + '/src/data/pokemon/species_info/gen_2_families.h' },
+        { text: gen_3_families_text, path: basePath + '/src/data/pokemon/species_info/gen_3_families.h' },
+        { text: gen_4_families_text, path: basePath + '/src/data/pokemon/species_info/gen_4_families.h' },
+        { text: gen_5_families_text, path: basePath + '/src/data/pokemon/species_info/gen_5_families.h' },
+        { text: gen_6_families_text, path: basePath + '/src/data/pokemon/species_info/gen_6_families.h' },
+        { text: gen_7_families_text, path: basePath + '/src/data/pokemon/species_info/gen_7_families.h' },
+        { text: gen_8_families_text, path: basePath + '/src/data/pokemon/species_info/gen_8_families.h' },
+        { text: gen_9_families_text, path: basePath + '/src/data/pokemon/species_info/gen_9_families.h' },
+    ];
+
+    async function modifySpeciesEvolutions(targetSpecies, newEvolutionSpecies) {
+        const speciesBlockRegex = new RegExp(`\\[${targetSpecies}\\][\\s\\S]*?\\.evolutions\\s*=\\s*EVOLUTION\\(([^)]*)\\),`, 'm');
+        const speciesRegex = /SPECIES_\w+/g;
+
+        for (let family of familiesTexts) {
+            if (speciesBlockRegex.test(family.text)) {
+                family.text = family.text.replace(speciesBlockRegex, (match, p1) => {
+                    const newEvolutions = p1.replace(speciesRegex, newEvolutionSpecies);
+                    return match.replace(p1, newEvolutions);
+                });
+                break;
+            }
+        }
+    }
+
+    async function removeSpeciesEvolutions(targetSpecies, whitelist = []) {
+        const speciesBlockRegex = new RegExp(`\\[${targetSpecies}\\][\\s\\S]*?\\.evolutions\\s*=\\s*EVOLUTION\\(([^)]*)\\),`, 'm');
+
+        for (let family of familiesTexts) {
+            if (speciesBlockRegex.test(family.text)) {
+                family.text = family.text.replace(speciesBlockRegex, (match, p1) => {
+                    if (whitelist.length === 0) {
+                        match = match.replace(/\.evolutions\s*=\s*EVOLUTION\(([\s\S]*?)\}\),?/, '');
+                    } else {
+                        const evolutions = p1.split('},').map((evo, index, array) => {
+                            if (index === array.length - 1) {
+                                return evo.trim(); // Do not add '}' to the last item
+                            }
+                            return evo.trim() + '}';
+                        });
+                        const filteredEvolutions = evolutions.filter(evo => {
+                            return whitelist.some(species => {
+                                // Extract the species part from the evolution string
+                                const speciesMatch = evo.match(/SPECIES_\w+/);
+                                return speciesMatch && speciesMatch[0] === species;
+                            });
+                        });
+                        if (filteredEvolutions.length > 0) {
+                            match = match.replace(p1, filteredEvolutions.join(', '));
+                        } else {
+                            match = match.replace(/\.evolutions\s*=\s*EVOLUTION\(([\s\S]*?)\}\),?/, '');
+                        }
+                    }
+                    return match;
+                });
+                break;
+            }
+        }
+    }
+
+    function getEvolutionsText(speciesName) {
+        // Regex to match `[SPECIES_NAME]` and the `.evolutions = EVOLUTION(...)` part
+        const speciesPattern = new RegExp(`\\[${speciesName}\\][\\s\\S]*?\\.evolutions\\s*=\\s*EVOLUTION\\(([^)]*\\))`, 'm');
+
+        for (let family of familiesTexts) {
+            const match = speciesPattern.exec(family.text);
+            if (match) {
+                // Extract the full `.evolutions = EVOLUTION(...)` string
+                const startIndex = match[0].indexOf('.evolutions');
+                let evolutionsBlock = match[0].substring(startIndex).trim();
+
+                // Append a comma if it isn't already present
+                if (!evolutionsBlock.endsWith(',')) {
+                    evolutionsBlock += ',';
+                }
+
+                return evolutionsBlock;
+            }
+        }
+
+        return null; // Return null if no match is found
+    }
+
+    const replaceEvolutionsText = (targetSpecies, newEvolutionsText) => {
+        // Regex to match `[SPECIES_NAME]` and the `.evolutions = EVOLUTION(...)` part
+        const speciesRegex = new RegExp(`\\[${targetSpecies}\\][\\s\\S]*?\\.evolutions\\s*=\\s*EVOLUTION\\(([^)]*)\\),`, 'm');
+
+        for (let family of familiesTexts) {
+            const match = family.text.match(speciesRegex);
+
+            if (match) {
+                // Replace the old evolutions block with the new one, making sure to add only one closing parenthesis
+                family.text = family.text.replace(speciesRegex, `${match[0].substring(0, match[0].indexOf('.evolutions'))}${newEvolutionsText}`);
+                return true; // Indicate that the replacement was successful
+            }
+        }
+
+        return false; // Indicate that the target species was not found
+    };
+
+
+    function getSpecies(favoriteList, type, defaultName) {
+        const favoriteTypedStarters = favoriteList.filter(pokemon =>
+            pokemon.types.some(typeObj => typeObj.type.name === type)
+        );
+        const pokemonName = favoriteTypedStarters.length > 0 ? favoriteTypedStarters[Math.floor(Math.random() * favoriteTypedStarters.length)].name : defaultName;
+        return emeraldSpeciesConversionArray[pokemonName].species;
+    }
+
+    // Modify all Starter evolutions with your Favorites
+    // Get list of Base Favorite Pokemon, Lvl 1 evolutions, and Lvl 2 evolutions
+    const starterIds = Object.values(Starters).map(starter => starter.id);
+    const starterLvl1Ids = Object.values(StartersLvl1).map(starterLvl1 => starterLvl1.id);
+    const starterLvl2Ids = Object.values(StartersLvl2).map(starterLvl2 => starterLvl2.id);
+    const favoriteStarters = favoritePokemon.filter(pokemon => starterIds.includes(pokemon.id));
+    const favoriteStartersLvl1 = favoritePokemon.filter(pokemon => starterLvl1Ids.includes(pokemon.id));
+    const favoriteStartersLvl2 = favoritePokemon.filter(pokemon => starterLvl2Ids.includes(pokemon.id));
+
+    const grassStarterSpecies = getSpecies(favoriteStarters, "grass", "treecko");
+    const waterStarterSpecies = getSpecies(favoriteStarters, "water", "mudkip");
+    const fireStarterSpecies = getSpecies(favoriteStarters, "fire", "torchic");
+    const grassStarterLvl1Species = getSpecies(favoriteStartersLvl1, "grass", "grovyle");
+    const waterStarterLvl1Species = getSpecies(favoriteStartersLvl1, "water", "marshtomp");
+    const fireStarterLvl1Species = getSpecies(favoriteStartersLvl1, "fire", "combusken");
+    const grassStarterLvl2Species = getSpecies(favoriteStartersLvl2, "grass", "sceptile");
+    const waterStarterLvl2Species = getSpecies(favoriteStartersLvl2, "water", "treecko");
+    const fireStarterLvl2Species = getSpecies(favoriteStartersLvl2, "fire", "swampert");
+
+    modifySpeciesEvolutions(grassStarterSpecies, grassStarterLvl1Species);
+    modifySpeciesEvolutions(grassStarterLvl1Species, grassStarterLvl2Species);
+    modifySpeciesEvolutions(waterStarterSpecies, waterStarterLvl1Species);
+    modifySpeciesEvolutions(waterStarterLvl1Species, waterStarterLvl2Species);
+    modifySpeciesEvolutions(fireStarterSpecies, fireStarterLvl1Species);
+    modifySpeciesEvolutions(fireStarterLvl1Species, fireStarterLvl2Species);
+
+    // Modify all non Starter evolutions from your Favorites (excluding Starters)
+    // Combine all IDs to be excluded
+    const exclusionIds = [...starterIds, ...starterLvl1Ids, ...starterLvl2Ids];
+
+    // Filter out the excluded Pokémon from the favorites list
+    const nonStarterFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
+
+    // Loop through all nonStarterFavorites and modify their evolutions
+    for (let favorite of nonStarterFavorites) {
+        const evolutionChain = getEvolutions(favorite.name);
+        // If favorite is "wurmple" or "goomy" they are exceptions, they are the only 3 stage evolutions with a split at stage 2...
+        if (favorite.name === "wurmple" || favorite.name === "goomy") {
+            if (favorite.name === "wurmple") {
+                const silcoonInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "silcoon");
+                const beautiflyInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "beautifly");
+                const cascoonInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "cascoon");
+                const dustoxInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "dustox");
+                // check if "silcoon" is in the favorite list, but not "cascoon" and vice versa
+                if (silcoonInFavorites && !cascoonInFavorites) {
+                    // check if "dustox" is in the favorite list, if it is then modify cascoon to dustox, else remove cascoon
+                    if (dustoxInFavorites) {
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["wurmple"].species, ".evolutions = EVOLUTION({EVO_LEVEL_SILCOON, 7, SPECIES_SILCOON},{EVO_LEVEL_CASCOON, 7, SPECIES_DUSTOX}),");
+                    } else {
+                        removeSpeciesEvolutions(emeraldSpeciesConversionArray["wurmple"].species, [emeraldSpeciesConversionArray["silcoon"].species]);
+                    }
+                } else if (!silcoonInFavorites && cascoonInFavorites) {
+                    // check if "beautifly" is in the favorite list, if it is then modify silcoon to beautifly, else remove silcoon
+                    if (beautiflyInFavorites) {
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["wurmple"].species, ".evolutions = EVOLUTION({EVO_LEVEL_SILCOON, 7, SPECIES_BEAUTIFLY},{EVO_LEVEL_CASCOON, 7, SPECIES_CASCOON}),");
+                    } else {
+                        removeSpeciesEvolutions(emeraldSpeciesConversionArray["wurmple"].species, [emeraldSpeciesConversionArray["cascoon"].species]);
+                    }
+                } else if (!silcoonInFavorites && !cascoonInFavorites) {
+                    if (beautiflyInFavorites && dustoxInFavorites) {
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["wurmple"].species, ".evolutions = EVOLUTION({EVO_LEVEL_SILCOON, 7, SPECIES_BEAUTIFLY},{EVO_LEVEL_CASCOON, 7, SPECIES_DUSTOX}),");
+                    } else if (beautiflyInFavorites) {
+                        // Remove "cascoon" and modify "silcoon" to "beautifly"
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["wurmple"].species, ".evolutions = EVOLUTION({EVO_LEVEL_SILCOON, 7, SPECIES_BEAUTIFLY}),");
+                    } else if (dustoxInFavorites) {
+                        // Remove "silcoon" and modify "cascoon" to "dustox"
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["wurmple"].species, ".evolutions = EVOLUTION({EVO_LEVEL_CASCOON, 7, SPECIES_DUSTOX}),");
+                    } else {
+                        // Remove all evolutions from wurmple
+                        removeSpeciesEvolutions(emeraldSpeciesConversionArray["wurmple"].species);
+                    }
+                }
+            } else if (favorite.name === "goomy") {
+                const sliggooInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "sliggoo");
+                const goodraInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "goodra");
+                const sliggooHisuiInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "sliggoo-hisui");
+                const goodraHisuiInFavorites = nonStarterFavorites.some(pokemon => pokemon.name === "goodra-hisui");
+                // check if "sliggoo" is in the favorite list, but not "sliggoo-hisui" and vice versa
+                if (sliggooInFavorites && !sliggooHisuiInFavorites) {
+                    // check if "goodra-hisui" is in the favorite list, if it is then modify sliggoo-hisui to goodra-hisui, else remove sliggoo-hisui
+                    if (goodraHisuiInFavorites) {
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["goomy"].species, ".evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_SLIGGOO},{EVO_NONE, 0, SPECIES_GOODRA_HISUI}),");
+                    } else {
+                        removeSpeciesEvolutions(emeraldSpeciesConversionArray["goomy"].species, [emeraldSpeciesConversionArray["sliggoo"].species]);
+                    }
+                } else if (!sliggooInFavorites && sliggooHisuiInFavorites) {
+                    // check if "goodra" is in the favorite list, if it is then modify sliggoo to goodra, else remove sliggoo
+                    if (goodraInFavorites) {
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["goomy"].species, ".evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_GOODRA},{EVO_NONE, 0, SPECIES_SLIGGOO_HISUI}),");
+                    } else {
+                        removeSpeciesEvolutions(emeraldSpeciesConversionArray["goomy"].species, [emeraldSpeciesConversionArray["sliggoo-hisui"].species]);
+                    }
+                } else if (!sliggooInFavorites && !sliggooHisuiInFavorites) {
+                    if (goodraInFavorites && goodraHisuiInFavorites) {
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["goomy"].species, ".evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_GOODRA},{EVO_NONE, 0, SPECIES_GOODRA_HISUI}),");
+                    } else if (goodraInFavorites) {
+                        // Remove "sliggoo-hisui" and modify "sliggoo" to "goodra"
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["goomy"].species, ".evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_GOODRA}),");
+                    } else if (goodraHisuiInFavorites) {
+                        // Remove "sliggoo" and modify "sliggoo-hisui" to "goodra-hisui"
+                        replaceEvolutionsText(emeraldSpeciesConversionArray["goomy"].species, ".evolutions = EVOLUTION({EVO_NONE, 0, SPECIES_GOODRA_HISUI}),");
+                    } else {
+                        // Remove all evolutions from goomy
+                        removeSpeciesEvolutions(emeraldSpeciesConversionArray["goomy"].species);
+                    }
+                }
+            }
+            continue;
+        }
+        // If there's no evolution there's nothing to modify
+        if (evolutionChain.length === 0) {
+            continue;
+        }
+        // Loop through all of the evolutions in the chain and check if they are in the favorite list
+        let evolutionsToModify = [];
+        for (let evolution of evolutionChain) {
+            if (nonStarterFavorites.some(pokemon => pokemon.name === evolution.name)) {
+                evolutionsToModify.push(evolution);
+            }
+        }
+        // If there are no evolutions in the favorite list then remove all evolutions
+        if (evolutionsToModify.length === 0) {
+            removeSpeciesEvolutions(emeraldSpeciesConversionArray[favorite.name].species);
+            continue;
+        }
+        // Loop through evolutionsToModify and create a list of level depth 1 evolutions if any exists then remove all other evolutions
+        let evolutionsLvl1ToKeep = [];
+        for (let evolution of evolutionsToModify) {
+            if (evolution.depth === 1) {
+                evolutionsLvl1ToKeep.push(evolution.name);
+            }
+        }
+        let totalEvolutionLvl1s = [];
+        for (let evolution of evolutionChain) {
+            if (evolution.depth === 1) {
+                totalEvolutionLvl1s.push(evolution.name);
+            }
+        }
+        if (evolutionsLvl1ToKeep.length > 0) {
+            if (evolutionsLvl1ToKeep.length === totalEvolutionLvl1s.length) {
+                continue;
+            } else {
+                // create a new array of evolutionsLvl1ToKeep but with their species names
+                evolutionsLvl1ToKeep = evolutionsLvl1ToKeep.map(evo => emeraldSpeciesConversionArray[evo].species);
+                removeSpeciesEvolutions(emeraldSpeciesConversionArray[favorite.name].species, evolutionsLvl1ToKeep);
+                continue;
+            }
+        }
+        // There are no level 1 evolutions, but there are higher tier evolutions, modify the existing one for the next level up
+        // If there's only 1 higher evolution than just modify it
+        // Else if there's multiple, check to see if there's a single next higher evolution and modify it
+        // Else there's a branching evolution, add all branching evolutions to the evolution
+        if (evolutionsToModify.length === 1) {
+            modifySpeciesEvolutions(emeraldSpeciesConversionArray[favorite.name].species, emeraldSpeciesConversionArray[evolutionsToModify[0].name].species);
+        } else {
+            // Get the single next evolution, if there's multiple set nextEvolution to null
+            let nextEvolution = null;
+            for (let evolution of evolutionsToModify) {
+                if (evolution.depth === 2) {
+                    if (nextEvolution === null) {
+                        nextEvolution = evolution;
+                    } else {
+                        nextEvolution = null;
+                        break;
+                    }
+                }
+            }
+            // If there's a single next evolution modify the species to that evolution
+            // Else there are branching evolutions, modify the evolution to use the branching logic
+            if (nextEvolution !== null) {
+                modifySpeciesEvolutions(emeraldSpeciesConversionArray[favorite.name].species, emeraldSpeciesConversionArray[nextEvolution.name].species);
+            } else {
+                // Find total number of max depth evolutions from evolutionChain
+                let totalMaxDepthEvolutions = [];
+                let maxDepth = 0;
+
+                // Determine the maximum depth
+                for (let evolution of evolutionChain) {
+                    if (evolution.depth > maxDepth) {
+                        maxDepth = evolution.depth;
+                    }
+                }
+
+                // Filter evolutions that have the maximum depth
+                for (let evolution of evolutionChain) {
+                    if (evolution.depth === maxDepth) {
+                        totalMaxDepthEvolutions.push(evolution.name);
+                    }
+                }
+
+                // Get the 2nd to last evolution in the chain depth wise
+                let secondToLastEvolution = null;
+                for (let evolution of evolutionChain) {
+                    if (evolution.depth === maxDepth - 1) {
+                        secondToLastEvolution = evolution.name;
+                        break;
+                    }
+                }
+
+                // SHOULD NOT GET HERE If secondToLastEvolution is null then there's no branching evolution to modify
+                if (secondToLastEvolution === null) {
+                    continue;
+                }
+
+                // Get the evolution script for the second to last evolution
+                const secondToLastEvolutionText = getEvolutionsText(emeraldSpeciesConversionArray[secondToLastEvolution].species);
+
+                // If the total number of max depth evolutions is equal to the total number of evolutions to modify then replace all evolutions with the new one
+                if (totalMaxDepthEvolutions.length === evolutionsToModify.length) {
+                    replaceEvolutionsText(emeraldSpeciesConversionArray[favorite.name].species, secondToLastEvolutionText);
+                    continue;
+                } else {
+                    // SHOULD NOT GET HERE
+                    console.error("There's more than 1 branching evolution, but less than the max.")
+                }
+            }
+        }
+    }
+
+    // Zip up the modified evolution files
+    for (let family of familiesTexts) {
+        zip.file(removeLeadingSlash(family.path), family.text, { date: localDate });
+    }
+}
 
 
 export const ExportFavorites = () => {
     const favoritePokemon = useSelector(getFavoritePokemon);
 
     const handleExportList = () => {
+        console.log(favoritePokemon);
         // Create a string with each favorite Pokémon on a new line
         const favoriteList = favoritePokemon.map(pokemon => `${capitalizeFirstLetter(pokemon.name)}`).join('\n');
 
@@ -229,41 +591,44 @@ export const ExportFavorites = () => {
 
         // Manually grab each file to be copied to the zip
         const folderStructure = [
-            'EmeraldExportREADME.txt',
-            'EmeraldExportFiles/',
-            'EmeraldExportFiles/data/maps/AncientTomb/scripts.inc',
-            'EmeraldExportFiles/data/maps/BirthIsland_Exterior/scripts.inc',
-            'EmeraldExportFiles/data/maps/DesertRuins/scripts.inc',
-            'EmeraldExportFiles/data/maps/FarawayIsland_Interior/scripts.inc',
-            'EmeraldExportFiles/data/maps/IslandCave/scripts.inc',
-            'EmeraldExportFiles/data/maps/MarineCave_End/scripts.inc',
-            'EmeraldExportFiles/data/maps/NavelRock_Bottom/scripts.inc',
-            'EmeraldExportFiles/data/maps/NavelRock_Top/scripts.inc',
-            'EmeraldExportFiles/data/maps/SkyPillar_Top/scripts.inc',
-            'EmeraldExportFiles/data/maps/SouthernIsland_Interior/scripts.inc',
-            'EmeraldExportFiles/data/maps/TerraCave_End/scripts.inc',
-            'EmeraldExportFiles/src/roamer.c',
-            'EmeraldExportFiles/src/starter_choose.c',
-            'EmeraldExportFiles/src/data/wild_encounters.json',
+            '/pokedex/EmeraldExportREADME.txt',
+            basePath + '/',
+            basePath + '/data/maps/AncientTomb/scripts.inc',
+            basePath + '/data/maps/BirthIsland_Exterior/scripts.inc',
+            basePath + '/data/maps/DesertRuins/scripts.inc',
+            basePath + '/data/maps/FarawayIsland_Interior/scripts.inc',
+            basePath + '/data/maps/IslandCave/scripts.inc',
+            basePath + '/data/maps/MarineCave_End/scripts.inc',
+            basePath + '/data/maps/NavelRock_Bottom/scripts.inc',
+            basePath + '/data/maps/NavelRock_Top/scripts.inc',
+            basePath + '/data/maps/SkyPillar_Top/scripts.inc',
+            basePath + '/data/maps/SouthernIsland_Interior/scripts.inc',
+            basePath + '/data/maps/TerraCave_End/scripts.inc',
+            basePath + '/src/roamer.c',
+            basePath + '/src/starter_choose.c',
+            basePath + '/src/data/wild_encounters.json',
         ];
 
         // Fetch and add all files to the zip
         for (const path of folderStructure) {
-            const response = await fetch(`/${path}`);
+            const response = await fetch(`${path}`);
             if (response.ok) {
                 const text = await response.text();
-                zip.file(path, text);
+                zip.file(removeLeadingSlash(path), text, { date: localDate });
             }
         }
 
         // Modify the starters to use the favorite's base starter pokemon of their type
-        zip.file("EmeraldExportFiles/src/starter_choose.c", await getModifiedStarterText(favoritePokemon));
+        zip.file(removeLeadingSlash(basePath) + "/src/starter_choose.c", await getModifiedStarterText(favoritePokemon), { date: localDate });
 
         // Modify the wild encounters to use the favorite's pokemon (non base starters or legendaries)
-        zip.file("EmeraldExportFiles/src/data/wild_encounters.json", await getModifiedWildEncountersText(favoritePokemon));
+        zip.file(removeLeadingSlash(basePath) + "/src/data/wild_encounters.json", await getModifiedWildEncountersText(favoritePokemon), { date: localDate });
 
         // Modify the legendary encounters to use the favorite's pokemon (fill with pseudo legendaries, and duplicates)
         await modifyAndZipLegendaries(zip, favoritePokemon);
+
+        // Modify the evolutions to use the favorite's pokemon
+        await modifyEvolutions(zip, favoritePokemon);
 
         // Generate the zip file
         const content = await zip.generateAsync({ type: "blob" });

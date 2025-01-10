@@ -52,9 +52,14 @@ This has been updated by drohack to allow a more detailed filtering of pokemon. 
 
 If you want to play a custom ROM of Pokemon Emerald (Expansion) (https://github.com/rh-hideout/pokeemerald-expansion) of your selected Favorites there's no easy way to do it. But if you use this feature you'll get a .zip file with the nessesary files to change all Wild Encounters, Legendary Encounters, and your Starters into your selected Favorite pokemon. There are some caveats:
 
-* It will only replace your Starter pokemon with other base Starter Favorites (else default back to Emerald Starters)
+* It will only replace your Starter pokemon with other base Starter Favorites of the same type (else default back to Emerald Starters)
 * It will only replace Legendary encounters with Sub Legendarys, Legendary, Mythics, and Pseudo Legendaries (if there's room). It'll fill extra slots with duplicate legendaries (default to base Emerald Legendaries if you didn't favorite any)
 * It will randomize Wild Encounters from your Favorites list (excluding base Starters and Sub Legendaries/Legendaries/Mythics) (levels and encounter rates are the same as base Emerald)
+* Evolutions are limited to what you have Favorited. This has some unique behaviour.
+    * Starters will follow the path of your favorited starters. Meaning if you choose Mudkip as your base water starter, and Wartortal as your 2nd stage, and Primarina as your 3rd, Mudkip will evolve into Wartortal who will evolve into Primarina. This goes for all 3 stages of your 3 different typed starters (if there's multiple options it'll randomly choose a path).
+    * Evolutions not favorited will be removed. i.e. if you have an Onyx as a favorite, but not a Steelix, the option to evolve Onyx will be removed from the game.
+        * This includes branching Evolutions. i.e. if you have Slowpoke and Slowbrow favorited, but not Slowking, the option to evolve Slowpoke to Slowking will be removed.
+    * If you skip a stage they will be removed, but the next stage will also be moved down. i.e. If you have Gastly and Gengar favorited, but not Haunter. Then Gastly will be updated so that when it would evolve into Haunter it will instead evolve into Gengar.
 * No other changes have been made (i.e. Moves, Trainers, Gyms, Events... etc.)
 
 Steps:
