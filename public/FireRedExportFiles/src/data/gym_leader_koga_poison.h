@@ -1,0 +1,71 @@
+    [TRAINER_LEADER_KOGA] =
+    {
+        .trainerName = _("KOGA"),
+        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerPic = TRAINER_PIC_LEADER_KOGA,
+        .encounterMusic_gender = 
+            TRAINER_ENCOUNTER_MUSIC_MALE,
+        .items = { ITEM_HYPER_POTION, ITEM_HYPER_POTION, ITEM_FULL_HEAL },
+        .doubleBattle = FALSE,
+        .aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY,
+        .partySize = 4,
+        .party = (const struct TrainerMon[])
+        {
+            {
+            .species = SPECIES_KOFFING,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 37,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_SELF_DESTRUCT,
+                MOVE_SLUDGE,
+                MOVE_SMOKESCREEN,
+                MOVE_TOXIC,
+            },
+            },
+            {
+            .species = SPECIES_MUK,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 39,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_MINIMIZE,
+                MOVE_SLUDGE,
+                MOVE_ACID_ARMOR,
+                MOVE_TOXIC,
+            },
+            },
+            {
+            .species = SPECIES_KOFFING,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 37,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_SELF_DESTRUCT,
+                MOVE_SLUDGE,
+                MOVE_SMOKESCREEN,
+                MOVE_TOXIC,
+            },
+            },
+            {
+            .species = SPECIES_WEEZING,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 43,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_TACKLE,
+                MOVE_SLUDGE,
+                MOVE_SMOKESCREEN,
+                MOVE_TOXIC,
+            },
+            },
+        },
+    },

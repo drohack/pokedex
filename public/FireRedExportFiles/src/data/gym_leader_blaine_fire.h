@@ -1,0 +1,71 @@
+    [TRAINER_LEADER_BLAINE] =
+    {
+        .trainerName = _("BLAINE"),
+        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerPic = TRAINER_PIC_LEADER_BLAINE,
+        .encounterMusic_gender = 
+            TRAINER_ENCOUNTER_MUSIC_MALE,
+        .items = { ITEM_HYPER_POTION, ITEM_HYPER_POTION, ITEM_FULL_HEAL },
+        .doubleBattle = FALSE,
+        .aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY,
+        .partySize = 4,
+        .party = (const struct TrainerMon[])
+        {
+            {
+            .species = SPECIES_GROWLITHE,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 42,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_BITE,
+                MOVE_ROAR,
+                MOVE_TAKE_DOWN,
+                MOVE_FIRE_BLAST,
+            },
+            },
+            {
+            .species = SPECIES_PONYTA,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 40,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_STOMP,
+                MOVE_BOUNCE,
+                MOVE_FIRE_SPIN,
+                MOVE_FIRE_BLAST,
+            },
+            },
+            {
+            .species = SPECIES_RAPIDASH,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 42,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_STOMP,
+                MOVE_BOUNCE,
+                MOVE_FIRE_SPIN,
+                MOVE_FIRE_BLAST,
+            },
+            },
+            {
+            .species = SPECIES_ARCANINE,
+            .gender = TRAINER_MON_RANDOM_GENDER,
+            .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
+            .lvl = 47,
+            .nature = NATURE_HARDY,
+            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+                MOVE_BITE,
+                MOVE_ROAR,
+                MOVE_TAKE_DOWN,
+                MOVE_FIRE_BLAST,
+            },
+            },
+        },
+    },

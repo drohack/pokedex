@@ -1,4 +1,4 @@
-export const emeraldSpeciesConversionArray = {
+export const speciesConversionArray = {
     "abomasnow": {
         "id": 460,
         "species": "SPECIES_ABOMASNOW"
