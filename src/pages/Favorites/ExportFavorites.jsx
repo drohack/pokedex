@@ -29,6 +29,7 @@ let fireStarterLvl1Species;
 let grassStarterLvl2Species;
 let waterStarterLvl2Species;
 let fireStarterLvl2Species;
+let chosenStarterIds = [];
 
 const removeLeadingSlash = (path) => {
     if (path.startsWith('/pokedex/')) {
@@ -52,23 +53,33 @@ const getRandomSpecies = (pokemonList) => {
 };
 
 // Function to replace Pokémon for a specific type
-const getRandomSpeciesForType = (pokemonList, type, favoritePokemon, defaultSpecies = "SPECIES_BULBASAUR") => {
+const getRandomSpeciesForType = (pokemonList, type, favoritePokemon, defaultSpecies = ["SPECIES_BULBASAUR", 1]) => {
     // Get a list of favorite Pokémon of the specified type
     let pokemonTypeList = pokemonList.filter(pokemon => pokemon.types.some(typeObj => typeObj.type.name === type));
     
     // Get random pokemon matching the given type
     if (pokemonTypeList.length > 0) {
         const randomIndex = Math.floor(Math.random() * pokemonTypeList.length);
-        return speciesConversionArray[pokemonTypeList[randomIndex].name].species;
+        const selectedPokemon = pokemonTypeList[randomIndex];
+        return {
+            species: speciesConversionArray[selectedPokemon.name].species,
+            id: selectedPokemon.id
+        };
     } else if (favoritePokemon != null && favoritePokemon.length > 0 && favoritePokemon.filter(pokemon => pokemon.types.some(typeObj => typeObj.type.name === type)).length > 0) {
         // If none exists just grab a random pokemon
-        pokemonTypeList = favoritePokemon.filter(pokemon => pokemon.types.some(typeObj => typeObj.type.name === type))
+        pokemonTypeList = favoritePokemon.filter(pokemon => pokemon.types.some(typeObj => typeObj.type.name === type));
         const randomIndex = Math.floor(Math.random() * pokemonTypeList.length);
-        return speciesConversionArray[pokemonTypeList[randomIndex].name].species
+        const selectedPokemon = pokemonTypeList[randomIndex];
+        return {
+            species: speciesConversionArray[selectedPokemon.name].species,
+            id: selectedPokemon.id
+        };
     } else {
-        return defaultSpecies
+        return {
+            species: defaultSpecies[0],
+            id: defaultSpecies[1]
+        };
     }
-
 };
 
 const modifyAndZipEmeraldStarterText = async (zip, basePath, favoritePokemon) => {
@@ -83,20 +94,22 @@ const modifyAndZipEmeraldStarterText = async (zip, basePath, favoritePokemon) =>
     const favoriteStartersLvl1 = favoritePokemon.filter(pokemon => starterLvl1Ids.includes(pokemon.id));
     const favoriteStartersLvl2 = favoritePokemon.filter(pokemon => starterLvl2Ids.includes(pokemon.id));
 
-    grassStarterSpecies = getRandomSpeciesForType(favoriteStarters, "grass", favoritePokemon, "SPECIES_TREECKO");
-    waterStarterSpecies = getRandomSpeciesForType(favoriteStarters, "water", favoritePokemon, "SPECIES_MUDKIP");
-    fireStarterSpecies = getRandomSpeciesForType(favoriteStarters, "fire", favoritePokemon, "SPECIES_TORCHIC");
-    grassStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "grass", favoritePokemon, "SPECIES_GROVYLE");
-    waterStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "water", favoritePokemon, "SPECIES_MARSHTOMP");
-    fireStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "fire", favoritePokemon, "SPECIES_COMBUSKEN");
-    grassStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "grass", favoritePokemon, "SPECIES_SCEPTILE");
-    waterStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "water", favoritePokemon, "SPECIES_TREECKO");
-    fireStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "fire", favoritePokemon, "SPECIES_SWAMPERT");
+    grassStarterSpecies = getRandomSpeciesForType(favoriteStarters, "grass", favoritePokemon, ["SPECIES_TREECKO", 252]);
+    waterStarterSpecies = getRandomSpeciesForType(favoriteStarters, "water", favoritePokemon, ["SPECIES_MUDKIP", 258]);
+    fireStarterSpecies = getRandomSpeciesForType(favoriteStarters, "fire", favoritePokemon, ["SPECIES_TORCHIC", 255]);
+    grassStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "grass", favoritePokemon, ["SPECIES_GROVYLE", 253]);
+    waterStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "water", favoritePokemon, ["SPECIES_MARSHTOMP", 259]);
+    fireStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "fire", favoritePokemon, ["SPECIES_COMBUSKEN", 256]);
+    grassStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "grass", favoritePokemon, ["SPECIES_SCEPTILE", 254]);
+    waterStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "water", favoritePokemon, ["SPECIES_SWAMPERT", 260]);
+    fireStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "fire", favoritePokemon, ["SPECIES_BLAZIKEN", 257]);
+
+    chosenStarterIds = [grassStarterSpecies.id, fireStarterSpecies.id, waterStarterSpecies.id, grassStarterLvl1Species.id, fireStarterLvl1Species.id, waterStarterLvl1Species.id, grassStarterLvl2Species.id, fireStarterLvl2Species.id, waterStarterLvl2Species.id];
 
     // Replace the default starters with a favorite starter
-    starter_choose_text = starter_choose_text.replace("SPECIES_TREECKO", grassStarterSpecies);
-    starter_choose_text = starter_choose_text.replace("SPECIES_TORCHIC", fireStarterSpecies);
-    starter_choose_text = starter_choose_text.replace("SPECIES_MUDKIP", waterStarterSpecies);
+    starter_choose_text = starter_choose_text.replace("SPECIES_TREECKO", grassStarterSpecies.species);
+    starter_choose_text = starter_choose_text.replace("SPECIES_TORCHIC", fireStarterSpecies.species);
+    starter_choose_text = starter_choose_text.replace("SPECIES_MUDKIP", waterStarterSpecies.species);
 
     zip.file(removeLeadingSlash(basePath) + '/src/starter_choose.c', starter_choose_text, { date: localDate });
 };
@@ -104,6 +117,8 @@ const modifyAndZipEmeraldStarterText = async (zip, basePath, favoritePokemon) =>
 const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) => {
     // Read the starter choose script in Professor Oaks Lab
     let starter_choose_text = await fetch(basePath + '/data/maps/PalletTown_ProfessorOaksLab/scripts.inc').then(response => response.text());
+    // Read the starter message box script in Professor Oaks Lab
+    let starter_message_text = await fetch(basePath + '/data/maps/PalletTown_ProfessorOaksLab/text.inc').then(response => response.text());
     // Read the Roaming file as the Roaming Legendary is based on your chosen starter
     let roaming_text = await fetch(basePath + '/src/wild_pokemon_area.c').then(response => response.text());
 
@@ -115,29 +130,35 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     const favoriteStartersLvl1 = favoritePokemon.filter(pokemon => starterLvl1Ids.includes(pokemon.id));
     const favoriteStartersLvl2 = favoritePokemon.filter(pokemon => starterLvl2Ids.includes(pokemon.id));
 
-    grassStarterSpecies = getRandomSpeciesForType(favoriteStarters, "grass", favoritePokemon, "SPECIES_BULBASAUR");
-    waterStarterSpecies = getRandomSpeciesForType(favoriteStarters, "water", favoritePokemon, "SPECIES_SQUIRTLE");
-    fireStarterSpecies = getRandomSpeciesForType(favoriteStarters, "fire", favoritePokemon, "SPECIES_CHARMANDER");
-    grassStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "grass", favoritePokemon, "SPECIES_IVYSAUR");
-    waterStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "water", favoritePokemon, "SPECIES_WARTORTLE");
-    fireStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "fire", favoritePokemon, "SPECIES_CHARMELEON");
-    grassStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "grass", favoritePokemon, "SPECIES_VENUSAUR");
-    waterStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "water", favoritePokemon, "SPECIES_BLASTOISE");
-    fireStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "fire", favoritePokemon, "SPECIES_CHARIZARD");
+    grassStarterSpecies = getRandomSpeciesForType(favoriteStarters, "grass", favoritePokemon, ["SPECIES_BULBASAUR", 1]);
+    waterStarterSpecies = getRandomSpeciesForType(favoriteStarters, "water", favoritePokemon, ["SPECIES_SQUIRTLE", 7]);
+    fireStarterSpecies = getRandomSpeciesForType(favoriteStarters, "fire", favoritePokemon, ["SPECIES_CHARMANDER", 4]);
+    grassStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "grass", favoritePokemon, ["SPECIES_IVYSAUR", 2]);
+    waterStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "water", favoritePokemon, ["SPECIES_WARTORTLE", 8]);
+    fireStarterLvl1Species = getRandomSpeciesForType(favoriteStartersLvl1, "fire", favoritePokemon, ["SPECIES_CHARMELEON", 5]);
+    grassStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "grass", favoritePokemon, ["SPECIES_VENUSAUR", 3]);
+    waterStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "water", favoritePokemon, ["SPECIES_BLASTOISE", 9]);
+    fireStarterLvl2Species = getRandomSpeciesForType(favoriteStartersLvl2, "fire", favoritePokemon, ["SPECIES_CHARIZARD", 6]);
+
+    chosenStarterIds = [grassStarterSpecies.id, fireStarterSpecies.id, waterStarterSpecies.id, grassStarterLvl1Species.id, fireStarterLvl1Species.id, waterStarterLvl1Species.id, grassStarterLvl2Species.id, fireStarterLvl2Species.id, waterStarterLvl2Species.id];
 
     // Replace the default starter name with the favorite grass starter
-    starter_choose_text = starter_choose_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies);
-    roaming_text = roaming_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies);
+    starter_choose_text = starter_choose_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies.species);
+    starter_message_text = starter_message_text.replace(/BULBASAUR/g, grassStarterSpecies.species.replace("SPECIES_", ""));
+    roaming_text = roaming_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies.species);
 
     // Replace the default starter name with the favorite fire starter
-    starter_choose_text = starter_choose_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies);
-    roaming_text = roaming_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies);
+    starter_choose_text = starter_choose_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies.species);
+    starter_message_text = starter_message_text.replace(/CHARMANDER/g, fireStarterSpecies.species.replace("SPECIES_", ""));
+    roaming_text = roaming_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies.species);
 
     // Replace the default starter name with the favorite water starter
-    starter_choose_text = starter_choose_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies);
-    roaming_text = roaming_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies);
+    starter_choose_text = starter_choose_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies.species);
+    starter_message_text = starter_message_text.replace(/SQUIRTLE/g, waterStarterSpecies.species.replace("SPECIES_", ""));
+    roaming_text = roaming_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies.species);
 
     zip.file(removeLeadingSlash(basePath) + '/data/maps/PalletTown_ProfessorOaksLab/scripts.inc', starter_choose_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/PalletTown_ProfessorOaksLab/text.inc', starter_message_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/src/wild_pokemon_area.c', roaming_text, { date: localDate });
 };
 
@@ -146,11 +167,10 @@ const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, un
     let wild_encounters_text = await fetch(basePath + '/src/data/wild_encounters.json').then(response => response.text());
 
     // Combine all IDs to be excluded
-    const starterIds = Object.values(Starters).map(starter => starter.id);
     const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
     const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
     const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
-    const exclusionIds = [...starterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+    const exclusionIds = [...chosenStarterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
 
     // Filter out the excluded Pokémon from the favorites list
     const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
@@ -463,15 +483,8 @@ async function modifyAndZipEvolutions(zip, basePath, favoritePokemon) {
     modifySpeciesEvolutions(fireStarterSpecies, fireStarterLvl1Species);
     modifySpeciesEvolutions(fireStarterLvl1Species, fireStarterLvl2Species);
 
-    // Modify all non Starter evolutions from your Favorites (excluding Starters)
-    // Combine all IDs to be excluded
-    const starterIds = Object.values(Starters).map(starter => starter.id);
-    const starterLvl1Ids = Object.values(StartersLvl1).map(starterLvl1 => starterLvl1.id);
-    const starterLvl2Ids = Object.values(StartersLvl2).map(starterLvl2 => starterLvl2.id);
-    const exclusionIds = [...starterIds, ...starterLvl1Ids, ...starterLvl2Ids];
-
-    // Filter out the excluded Pokémon from the favorites list
-    const nonStarterFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
+    // Filter out the chosen starter Pokémon from the favorites list
+    const nonStarterFavorites = favoritePokemon.filter(pokemon => !chosenStarterIds.includes(pokemon.id));
 
     // Loop through all nonStarterFavorites and modify their evolutions
     for (let favorite of nonStarterFavorites) {
