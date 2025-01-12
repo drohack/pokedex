@@ -44,12 +44,14 @@ function NavBar() {
         <div className={styles.navDiv}>
           <NavLink
             to="/"
+            onClick={() => window.scrollTo(0, 0)}
             className={({ isActive }) => (isActive ? styles.active : undefined)}
           >
             Home
           </NavLink>
           <NavLink
             to="/favorites"
+            onClick={() => window.scrollTo(0, 0)}
             className={({ isActive }) => (isActive ? styles.active : undefined)}
           >
             Favorites {favoriteCount > 0 ? `(${favoriteCount})` : ""}
