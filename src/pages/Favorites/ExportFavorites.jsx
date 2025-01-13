@@ -476,12 +476,12 @@ async function modifyAndZipEvolutions(zip, basePath, favoritePokemon) {
 
 
     // Modify all Starter evolutions with your Favorites
-    modifySpeciesEvolutions(grassStarterSpecies, grassStarterLvl1Species);
-    modifySpeciesEvolutions(grassStarterLvl1Species, grassStarterLvl2Species);
-    modifySpeciesEvolutions(waterStarterSpecies, waterStarterLvl1Species);
-    modifySpeciesEvolutions(waterStarterLvl1Species, waterStarterLvl2Species);
-    modifySpeciesEvolutions(fireStarterSpecies, fireStarterLvl1Species);
-    modifySpeciesEvolutions(fireStarterLvl1Species, fireStarterLvl2Species);
+    modifySpeciesEvolutions(grassStarterSpecies.species, grassStarterLvl1Species.species);
+    modifySpeciesEvolutions(grassStarterLvl1Species.species, grassStarterLvl2Species.species);
+    modifySpeciesEvolutions(waterStarterSpecies.species, waterStarterLvl1Species.species);
+    modifySpeciesEvolutions(waterStarterLvl1Species.species, waterStarterLvl2Species.species);
+    modifySpeciesEvolutions(fireStarterSpecies.species, fireStarterLvl1Species.species);
+    modifySpeciesEvolutions(fireStarterLvl1Species.species, fireStarterLvl2Species.species);
 
     // Filter out the chosen starter Pokémon from the favorites list
     const nonStarterFavorites = favoritePokemon.filter(pokemon => !chosenStarterIds.includes(pokemon.id));
@@ -765,15 +765,15 @@ const createAndZipFireRedTrainers = async (zip, basePath, favoritePokemon) => {
     trainers_text += '\n' + await replacePokemonForType('/src/data/elite_4_lance_dragon.h', 'dragon');
 
     // Replace Rival's pokemon with opposite starter type and random other favorite pokemon
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_fire_stage1.h', 'SPECIES_CHARMANDER', fireStarterSpecies);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_fire_stage2.h', 'SPECIES_CHARMELEON', fireStarterLvl1Species);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_fire_stage3.h', 'SPECIES_CHARIZARD', fireStarterLvl2Species);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_grass_stage1.h', 'SPECIES_BULBASAUR', grassStarterSpecies);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_grass_stage2.h', 'SPECIES_IVYSAUR', grassStarterLvl1Species);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_grass_stage3.h', 'SPECIES_VENUSAUR', grassStarterLvl2Species);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_water_stage1.h', 'SPECIES_SQUIRTLE', waterStarterSpecies);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_water_stage2.h', 'SPECIES_WARTORTLE', waterStarterLvl1Species);
-    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_water_stage3.h', 'SPECIES_BLASTOISE', waterStarterLvl2Species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_fire_stage1.h', 'SPECIES_CHARMANDER', fireStarterSpecies.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_fire_stage2.h', 'SPECIES_CHARMELEON', fireStarterLvl1Species.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_fire_stage3.h', 'SPECIES_CHARIZARD', fireStarterLvl2Species.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_grass_stage1.h', 'SPECIES_BULBASAUR', grassStarterSpecies.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_grass_stage2.h', 'SPECIES_IVYSAUR', grassStarterLvl1Species.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_grass_stage3.h', 'SPECIES_VENUSAUR', grassStarterLvl2Species.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_water_stage1.h', 'SPECIES_SQUIRTLE', waterStarterSpecies.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_water_stage2.h', 'SPECIES_WARTORTLE', waterStarterLvl1Species.species);
+    trainers_text += '\n' + await replacePokemonForRival('/src/data/rival_water_stage3.h', 'SPECIES_BLASTOISE', waterStarterLvl2Species.species);
 
     // Add the modified trainers_text to the zip file
     zip.file(removeLeadingSlash(basePath) + '/src/data/trainers.h', trainers_text, { date: localDate });
