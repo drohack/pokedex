@@ -189,10 +189,14 @@ const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, un
                 const regex = new RegExp(`"${uniqueWildEncounters[i]}"`, 'g');
                 wild_encounters_text = wild_encounters_text.replace(regex, `"${speciesName}"`);
             }
+        } else if (filteredFavorites.length > 0) {
+            // Use a random filtered favorite Pokémon for remaining encounters
+            const regex = new RegExp(`"${uniqueWildEncounters[i]}"`, 'g');
+            wild_encounters_text = wild_encounters_text.replace(regex, `"${getRandomSpecies(filteredFavorites)}"`);
         } else {
             // Use a random favorite Pokémon for remaining encounters
             const regex = new RegExp(`"${uniqueWildEncounters[i]}"`, 'g');
-            wild_encounters_text = wild_encounters_text.replace(regex, `"${getRandomSpecies(filteredFavorites)}"`);
+            wild_encounters_text = wild_encounters_text.replace(regex, `"${getRandomSpecies(favoritePokemon)}"`);
         }
     }
 
@@ -297,7 +301,7 @@ const modifyAndZipFireRedLegendaries = async (zip, basePath, favoritePokemon) =>
     const allLegendaryIds = [...subLegendaryIds, ...legendaryIds, ...mythicalIds];
 
     // Filter the list of favorite Pokémon to include only legendaries
-    let favoriteLegendaries = favoritePokemon.filter(pokemon => allLegendaryIds.includes(pokemon.id));
+    let favoriteLegendaries = [...favoritePokemon.filter(pokemon => allLegendaryIds.includes(pokemon.id))];
     shuffleArray(favoriteLegendaries);
 
     // You might need these later
@@ -308,10 +312,10 @@ const modifyAndZipFireRedLegendaries = async (zip, basePath, favoritePokemon) =>
 
     // Backup use Pseudo Legendaries if no Legendaries are selected, else use random favorite pokemon
     if (favoriteLegendaries.length === 0 && favoritePseudoLegendaries.length > 0) {
-        favoriteLegendaries = favoritePseudoLegendaries;
+        favoriteLegendaries = [...favoritePseudoLegendaries];
         shuffleArray(favoriteLegendaries);
     } else if (favoriteLegendaries.length === 0 && favoritePseudoLegendaries.length === 0) {
-        favoriteLegendaries = favoritePokemon;
+        favoriteLegendaries = [...favoritePokemon];
         shuffleArray(favoriteLegendaries);
     }
 
@@ -331,12 +335,12 @@ const modifyAndZipFireRedLegendaries = async (zip, basePath, favoritePokemon) =>
             }
         } else if (favoritePseudoLegendaries.length > 0) {
             // Add pseudo legendaries one at a time to favoriteLegendaries till there's 12
-            for (let i = 0; i < 7 - favoriteLegendaries.length; i++) {
+            for (let i = 0; favoriteLegendaries.length < 7; i++) {
                 favoriteLegendaries.push(favoritePseudoLegendaries[i]);
             }
         } else {
             // There are no pseudo legendaries so add random legendaries one at a time to favoriteLegendaries till there's 12
-            for (let i = 0; i < 7 - favoriteLegendaries.length; i++) {
+            while (favoriteLegendaries.length < 7) {
                 favoriteLegendaries.push(favoriteLegendaries[Math.floor(Math.random() * favoriteLegendaries.length)]);
             }
         }
