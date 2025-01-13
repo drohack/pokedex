@@ -79,6 +79,7 @@ function Favorites() {
 
     return (
         <div className={styles.favoriteContainer}>
+            {visibleFavoritePokemon.length > 0 && (
             <div className={styles.favoriteHeader}>
                 <p className={styles.favoriteLabel}>
                     Showing: {visibleFavoritePokemon.length}
@@ -86,6 +87,7 @@ function Favorites() {
                 <ExportFavorites />
                 <button onClick={handleClearFavorites} className={styles.clearButton}>Clear Favorites</button>
             </div>
+            )}
             {favoritePokemon.length === 0 ? emptyFavorites : <PokemonList pokemon={visibleFavoritePokemon} />}
         </div>
     )
