@@ -9,7 +9,7 @@ import { selectSearchTerm } from "../../components/SearchTerm/searchTermSlice";
 import PokemonList from "../../components/PokemonList/PokemonList";
 
 // Styles
-import styles from "./Home.module.css";
+import styles from "./home.module.css";
 
 // Import the Pokemon lists
 import { StartersAndEvolutions, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from "../../utils/index";
