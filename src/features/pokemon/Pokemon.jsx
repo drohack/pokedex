@@ -8,7 +8,6 @@ import { setSelectedPokemon } from "./pokemonSlice";
 import { Link } from "react-router-dom";
 import db from "../../db/db";
 import type_styles from "../../pages/detail/PokemonDetails/PokemonDetails.module.css";
-import PokemonImage from './PokemonImage';
 
 const Pokemon = ({ pokemon }) => {
   const dispatch = useDispatch();
@@ -35,7 +34,7 @@ const Pokemon = ({ pokemon }) => {
 
   return (
     <div>
-      <PokemonImage imageUrl={pokemon.imageUrl} name={pokemon.name} />
+      <img src={pokemon.imageUrl} alt={pokemon.name} />
       <h3 className={styles.name}>{capitalizeFirstLetter(pokemon.name)}</h3>
 
       {/* Display Types */}
