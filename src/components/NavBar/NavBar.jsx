@@ -69,7 +69,7 @@ function NavBar() {
         <div className={styles.expandable}>
           <div className={`${styles.expandedContent} ${isExpanded ? styles.expanded : ""}`}>
             {/* Add content for the expandable row here */}
-            <div  className={styles.navDiv}>
+            <div className={styles.navDiv}>
               <TypeFilter />
               <div>
                 <LegendaryFilter />
