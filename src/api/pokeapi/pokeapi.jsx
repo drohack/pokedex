@@ -64,9 +64,9 @@ export const fetchPokemonData = async (region) => {
     // If the region is a form, filter out the forms that don't match the region
     if (region.endsWith("_form")) {
       const formName = "-" + region.split("_")[0].toLowerCase();
-      return validPokemon.filter(pokemon => pokemon.name.endsWith(formName));
+      return validPokemon.filter(pokemon => pokemon.name.includes(formName) && !pokemon.name.includes('-totem-')  && !pokemon.name.endsWith('-cap'));
     } else if (region === "MEGA") {
-      return validPokemon.filter(pokemon => pokemon.name.endsWith("-mega"));
+      return validPokemon.filter(pokemon => pokemon.name.includes("-mega"));
     } else if (region === "GMAX") {
       return validPokemon.filter(pokemon => pokemon.name.endsWith("-gmax"));
     }
