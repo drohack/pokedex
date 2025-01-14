@@ -61,6 +61,16 @@ export const fetchPokemonData = async (region) => {
     // Filter out any null values (from failed fetches)
     const validPokemon = detailedPokemon.filter((pokemon) => pokemon !== null);
 
+    // If the region is a form, filter out the forms that don't match the region
+    if (region.endsWith("_form")) {
+      const formName = "-" + region.split("_")[0].toLowerCase();
+      return validPokemon.filter(pokemon => pokemon.name.endsWith(formName));
+    } else if (region === "MEGA") {
+      return validPokemon.filter(pokemon => pokemon.name.endsWith("-mega"));
+    } else if (region === "GMAX") {
+      return validPokemon.filter(pokemon => pokemon.name.endsWith("-gmax"));
+    }
+
     return validPokemon;
   } catch (err) {
     console.error("Error fetching pokemon data", err);
