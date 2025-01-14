@@ -56,7 +56,7 @@ Intended for use with:
 
 If you want to play a custom ROM of  of your selected Favorites there's no easy way to do it. But if you use this feature you'll get a .zip file with the nessesary files to change all Wild Encounters, Legendary Encounters, and your Starters into your selected Favorite pokemon. There are some caveats:
 
-* Replace your Starter pokemon with other base Starter Favorites of the same type (else default back to default Starters)
+* Replace your Starter pokemon with other base Starter Favorites of the same type (else random Favorite of the same type)
 * Replace Legendary encounters with Sub Legendarys, Legendary, Mythics, and Pseudo Legendaries (if there's room). It'll fill extra slots with duplicate legendaries (uses random Favorite pokemon if you didn't favorite any Legendaries)
 * Randomize Wild Encounters from your Favorites list (excluding base Starters and Sub Legendaries/Legendaries/Mythics) (levels and encounter rates are the same as base game)
 * Randomize Trainer pokemon (keep levels and stats)
