@@ -41,7 +41,7 @@ jobs:
         commit_output=$(git commit -m "Deploy updated pokedex from GitHub Actions" || true)
         echo "$commit_output"
         if echo "$commit_output" | grep -q "nothing to commit, working tree clean"; then
-          echo "Warning: Nothing to commit, working tree clean"
+          echo "::warning:: Nothing to commit, working tree clean"
         else
           echo "Push changes"
           git push -f origin main
