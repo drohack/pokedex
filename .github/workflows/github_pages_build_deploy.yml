@@ -34,7 +34,11 @@ jobs:
         mkdir -p pokedex
         mv ../pokedex/* pokedex/
         git add pokedex
-        git commit -m "Deploy updated pokedex from GitHub Actions"
-        git push -f origin main
+        commit_output=$(git commit -m "Deploy updated pokedex from GitHub Actions" 2>&1)
+        if echo "$commit_output" | grep -q "nothing to commit, working tree clean"; then
+          echo "Warning: Nothing to commit, working tree clean"
+        else
+          git push -f origin main
+        fi
       env:
         GH_PAT: ${{ secrets.GH_PAT }}
