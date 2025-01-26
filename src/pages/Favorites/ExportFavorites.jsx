@@ -833,6 +833,10 @@ export const ExportFavorites = () => {
         const general_config_text = await fetch(baseEmeraldPath + '/include/config/general.h').then(response => response.text());
         zip.file(removeLeadingSlash(baseEmeraldPath + '/include/config/general.h'), general_config_text, { date: localDate });
 
+        // Add the new_game.c script to enable National PokeDex at start and give running shoes
+        const new_game_text = await fetch(baseEmeraldPath + '/src/new_game.c').then(response => response.text());
+        zip.file(removeLeadingSlash(baseEmeraldPath + '/src/new_game.c'), new_game_text, { date: localDate });
+
         // Modify the starters to use the favorite's base starter pokemon of their type
         await modifyAndZipEmeraldStarterText(zip, baseEmeraldPath, favoritePokemon);
 
@@ -870,6 +874,10 @@ export const ExportFavorites = () => {
         // Add the general.h config file to the zip
         const general_config_text = await fetch(baseFireRedPath + '/include/config/general.h').then(response => response.text());
         zip.file(removeLeadingSlash(baseFireRedPath + '/include/config/general.h'), general_config_text, { date: localDate });
+
+        // Add the new_game.c script to enable National PokeDex at start and give B dash
+        const new_game_text = await fetch(baseFireRedPath + '/src/new_game.c').then(response => response.text());
+        zip.file(removeLeadingSlash(baseFireRedPath + '/src/new_game.c'), new_game_text, { date: localDate });
 
         // Modify the starters to use the favorite's base starter pokemon of their type
         await modifyAndZipFireRedStarterText(zip, baseFireRedPath, favoritePokemon);
