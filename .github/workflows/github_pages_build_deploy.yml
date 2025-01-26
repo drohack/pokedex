@@ -25,14 +25,26 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
-        mkdir pokedex-deploy
-        mv pokedex pokedex-deploy/pokedex
+        echo "Make pokedex-deploy"
+        mkdir -p pokedex-deploy
         cd pokedex-deploy
+        echo "Checkout drohack.github.io.git"
         git init
         git remote add origin https://$GH_PAT@github.com/drohack/drohack.github.io.git
-        git add .
-        git commit -m "Deploy from GitHub Actions"
-        git branch -M main
-        git push -f origin main
+        git pull origin main
+        echo "Replace /pokedex/ with new /pokedex/"
+        rm -rf pokedex
+        mkdir -p pokedex
+        mv ../pokedex/* pokedex/
+        git add pokedex
+        echo "Commit changes"
+        commit_output=$(git commit -m "Deploy updated pokedex from GitHub Actions" || true)
+        echo "$commit_output"
+        if echo "$commit_output" | grep -q "nothing to commit, working tree clean"; then
+          echo "::warning:: Nothing to commit, working tree clean"
+        else
+          echo "Push changes"
+          git push -f origin main
+        fi
       env:
         GH_PAT: ${{ secrets.GH_PAT }}
