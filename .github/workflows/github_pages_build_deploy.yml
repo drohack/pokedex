@@ -31,6 +31,12 @@ jobs:
         echo "Checkout drohack.github.io.git"
         git init
         git remote add origin https://$GH_PAT@github.com/drohack/drohack.github.io.git
+        if git ls-remote --exit-code origin main; then
+          git fetch origin main
+          git checkout main
+        else
+          git checkout -b main
+        fi
         git pull origin main
         echo "Replace /pokedex/ with new /pokedex/"
         rm -rf pokedex
