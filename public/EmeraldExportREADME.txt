@@ -28,7 +28,11 @@ Steps:
         3. Restart PC
         4. Open PowerShell as Admin and run `wsl`. Follow instructions (make username/password). This should start the WSL instance right away.
         5. Run `sudo apt update && sudo apt install build-essential` (this allows you to run the `make` command to build the ROM).
-        6. Navigate to your `pokefirered-expansion` folder
+        6. You may need to run the following:
+            1. `sudo apt update && sudo apt install gcc-arm-none-eabi pkg-config libpng-dev`
+            2. `sudo apt update`
+            3. `sudo apt upgrade`
+        7. Navigate to your `pokefirered-expansion` folder
     5. Keep this window open (you can get back to your WSL instance in Power Shell by running `wsl`)
 4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 26 files.
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokeemerald.gba" and "pokeemerald.gba" files. This takes between 5 - 10 minutes to compile.
