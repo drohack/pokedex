@@ -3,7 +3,8 @@
   margin: 0 auto;
   padding: 1rem;
   text-align: center;
-  padding-top: 80px;  /* Add padding equal to or greater than navbar height */
+  padding-top: 150px;  /* Add padding equal to or greater than navbar height */
+  background-color: #242424;
 }
 
 .logo {

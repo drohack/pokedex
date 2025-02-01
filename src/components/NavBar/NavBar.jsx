@@ -40,8 +40,8 @@ function NavBar() {
 
   return (
     <>
-      <nav className={styles.nav}>
-        <div className={styles.navDiv}>
+      <nav id="nav" className={styles.nav}>
+        <div id="navDiv" className={styles.navDiv}>
           <NavLink
             to="/"
             onClick={() => window.scrollTo(0, 0)}

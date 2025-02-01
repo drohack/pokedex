@@ -5,7 +5,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   padding-right: 5px;
-  min-width: 360px; /* Set a minimum width */
+  min-width: 260px; /* Set a minimum width */
 }
 
 .searchInput {

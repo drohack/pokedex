@@ -4,6 +4,7 @@
   left: 50%; /* Move it to the center */
   transform: translateX(-50%); /* Offset the left margin to perfectly center it */
   width: 50%; /* Adjust width if needed, or leave it auto */
+  min-width: 830px;
   background-color: #333; /* Background color */
   display: flex;
   flex-direction: column; /* Stack the divs vertically */

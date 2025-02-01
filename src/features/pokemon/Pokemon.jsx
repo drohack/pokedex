@@ -49,7 +49,7 @@ const Pokemon = ({ pokemon }) => {
       </div>
 
       <div className={styles.favDiv}>
-        {isFavorite ? <FaHeart fill="red" /> : <FaRegHeart />}
+        {isFavorite ? <FaHeart color="red" /> : <FaRegHeart color="white"/>}
       </div>
     </div>
   );
