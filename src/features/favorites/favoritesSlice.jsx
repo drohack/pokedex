@@ -1,13 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import db from "../../db/db";
 
 export const initializeFavorites = createAsyncThunk(
-  "favorites/initializeFavorites",
+  'favorites/initializeFavorites',
   async () => {
     try {
-      //console.log("Start favorite init"); // Debugging log
       const favoritesFromDb = await db.favorites.toArray();
-      //console.log("Favorites from DB:", favoritesFromDb); // Debugging log
       return favoritesFromDb;
     } catch (error) {
       console.error("Error initializing favorites:", error);
@@ -16,16 +14,32 @@ export const initializeFavorites = createAsyncThunk(
   }
 );
 
+export const initializeLocks = createAsyncThunk(
+  'favorites/initializeLocks',
+  async () => {
+    try {
+      const locksFromDb = await db.locks.toArray();
+      return locksFromDb.reduce((acc, lock) => {
+        acc[lock.id] = true;
+        return acc;
+      }, {});
+    } catch (error) {
+      console.error("Error initializing locks:", error);
+      return {};
+    }
+  }
+);
+
 const options = {
   name: "favorites",
   initialState: {
     favoritePokemon: [],
+    lockedPokemon: [],
     isLoading: false,
     error: false
   },
   reducers: {
     toggleFavorite: (state, action) => {
-      // console.log(`Toggling favorite ${action}`);
       const pokemonToToggle = action.payload;
       const index = state.favoritePokemon.findIndex(
         (pokemon) => pokemonToToggle.id === pokemon.id
@@ -34,11 +48,9 @@ const options = {
       if (index !== -1) {
         state.favoritePokemon.splice(index, 1);
         db.favorites.delete(pokemonToToggle.id);
-        // console.log(`Unfavorited ${Object.keys(pokemonToToggle)}`);
       } else {
         state.favoritePokemon.push(pokemonToToggle);
         db.favorites.add(pokemonToToggle);
-        // console.log(`Favorited ${Object.keys(pokemonToToggle)}`);
       }
     },
     removeFavorite: (state, action) => {
@@ -51,29 +63,47 @@ const options = {
     clearAllFavorites: (state) => {
       state.favoritePokemon = [];
       db.favorites.clear();
-      console.log("Cleared all favorites"); // Debugging log
+      state.lockedPokemon = {};
+      db.locks.clear();
+      console.log("Cleared all favorites and locks");
     },
+    toggleLock: (state, action) => {
+      const pokemonToToggle = action.payload;
+      if (state.lockedPokemon[pokemonToToggle.id]) {
+        delete state.lockedPokemon[pokemonToToggle.id];
+        db.locks.delete(pokemonToToggle.id);
+      } else {
+        state.lockedPokemon[pokemonToToggle.id] = true;
+        db.locks.add({ id: pokemonToToggle.id });
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(initializeFavorites.pending, (state) => {
         state.isLoading = true;
         state.error = false;
-        //console.log("Loading favorite pokemon");
+      })
+      .addCase(initializeFavorites.fulfilled, (state, action) => {
+        state.favoritePokemon = action.payload;
+        state.isLoading = false;
       })
       .addCase(initializeFavorites.rejected, (state) => {
         state.isLoading = false;
         state.error = true;
         console.error("Failed to load favorite pokemon");
       })
-      .addCase(initializeFavorites.fulfilled, (state, action) => {
-        state.favoritePokemon = action.payload;
-        //console.log("Succesfully loaded favorite pokemon");
+      .addCase(initializeLocks.fulfilled, (state, action) => {
+        state.lockedPokemon = action.payload;
       });
-  },
+  }
 };
 
 export const favoritesSlice = createSlice(options);
+
+export const { toggleFavorite, removeFavorite, clearAllFavorites, toggleLock } = favoritesSlice.actions;
+
 export const getFavoritePokemon = (state) => state.favorites.favoritePokemon;
-export const { toggleFavorite, removeFavorite, clearAllFavorites } = favoritesSlice.actions;
+export const getLockedPokemon = (state) => state.favorites.lockedPokemon;
+
 export default favoritesSlice.reducer;

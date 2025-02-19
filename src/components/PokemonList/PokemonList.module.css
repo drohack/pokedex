@@ -58,3 +58,13 @@
   font-size: 1rem;
   text-align: center;
 }
+
+.lockButton {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+}

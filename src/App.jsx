@@ -7,13 +7,17 @@ import Favorites from "./pages/Favorites/Favorites"
 import NavBar from "./components/NavBar/NavBar";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { initializeFavorites } from "./features/favorites/favoritesSlice";
+import { initializeFavorites, initializeLocks } from "./features/favorites/favoritesSlice";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initializeFavorites())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(initializeLocks())
   }, [dispatch])
 
   return (
