@@ -11,6 +11,7 @@
     justify-content: space-between; /* Space items apart */
     width: 90%; /* Ensure the header takes the full width */
     padding: 0 20px; /* Optional: Add padding to the sides */
+    align-items: center;
 }
 
 .favoriteLabel {
@@ -25,4 +26,19 @@
     cursor: pointer;
     transition: background-color 0.3s, border 0.3s;
     color: #e5e5e5;
+}
+
+.left {
+    flex: 1;
+    text-align: left;
+}
+
+.centered {
+    flex: 1;
+    text-align: center;
+}
+
+.right {
+    flex: 1;
+    text-align: right;
 }

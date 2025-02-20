@@ -6,6 +6,7 @@ import { setSelectedLegendaries } from "../LegendaryFilter/legendaryFilterSlice"
 import { setSelectedStarters } from "../StarterFilter/starterFilterSlice";
 import { setSelectedTypes } from '../TypeFilter/typeFilterSlice';
 import { typeColors, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from '../../utils/index';
+import { setSelectedLocks } from '../LockedFilter/lockedFilterSlice';
 
 export const ExclusionFilter = () => {
     const dispatch = useDispatch();
@@ -25,6 +26,8 @@ export const ExclusionFilter = () => {
                 dispatch(setSelectedLegendaries([])); // Clear selected legendaries
             } else if (exclusionGroup === "Starters") {
                 dispatch(setSelectedStarters([])); // Clear selected starters
+            } else if (exclusionGroup === "Locked") {
+                dispatch(setSelectedLocks([])); // Clear selected locks
             } else if (exclusionGroup === "Favorites") {
                 // Do nothing
             } else {
@@ -51,6 +54,16 @@ export const ExclusionFilter = () => {
                         className={styles.typeCheckbox}
                     />
                     Favorites
+                </label>
+                <label key="Locked" className={styles.typeLabel}>
+                    <input
+                        type="checkbox"
+                        value="Locked"
+                        checked={selectedExclusions.includes("Locked")}
+                        onChange={handleExclusionChange}
+                        className={styles.typeCheckbox}
+                    />
+                    Locked
                 </label>
                 <label key="Starters" className={styles.typeLabel}>
                     <input

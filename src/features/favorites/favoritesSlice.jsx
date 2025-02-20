@@ -60,6 +60,15 @@ const options = {
       );
       db.favorites.delete(pokemonToRemove.id);
     },
+    clearNotLockedFavorites: (state) => {
+      state.favoritePokemon = state.favoritePokemon.filter((pokemon) => {
+        if (!state.lockedPokemon[pokemon.id]) {
+          db.favorites.delete(pokemon.id);
+          return false;
+        }
+        return true;
+      });
+    },
     clearAllFavorites: (state) => {
       state.favoritePokemon = [];
       db.favorites.clear();
@@ -101,7 +110,7 @@ const options = {
 
 export const favoritesSlice = createSlice(options);
 
-export const { toggleFavorite, removeFavorite, clearAllFavorites, toggleLock } = favoritesSlice.actions;
+export const { toggleFavorite, removeFavorite, toggleLock, clearNotLockedFavorites, clearAllFavorites } = favoritesSlice.actions;
 
 export const getFavoritePokemon = (state) => state.favorites.favoritePokemon;
 export const getLockedPokemon = (state) => state.favorites.lockedPokemon;

@@ -15,6 +15,9 @@ const exclusionFilterSlice = createSlice({
     clearStartersFromExclusions: (state) => {
       state.selectedExclusions = state.selectedExclusions.filter(exclusion => exclusion !== "Starters");
     },
+    clearLockedFromExclusions: (state) => {
+      state.selectedExclusions = state.selectedExclusions.filter(exclusion => exclusion !== "Locked");
+    },
     clearTypeFromExclusions: (state, action) => {
       const typeToRemove = action.payload;
       state.selectedExclusions = state.selectedExclusions.filter(
@@ -24,5 +27,5 @@ const exclusionFilterSlice = createSlice({
   },
 });
 
-export const { setSelectedExclusions, clearLegendariesFromExclusions, clearStartersFromExclusions, clearTypeFromExclusions } = exclusionFilterSlice.actions;
+export const { setSelectedExclusions, clearLegendariesFromExclusions, clearStartersFromExclusions, clearTypeFromExclusions, clearLockedFromExclusions } = exclusionFilterSlice.actions;
 export default exclusionFilterSlice.reducer;

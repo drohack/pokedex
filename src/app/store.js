@@ -8,6 +8,7 @@ import legendaryFilterReducer from "../components/LegendaryFilter/legendaryFilte
 import starterFilterReducer from "../components/StarterFilter/starterFilterSlice"
 import exclusionFilterReducer from "../components/ExclusionFilter/exclusionFilterSlice"
 import pseudoLegendaryFilterReducer from '../components/PseudoLegendaryFilter/pseudoLegendaryFilterSlice';
+import lockedFilterReducer from '../components/LockedFilter/lockedFilterSlice';
 
 export default configureStore({
     reducer: {
@@ -20,6 +21,7 @@ export default configureStore({
         pseudoLegendaryFilter: pseudoLegendaryFilterReducer,
         starterFilter: starterFilterReducer,
         exclusionFilter: exclusionFilterReducer,
+        lockedFilter: lockedFilterReducer,
     },
     devTools: true
 })

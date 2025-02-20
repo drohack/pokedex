@@ -31,6 +31,8 @@ const Home = () => {
   const selectedPseudoLegendaries = useSelector((state) => state.pseudoLegendaryFilter?.selectedPseudoLegendaries || []);
   // Get selected starters from Redux state
   const selectedStarters = useSelector((state) => state.starterFilter?.selectedStarters || []);
+  // Get selected locks from Redux state
+  const selectedLocks = useSelector((state) => state.lockedFilter?.selectedLocks || []);
   // Get selected exclusions from Redux state
   const selectedExclusions = useSelector((state) => state.exclusionFilter?.selectedExclusions || []);
 
@@ -38,6 +40,9 @@ const Home = () => {
   const favoritePokemon = useSelector(getFavoritePokemon);
   // Convert favoritePokemon to an array of IDs
   const favoriteIds = favoritePokemon.map(fav => fav.id);
+  // Get the locked Pokemon from the Redux state
+  const lockedPokemon = useSelector((state) => state.favorites.lockedPokemon);
+  const lockedPokemonIds = Object.keys(lockedPokemon).map(id => parseInt(id));
 
   // Convert StartersAndEvolutions object to an array of IDs
   const starterIds = Object.values(StartersAndEvolutions).map(starter => starter.id);
@@ -51,7 +56,7 @@ const Home = () => {
   const allLegendaryIds = [...subLegendaryIds, ...legendaryIds, ...mythicalIds];
 
   // Check if any selected legendaries are in the SubLegendaries list
-  const combinedLegendariesPseudoStarterIds = [ ...selectedLegendaries, ...selectedPseudoLegendaries, ...selectedStarters ];
+  const combinedLegendariesPseudoStarterLockedIds = [ ...selectedLegendaries, ...selectedPseudoLegendaries, ...selectedStarters, ...selectedLocks ];
 
 
   // Filter Pokemon based on Search Filter, selected Types, and selected Legendaries
@@ -67,14 +72,19 @@ const Home = () => {
         );
 
     // Check if the Pokémon's ID is in the selected legendaries list (or if none are selected)
-    const combinedLegendaryPseudoStarterMatches = 
-        combinedLegendariesPseudoStarterIds.length === 0 || 
-        combinedLegendariesPseudoStarterIds.includes(p.id);
+    const combinedLegendaryPseudoStarterLockedMatches = 
+      combinedLegendariesPseudoStarterLockedIds.length === 0 || 
+      combinedLegendariesPseudoStarterLockedIds.includes(p.id);
 
     // Check if the Pokémon's ID is in the favoriteIds list if "Favorites" is in selectedExclusions
     const isFavoriteExcluded = 
         selectedExclusions.includes("Favorites") && 
         favoriteIds.includes(p.id);
+
+    // Check if the Pokémon's ID is in the lockedIds list if "Locked" is in selectedExclusions
+    const isLockedExcluded = 
+        selectedExclusions.includes("Locked") && 
+        lockedPokemonIds.includes(p.id);
 
     // Check if the Pokémon's ID is in the StartersAndEvolutions list if "Starters" is in selectedExclusions
     const isStarterExcluded = 
@@ -93,7 +103,7 @@ const Home = () => {
         );
 
     // Only include the Pokémon if all conditions are true
-    return nameMatches && typesMatch && combinedLegendaryPseudoStarterMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded;
+    return nameMatches && typesMatch && combinedLegendaryPseudoStarterLockedMatches && !isFavoriteExcluded && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded && !isLockedExcluded;
   });
 
   return (

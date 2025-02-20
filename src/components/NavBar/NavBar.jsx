@@ -16,6 +16,8 @@ import ExclusionFilter from "../ExclusionFilter/ExclusionFilter";
 import { setSelectedExclusions } from "../ExclusionFilter/exclusionFilterSlice";
 import PseudoLegendaryFilter from "../PseudoLegendaryFilter/PseudoLegendaryFilter";
 import { setSelectedPseudoLegendaries } from "../PseudoLegendaryFilter/pseudoLegendaryFilterSlice";
+import LockedFilter from "../LockedFilter/LockedFilter";
+import { setSelectedLocks } from "../LockedFilter/lockedFilterSlice";
 
 function NavBar() {
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ function NavBar() {
     dispatch(setSelectedStarters([])); // Clear selected starters
     dispatch(setSelectedExclusions([])); // Clear selected exclusions
     dispatch(setSelectedPseudoLegendaries([])); // Clear selected pseudo-legendaries
+    dispatch(setSelectedLocks([])); // Clear selected locks
   };
 
   return (
@@ -75,7 +78,10 @@ function NavBar() {
                 <LegendaryFilter />
                 <PseudoLegendaryFilter />
               </div>
-              <StarterFilter />
+              <div>
+                <StarterFilter />
+                <LockedFilter />
+              </div>
               <ExclusionFilter />
             </div>
           </div>
