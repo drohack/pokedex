@@ -127,6 +127,8 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     // Read the Roaming file as the Roaming Legendary is based on your chosen starter
     let wild_pokemon_area_text = await fetch(basePath + '/src/wild_pokemon_area.c').then(response => response.text());
     let roamer_text = await fetch(basePath + '/src/roamer.c').then(response => response.text());
+    // Read the field specials file to replace the starter pokemon
+    let field_specials_text = await fetch(basePath + '/src/field_specials.c').then(response => response.text());
 
     // Get list of Base Favorite Pokemon, Lvl 1 evolutions, and Lvl 2 evolutions
     const starterIds = Object.values(Starters).map(starter => starter.id);
@@ -153,6 +155,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     starter_message_text = starter_message_text.replace(/BULBASAUR/g, grassStarterSpecies.species.replace("SPECIES_", ""));
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies.species);
     roamer_text = roamer_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies.species);
+    field_specials_text = field_specials_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies.species);
     let entei_pokemon_species_replacement = getRandomSpecies(favoritePokemon);
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_ENTEI/g, entei_pokemon_species_replacement);
     roamer_text = roamer_text.replace(/SPECIES_ENTEI/g, entei_pokemon_species_replacement);
@@ -162,6 +165,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     starter_message_text = starter_message_text.replace(/CHARMANDER/g, fireStarterSpecies.species.replace("SPECIES_", ""));
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies.species);
     roamer_text = roamer_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies.species);
+    field_specials_text = field_specials_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies.species);
     let suicune_pokemon_species_replacement = getRandomSpecies(favoritePokemon);
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_SUICUNE/g, suicune_pokemon_species_replacement);
     roamer_text = roamer_text.replace(/SPECIES_SUICUNE/g, suicune_pokemon_species_replacement);
@@ -171,6 +175,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     starter_message_text = starter_message_text.replace(/SQUIRTLE/g, waterStarterSpecies.species.replace("SPECIES_", ""));
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies.species);
     roamer_text = roamer_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies.species);
+    field_specials_text = field_specials_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies.species);
     let raikou_pokemon_species_replacement = getRandomSpecies(favoritePokemon);
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_RAIKOU/g, raikou_pokemon_species_replacement);
     roamer_text = roamer_text.replace(/SPECIES_RAIKOU/g, raikou_pokemon_species_replacement);
@@ -179,6 +184,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     zip.file(removeLeadingSlash(basePath) + '/data/maps/PalletTown_ProfessorOaksLab/text.inc', starter_message_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/src/wild_pokemon_area.c', wild_pokemon_area_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/src/roamer.c', roamer_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/field_specials.c', field_specials_text, { date: localDate });
 };
 
 const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, uniqueWildEncounters) => {
