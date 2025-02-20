@@ -974,6 +974,10 @@ export const ExportFavorites = () => {
         const new_game_text = await fetch(baseFireRedPath + '/src/new_game.c').then(response => response.text());
         zip.file(removeLeadingSlash(baseFireRedPath + '/src/new_game.c'), new_game_text, { date: localDate });
 
+        // Add the Department Store 4F script to add Linking Cable as a puchasable item
+        const celadon_city_department_store_4F_text = await fetch(baseFireRedPath + '/data/maps/CeledonCity_DepartmentStore_4F/scripts.inc').then(response => response.text());
+        zip.file(removeLeadingSlash(baseFireRedPath + '/data/maps/CeledonCity_DepartmentStore_4F/scripts.inc'), celadon_city_department_store_4F_text, { date: localDate });
+
         // Modify the starters to use the favorite's base starter pokemon of their type
         await modifyAndZipFireRedStarterText(zip, baseFireRedPath, favoritePokemon);
 
