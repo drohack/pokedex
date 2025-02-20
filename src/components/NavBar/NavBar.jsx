@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./NavBar.module.css";
@@ -41,9 +41,24 @@ function NavBar() {
     dispatch(setSelectedLocks([])); // Clear selected locks
   };
 
+  const navRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (navRef.current && !navRef.current.contains(event.target)) {
+      setIsExpanded(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <nav id="nav" className={styles.nav}>
+      <nav id="nav" className={styles.nav} ref={navRef}>
         <div id="navDiv" className={styles.navDiv}>
           <NavLink
             to="/"
