@@ -7,7 +7,9 @@ import { getFavoritePokemon } from "../../features/favorites/favoritesSlice";
 import { capitalizeFirstLetter, getEvolutions, Starters, StartersLvl1, StartersLvl2, SubLegendaries, Legendaries, Mythical, PseudoLegendaries } from "../../utils/index";
 import { speciesConversionArray } from "../../utils/SpeciesConversion";
 import { emeraldUniqueWildEncounters } from '../../utils/EmeraldUniqueWildEncounters';
+import { emeraldUniqueIngameTrades, emeraldRequestedUniqueIngameTrades } from '../../utils/EmeraldUniqueIngameTrades';
 import { fireRedUniqueWildEncounters } from '../../utils/FireRedUniqueWildEncounters';
+import { fireRedUniqueIngameTrades, fireRedRequestedUniqueIngameTrades } from '../../utils/FireRedUniqueIngameTrades';
 
 const baseEmeraldPath = '/pokedex/EmeraldExportFiles';
 const baseFireRedPath = '/pokedex/FireRedExportFiles';
@@ -204,6 +206,76 @@ const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, un
     }
 
     zip.file(removeLeadingSlash(basePath) + '/src/data/wild_encounters.json', wild_encounters_text, { date: localDate });
+};
+
+const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, uniqueIngameTrades, requestedUniqueIngameTrades, uniqueWildEncounters) => {
+    // Read the original ingame_trades.json file (from public/ folder)
+    let ingame_trades_text = await fetch(path).then(response => response.text());
+
+    // Combine all IDs to be excluded
+    const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
+    const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
+    const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
+    const exclusionIds = [...chosenStarterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+
+    // Filter out the excluded Pokémon from the favorites list
+    const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
+
+    // Shuffle the list of unique ingame trades
+    shuffleArray(uniqueIngameTrades);
+
+    // Replace unique wild encounters with favorite Pokémon species
+    for (let i = 0; i < uniqueIngameTrades.length; i++) {
+        let j = i + uniqueWildEncounters.length; // Get the next unique pokemon after the wild encounters
+        if (j < filteredFavorites.length) {
+            // Use a unique favorite Pokémon
+            const favorite = filteredFavorites[j];
+            const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
+            const speciesName = speciesEntry ? speciesEntry.species : null;
+            if (speciesName) {
+                const regex = new RegExp(`${uniqueIngameTrades[i]}`, 'g');
+                ingame_trades_text = ingame_trades_text.replace(regex, `${speciesName}`);
+            }
+        } else if (filteredFavorites.length > 0) {
+            // Use a random filtered favorite Pokémon for remaining encounters
+            const regex = new RegExp(`${uniqueIngameTrades[i]}`, 'g');
+            ingame_trades_text = ingame_trades_text.replace(regex, `${getRandomSpecies(filteredFavorites)}`);
+        } else {
+            // Use a random favorite Pokémon for remaining encounters
+            const regex = new RegExp(`${uniqueIngameTrades[i]}`, 'g');
+            ingame_trades_text = ingame_trades_text.replace(regex, `${getRandomSpecies(favoritePokemon)}`);
+        }
+    }
+
+    // Shuffle the list of unique ingame trades
+    shuffleArray(requestedUniqueIngameTrades);
+
+    // Replace unique wild encounters with favorite Pokémon species
+    for (let i = 0; i < requestedUniqueIngameTrades.length; i++) {
+        uniqueWildEncounters.length; // Get the next unique pokemon after the wild encounters
+        if (uniqueWildEncounters.length < filteredFavorites.length) {
+            // Get a random filtered favorite Pokémon that you can find in the wild
+            // get a random number between 0 and the length of the unique wild encounters
+            const randomIndex = Math.floor(Math.random() * uniqueWildEncounters.length);
+            const favorite = filteredFavorites[randomIndex];
+            const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
+            const speciesName = speciesEntry ? speciesEntry.species : null;
+            if (speciesName) {
+                const regex = new RegExp(`${requestedUniqueIngameTrades[i]}`, 'g');
+                ingame_trades_text = ingame_trades_text.replace(regex, `${speciesName}`);
+            }
+        } else if (filteredFavorites.length > 0) {
+            // Use a random filtered favorite Pokémon for remaining encounters
+            const regex = new RegExp(`${requestedUniqueIngameTrades[i]}`, 'g');
+            ingame_trades_text = ingame_trades_text.replace(regex, `${getRandomSpecies(filteredFavorites)}`);
+        } else {
+            // Use a random favorite Pokémon for remaining encounters
+            const regex = new RegExp(`${requestedUniqueIngameTrades[i]}`, 'g');
+            ingame_trades_text = ingame_trades_text.replace(regex, `${getRandomSpecies(favoritePokemon)}`);
+        }
+    }
+
+    zip.file(removeLeadingSlash(path), ingame_trades_text, { date: localDate });
 };
 
 const modifyAndZipEmeraldLegendaries = async (zip, basePath, favoritePokemon) => {
@@ -843,6 +915,9 @@ export const ExportFavorites = () => {
         // Modify the wild encounters to use the favorite's pokemon (non base starters or legendaries)
         await modifyAndZipWildEncountersText(zip, baseEmeraldPath, favoritePokemon, emeraldUniqueWildEncounters);
 
+        // Modify the ingame trades to use the favorite's pokemon (non base starters or legendaries)
+        await modifyAndZipIngameTradesText(zip, baseEmeraldPath + '/src/data/trade.h', favoritePokemon, emeraldUniqueIngameTrades, emeraldRequestedUniqueIngameTrades, emeraldUniqueWildEncounters);
+
         // Modify the legendary encounters to use the favorite's pokemon (fill with pseudo legendaries, and duplicates)
         await modifyAndZipEmeraldLegendaries(zip, baseEmeraldPath, favoritePokemon);
 
@@ -884,6 +959,9 @@ export const ExportFavorites = () => {
 
         // Modify the wild encounters to use the favorite's pokemon (non base starters or legendaries)
         await modifyAndZipWildEncountersText(zip, baseFireRedPath, favoritePokemon, fireRedUniqueWildEncounters);
+
+        // Modify the ingame trades to use the favorite's pokemon (non base starters or legendaries)
+        await modifyAndZipIngameTradesText(zip, baseFireRedPath + '/src/data/ingame_trades.h', favoritePokemon, fireRedUniqueIngameTrades, fireRedRequestedUniqueIngameTrades, fireRedUniqueWildEncounters);
 
         // Modify the legendary encounters to use the favorite's pokemon (fill with pseudo legendaries, and duplicates)
         await modifyAndZipFireRedLegendaries(zip, baseFireRedPath, favoritePokemon);

@@ -1,0 +1,24 @@
+export const fireRedUniqueIngameTrades = [
+    "SPECIES_MR_MIME",
+    "SPECIES_JYNX",
+    "SPECIES_FARFETCHD",
+    "SPECIES_LICKITUNG",
+    "SPECIES_ELECTRODE",
+    "SPECIES_TANGELA",
+    "SPECIES_SEEL",
+]
+
+export const fireRedRequestedUniqueIngameTrades = [
+    "SPECIES_ABRA",
+    "SPECIES_POLIWHIRL",
+    "SPECIES_NIDORAN_F",
+    "SPECIES_NIDORAN_M",
+    "SPECIES_SPEAROW",
+    "SPECIES_NIDORINA",
+    "SPECIES_NIDORINO",
+    "SPECIES_GOLDUCK",
+    "SPECIES_SLOWBRO",
+    "SPECIES_RAICHU",
+    "SPECIES_VENONAT",
+    "SPECIES_PONYTA",
+]
