@@ -375,7 +375,13 @@ const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemo
     let silphco_7f_text = await fetch(basePath + '/data/maps/SilphCo_7F/text.inc').then(response => response.text());
     let ssanne_2f_room1_text = await fetch(basePath + '/data/maps/SSAnne_2F_Room1/scripts.inc').then(response => response.text());
     let threeisland_berryforest_text = await fetch(basePath + '/data/maps/ThreeIsland_BerryForest/scripts.inc').then(response => response.text());
+    let fiveisland_waterlabyrinth_text = await fetch(basePath + '/data/maps/FiveIsland_WaterLabyrinth/scripts.inc').then(response => response.text());
+    let sixisland_waterpath_house1_script_text = await fetch(basePath + '/data/maps/SixIsland_WaterPath_House1/scripts.inc').then(response => response.text());
+    let sixisland_waterpath_house1_text = await fetch(basePath + '/data/maps/SixIsland_WaterPath_House1/text.inc').then(response => response.text());
     let battle_setup_text = await fetch(basePath + '/src/battle_setup.c').then(response => response.text());
+    let trainer_tower_sets_text = await fetch(basePath + '/src/trainer_tower_sets.c').then(response => response.text());
+    let bt_lvl50_text = await fetch(basePath + '/src/battle_tower/level_50_mons.c').then(response => response.text());
+    let bt_lvl100_text = await fetch(basePath + '/src/battle_tower/level_100_mons.c').then(response => response.text());
 
     // Replace unique wild encounters with favorite Pokémon species
     const getSpeciesWithOffset = (favoritePokemon, filteredFavorites, offset) => {
@@ -430,8 +436,15 @@ const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemo
     silphco_7f_text = silphco_7f_text.replace(/LAPRAS/g, silphco_7f_pokemon_species.replace("SPECIES_", ""));
     ssanne_2f_room1_text = ssanne_2f_room1_text.replace(/SPECIES_SNORLAX/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 24));
     threeisland_berryforest_text = threeisland_berryforest_text.replace(/SPECIES_HYPNO/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 25));
+    fiveisland_waterlabyrinth_text = fiveisland_waterlabyrinth_text.replace(/SPECIES_TOGEPI/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 26));
+    let ssixisland_waterpath_house1_pokemon_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 27);
+    sixisland_waterpath_house1_script_text = sixisland_waterpath_house1_script_text.replace(/SPECIES_HERACROSS/g, ssixisland_waterpath_house1_pokemon_species);
+    sixisland_waterpath_house1_text = sixisland_waterpath_house1_text.replace(/HERACROSS/g, ssixisland_waterpath_house1_pokemon_species.replace("SPECIES_", ""));
     battle_setup_text = battle_setup_text.replace(/SPECIES_WEEDLE/g, getRandomSpecies(favoritePokemon));
     battle_setup_text = battle_setup_text.replace(/SPECIES_MAROWAK/g, getRandomSpecies(favoritePokemon));
+    trainer_tower_sets_text = trainer_tower_sets_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bt_lvl50_text = bt_lvl50_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bt_lvl100_text = bt_lvl100_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
 
     // Write the modified text to the zip file
     zip.file(removeLeadingSlash(basePath) + '/data/maps/CeladonCity_Condominiums_RoofRoom/scripts.inc', celedon_condominiums_roofroom_text, { date: localDate });
@@ -452,7 +465,13 @@ const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemo
     zip.file(removeLeadingSlash(basePath) + '/data/maps/SilphCo_7F/text.inc', silphco_7f_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/data/maps/SSAnne_2F_Room1/scripts.inc', ssanne_2f_room1_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/data/maps/ThreeIsland_BerryForest/scripts.inc', threeisland_berryforest_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/FiveIsland_WaterLabyrinth/scripts.inc', fiveisland_waterlabyrinth_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SixIsland_WaterPath_House1/scripts.inc', sixisland_waterpath_house1_script_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SixIsland_WaterPath_House1/text.inc', sixisland_waterpath_house1_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/src/battle_setup.c', battle_setup_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/trainer_tower_sets.c', trainer_tower_sets_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/battle_tower/level_50_mons.c', bt_lvl50_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/battle_tower/level_100_mons.c', bt_lvl100_text, { date: localDate });
 };
 
 const modifyAndZipEmeraldLegendaries = async (zip, basePath, favoritePokemon) => {
