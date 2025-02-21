@@ -1115,6 +1115,10 @@ export const ExportFavorites = () => {
         const new_game_text = await fetch(baseEmeraldPath + '/src/new_game.c').then(response => response.text());
         zip.file(removeLeadingSlash(baseEmeraldPath + '/src/new_game.c'), new_game_text, { date: localDate });
 
+        // Add the LilyCoveCity Department Store script to add Linking Cable as a puchasable item
+        const lilycovecity_departmentstore_3f_text = await fetch(baseEmeraldPath + '/data/maps/LilycoveCity_DepartmentStore_3F/scripts.inc').then(response => response.text());
+        zip.file(removeLeadingSlash(baseEmeraldPath + '/data/maps/LilycoveCity_DepartmentStore_3F/scripts.inc'), lilycovecity_departmentstore_3f_text, { date: localDate });
+
         // Modify the starters to use the favorite's base starter pokemon of their type
         await modifyAndZipEmeraldStarterText(zip, baseEmeraldPath, favoritePokemon);
 
