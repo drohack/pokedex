@@ -52,9 +52,9 @@ const PokemonList = ({ pokemon }) => {
             <button className={styles.card} style={getTypeBackground(p.types)} onClick={() => handleToggleFavorite(p)}>
               <Pokemon pokemon={p} />
               {isFavorite && (
-                <button className={styles.lockButton} onClick={(e) => {handleToggleLock(p, e);}}>
+                <div className={styles.lockButton} onClick={(e) => {handleToggleLock(p, e);}}>
                   {lockedPokemon[p.id] ? <FaLock color="gold" /> : <FaUnlock color="white" />}
-                </button>
+                </div>
               )}
             </button>
           </div>

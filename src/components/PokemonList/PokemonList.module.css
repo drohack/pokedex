@@ -61,10 +61,19 @@
 
 .lockButton {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 2px;
+  right: 2px;
+  padding: 9px;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1em;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+  border-radius: 8px;
+}
+
+.lockButton:hover,
+.lockButton:focus {
+  border-color: #ccc; /* Change border color on hover/focus */
 }
