@@ -200,7 +200,7 @@ const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, fi
             // Use a unique favorite Pokémon
             const favorite = filteredFavorites[i];
             const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
-            const speciesName = speciesEntry ? speciesEntry.species : null;
+            const speciesName = speciesEntry ? speciesEntry.species : getRandomSpecies(filteredFavorites);
             if (speciesName) {
                 const regex = new RegExp(`"${uniqueWildEncounters[i]}"`, 'g');
                 wild_encounters_text = wild_encounters_text.replace(regex, `"${speciesName}"`);
@@ -233,7 +233,7 @@ const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, filtered
             // Use a unique favorite Pokémon
             const favorite = filteredFavorites[j];
             const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
-            const speciesName = speciesEntry ? speciesEntry.species : null;
+            const speciesName = speciesEntry ? speciesEntry.species : getRandomSpecies(filteredFavorites);
             if (speciesName) {
                 const regex = new RegExp(`${uniqueIngameTrades[i]}`, 'g');
                 ingame_trades_text = ingame_trades_text.replace(regex, `${speciesName}`);
@@ -261,7 +261,7 @@ const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, filtered
             const randomIndex = Math.floor(Math.random() * uniqueWildEncounters.length);
             const favorite = filteredFavorites[randomIndex];
             const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
-            const speciesName = speciesEntry ? speciesEntry.species : null;
+            const speciesName = speciesEntry ? speciesEntry.species : getRandomSpecies(filteredFavorites);
             if (speciesName) {
                 const regex = new RegExp(`${requestedUniqueIngameTrades[i]}`, 'g');
                 ingame_trades_text = ingame_trades_text.replace(regex, `${speciesName}`);
@@ -280,8 +280,83 @@ const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, filtered
     zip.file(removeLeadingSlash(path), ingame_trades_text, { date: localDate });
 };
 
+const modifyAndZipEmeraldOtherPokemonText = async (zip, basePath, favoritePokemon, filteredFavorites, startingId) => {
+    // Read the different files (from public/ folder)
+    let aquahideout_bf1_text = await fetch(basePath + '/data/maps/AquaHideout_B1F/scripts.inc').then(response => response.text());
+    let battlefrontier_outsideeast_text = await fetch(basePath + '/data/maps/BattleFrontier_OutsideEast/scripts.inc').then(response => response.text());
+    let lavaridgetown_text = await fetch(basePath + '/data/maps/LavaridgeTown/scripts.inc').then(response => response.text());
+    let mossdeepcity_stevenshouse_text = await fetch(basePath + '/data/maps/MossdeepCity_StevensHouse/scripts.inc').then(response => response.text());
+    let newmauville_inside = await fetch(basePath + '/data/maps/NewMauville_Inside/scripts.inc').then(response => response.text());
+    let route199_weatherinstitue_2f_text = await fetch(basePath + '/data/maps/Route119_WeatherInstitute_2F/scripts.inc').then(response => response.text());
+    let route120_text = await fetch(basePath + '/data/maps/Route120/scripts.inc').then(response => response.text());
+    let rustborocity_devoncorp_2f_text = await fetch(basePath + '/data/maps/RustboroCity_DevonCorp_2F/scripts.inc').then(response => response.text());
+    let battle_partners_text = await fetch(basePath + '/src/data/battle_partners.h').then(response => response.text());
+    let contest_opponents_text = await fetch(basePath + '/src/data/contest_opponents.h').then(response => response.text());
+    let lilycove_lady_text = await fetch(basePath + '/src/data/lilycove_lady.h').then(response => response.text());
+    let bf_mons_text = await fetch(basePath + '/src/data/battle_frontier/battle_frontier_mons.h').then(response => response.text());
+    let bp_lvl50_wild_mons_text = await fetch(basePath + '/src/data/battle_frontier/battle_pyramid_level_50_wild_mons.h').then(response => response.text());
+    let bp_open_lvl_wild_mons_text = await fetch(basePath + '/src/data/battle_frontier/battle_pyramid_open_level_wild_mons.h').then(response => response.text());
+    let bf_tent_text = await fetch(basePath + '/src/data/battle_frontier/battle_tent.h').then(response => response.text());
+    let bf_trainer_hill_text = await fetch(basePath + '/src/data/battle_frontier/trainer_hill.h').then(response => response.text());
+
+    // Replace unique wild encounters with favorite Pokémon species
+    const getSpeciesWithOffset = (favoritePokemon, filteredFavorites, offset) => {
+        if (offset < filteredFavorites.length) {
+            // Use a unique favorite Pokémon
+            const favorite = filteredFavorites[j];
+            const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
+            const speciesName = speciesEntry ? speciesEntry.species : getRandomSpecies(filteredFavorites);
+            return speciesName;
+        } else if (filteredFavorites.length > 0) {
+            // Use a random filtered favorite Pokémon for remaining encounters
+            return getRandomSpecies(filteredFavorites);
+        } else {
+            // Use a random favorite Pokémon for remaining encounters
+            return getRandomSpecies(favoritePokemon);
+        }
+    }
+
+    aquahideout_bf1_text = aquahideout_bf1_text.replace(/SPECIES_ELECTRODE/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId));
+    battlefrontier_outsideeast_text = battlefrontier_outsideeast_text.replace(/SPECIES_SUDOWOODO/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 1));
+    lavaridgetown_text = lavaridgetown_text.replace(/SPECIES_WYNAUT/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 2));
+    mossdeepcity_stevenshouse_text = mossdeepcity_stevenshouse_text.replace(/SPECIES_BELDUM/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 3));
+    newmauville_inside = newmauville_inside.replace(/SPECIES_VOLTORB/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 4));
+    route199_weatherinstitue_2f_text = route199_weatherinstitue_2f_text.replace(/SPECIES_CASTFORM_NORMAL/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 5));
+    route120_text = route120_text.replace(/SPECIES_KECLEON/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 6));
+    rustborocity_devoncorp_2f_text = rustborocity_devoncorp_2f_text.replace(/SPECIES_LILEEP/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 7));
+    rustborocity_devoncorp_2f_text = rustborocity_devoncorp_2f_text.replace(/SPECIES_ANORITH/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 8));
+    battle_partners_text = battle_partners_text.replace(/SPECIES_METANG/g, getRandomSpecies(favoritePokemon));
+    battle_partners_text = battle_partners_text.replace(/SPECIES_SKARMORY/g, getRandomSpecies(favoritePokemon));
+    battle_partners_text = battle_partners_text.replace(/SPECIES_AGGRON/g, getRandomSpecies(favoritePokemon));
+    contest_opponents_text = contest_opponents_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    lilycove_lady_text = lilycove_lady_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bf_mons_text = bf_mons_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bp_lvl50_wild_mons_text = bp_lvl50_wild_mons_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bp_open_lvl_wild_mons_text = bp_open_lvl_wild_mons_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bf_tent_text = bf_tent_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+    bf_trainer_hill_text = bf_trainer_hill_text.replace(/SPECIES[^,]+(?=,)/g, () => getRandomSpecies(favoritePokemon));
+
+    // Write the modified text to the zip file
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/AquaHideout_B1F/scripts.inc', aquahideout_bf1_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/BattleFrontier_OutsideEast/scripts.inc', battlefrontier_outsideeast_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/LavaridgeTown/scripts.inc', lavaridgetown_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/MossdeepCity_StevensHouse/scripts.inc', mossdeepcity_stevenshouse_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/NewMauville_Inside/scripts.inc', newmauville_inside, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route119_WeatherInstitute_2F/scripts.inc', route199_weatherinstitue_2f_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route120/scripts.inc', route120_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/RustboroCity_DevonCorp_2F/scripts.inc', rustborocity_devoncorp_2f_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/battle_partners.h', battle_partners_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/contest_opponents.h', contest_opponents_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/lilycove_lady.h', lilycove_lady_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/battle_frontier/battle_frontier_mons.h', bf_mons_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/battle_frontier/battle_pyramid_level_50_wild_mons.h', bp_lvl50_wild_mons_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/battle_frontier/battle_pyramid_open_level_wild_mons.h', bp_open_lvl_wild_mons_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/battle_frontier/battle_tent.h', bf_tent_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/data/battle_frontier/trainer_hill.h', bf_trainer_hill_text, { date: localDate });
+};
+
 const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemon, filteredFavorites, startingId) => {
-    // Read the different shop files (from public/ folder)
+    // Read the different files (from public/ folder)
     let celedon_condominiums_roofroom_text = await fetch(basePath + '/data/maps/CeladonCity_Condominiums_RoofRoom/scripts.inc').then(response => response.text());
     let celedon_gamecorner_prizeroom_text = await fetch(basePath + '/data/maps/CeladonCity_GameCorner_PrizeRoom/scripts.inc').then(response => response.text());
     let cinnabar_pokemonlab_experimentroom_text = await fetch(basePath + '/data/maps/CinnabarIsland_PokemonLab_ExperimentRoom/scripts.inc').then(response => response.text());
@@ -308,7 +383,7 @@ const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemo
             // Use a unique favorite Pokémon
             const favorite = filteredFavorites[j];
             const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
-            const speciesName = speciesEntry ? speciesEntry.species : null;
+            const speciesName = speciesEntry ? speciesEntry.species : getRandomSpecies(filteredFavorites);
             return speciesName;
         } else if (filteredFavorites.length > 0) {
             // Use a random filtered favorite Pokémon for remaining encounters
@@ -334,7 +409,7 @@ const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemo
     powerplant_text = powerplant_text.replace(/SPECIES_ELECTRODE/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 12));
     let route4_pokemon_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 13);
     route4_pokemoncenter_1f_script_text = route4_pokemoncenter_1f_script_text.replace(/SPECIES_MAGIKARP/g, route4_pokemon_species);
-    route4_pokemoncenter_1f_script_text = route4_pokemoncenter_1f_script_text.replace(/MAGIKARP/g, route4_pokemon_species.replace("SPECIES_", ""));
+    route4_pokemoncenter_1f_text = route4_pokemoncenter_1f_text.replace(/MAGIKARP/g, route4_pokemon_species.replace("SPECIES_", ""));
     route12_text = route12_text.replace(/SPECIES_SNORLAX/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 14));
     let rout12_pokemon_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 15)
     route12_fishinghouse_script_text = route12_fishinghouse_script_text.replace(/SPECIES_MAGIKARP/g, rout12_pokemon_species);
@@ -358,6 +433,7 @@ const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemo
     battle_setup_text = battle_setup_text.replace(/SPECIES_WEEDLE/g, getRandomSpecies(favoritePokemon));
     battle_setup_text = battle_setup_text.replace(/SPECIES_MAROWAK/g, getRandomSpecies(favoritePokemon));
 
+    // Write the modified text to the zip file
     zip.file(removeLeadingSlash(basePath) + '/data/maps/CeladonCity_Condominiums_RoofRoom/scripts.inc', celedon_condominiums_roofroom_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/data/maps/CeladonCity_GameCorner_PrizeRoom/scripts.inc', celedon_gamecorner_prizeroom_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/data/maps/CinnabarIsland_PokemonLab_ExperimentRoom/scripts.inc', cinnabar_pokemonlab_experimentroom_text, { date: localDate });
@@ -1029,6 +1105,10 @@ export const ExportFavorites = () => {
         // Modify the ingame trades to use the favorite's pokemon (non base starters or legendaries)
         await modifyAndZipIngameTradesText(zip, baseEmeraldPath + '/src/data/trade.h', favoritePokemon, filteredFavorites, emeraldUniqueIngameTrades, emeraldRequestedUniqueIngameTrades, emeraldUniqueWildEncounters);
 
+        // Modify the shop/trap/world/other pokemon to use the favorite's pokemon (non base starters or legendaries) (start favorite index after already used)
+        let startingId = emeraldUniqueWildEncounters.length + emeraldUniqueIngameTrades.length + emeraldRequestedUniqueIngameTrades.length;
+        await modifyAndZipEmeraldOtherPokemonText(zip, baseEmeraldPath, favoritePokemon, filteredFavorites, startingId);
+
         // Modify the legendary encounters to use the favorite's pokemon (fill with pseudo legendaries, and duplicates)
         await modifyAndZipEmeraldLegendaries(zip, baseEmeraldPath, favoritePokemon);
 
@@ -1088,7 +1168,7 @@ export const ExportFavorites = () => {
         // Modify the ingame trades to use the favorite's pokemon (non base starters or legendaries)
         await modifyAndZipIngameTradesText(zip, baseFireRedPath + '/src/data/ingame_trades.h', favoritePokemon, filteredFavorites, fireRedUniqueIngameTrades, fireRedRequestedUniqueIngameTrades, fireRedUniqueWildEncounters);
 
-        // Modify the shop pokemon to use the favorite's pokemon (non base starters or legendaries) (start favorite index after already used)
+        // Modify the shop/trap/world/other pokemon to use the favorite's pokemon (non base starters or legendaries) (start favorite index after already used)
         let startingId = fireRedUniqueWildEncounters.length + fireRedUniqueIngameTrades.length + fireRedRequestedUniqueIngameTrades.length;
         await modifyAndZipFireRedOtherPokemonText(zip, baseFireRedPath, favoritePokemon, filteredFavorites, startingId);
 
