@@ -12,6 +12,10 @@ If you want to play a custom ROM of Pokemon FireRed (Expansion) (https://github.
     * Evolutions not favorited will be removed. i.e. if you have an Onyx as a favorite, but not a Steelix, the option to evolve Onyx will be removed from the game.
         * This includes branching Evolutions. i.e. if you have Slowpoke and Slowbrow favorited, but not Slowking, the option to evolve Slowpoke to Slowking will be removed.
     * If you skip a stage they will be removed, but the next stage will also be moved down. i.e. If you have Gastly and Gengar favorited, but not Haunter. Then Gastly will be updated so that when it would evolve into Haunter it will instead evolve into Gengar.
+* Randomize world pokemon (i.e. static fights, bought, npc traded)
+* Add item LINKING_CABLE to the Department Store (to be able to evolve pokemon that require trading)
+* Start with Running Shoes
+* Use National PokeDex
 * No other changes have been made (i.e. Moves, Stats, Items... etc.)
 
 Steps:

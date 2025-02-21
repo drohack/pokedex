@@ -1,0 +1,40 @@
+.infoPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure the popup is above other elements */
+}
+
+.infoPopupContent {
+  background: black;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+  z-index: 1001; /* Ensure the content is above the dimmed background */
+  text-align: left; /* Ensure text is left-aligned */
+}
+
+.infoPopupContent p,
+.infoPopupContent ul {
+  text-align: left; /* Left-align the <p> and <ul> elements */
+}
+
+.centerText {
+  text-align: center; /* Center-align the text */
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}

@@ -4,7 +4,7 @@ https://drohack.github.io/pokedex/
 
 A simple Pokedex application built with React, React Query, Redux Toolkit, React Router, and Dexie.js for persistent data. Uses data from PokeAPI https://pokeapi.co/.
 
-This has been updated by drohack to allow a more detailed filtering of pokemon. A larger list of pokemon to search. And to export the Favorites list to either a text file OR for a Pokemon Emerald Extended ROM. This was made for GACKcon 2025 panel "Narrowing down to the ultimate 151 pokemon" (There are so many pokemon, there must be some good ones in every generation. During this panel we will narrow down the 1000+ pokemon into the perfect 151. Come let your voice and terrible opinions be heard).
+This has been updated by drohack to allow a more detailed filtering of pokemon. A larger list of pokemon to search. And to export the Favorites list to either a text file OR for a semi randomized Pokemon Emerald Extended ROM or semi randomized Pokemon FireRed Extended ROM. This was made for GACKcon 2025 panel "Narrowing down to the ultimate 151 pokemon" (There are so many pokemon, there must be some good ones in every generation. During this panel we will narrow down the 1000+ pokemon into the perfect 151. Come let your voice and terrible opinions be heard).
 
 ## Screenshots
 
@@ -49,6 +49,8 @@ This has been updated by drohack to allow a more detailed filtering of pokemon. 
     * Filters work on Favorites page
     * Export List: Exports a simple text file with all of your favorite pokemon, each on their own line
     * Export FireRed or Emerald ROM (see below for more details)
+* **Lock favorites:**
+    * Allow you to lock some of your more precious favirotes so they don't accidentally get unfavorited
 
 ## Export FireRed or Emerald ROM
 
@@ -68,6 +70,11 @@ If you want to play a custom ROM of  of your selected Favorites there's no easy 
     * Evolutions not favorited will be removed. i.e. if you have an Onyx as a favorite, but not a Steelix, the option to evolve Onyx will be removed from the game.
         * This includes branching Evolutions. i.e. if you have Slowpoke and Slowbrow favorited, but not Slowking, the option to evolve Slowpoke to Slowking will be removed.
     * If you skip a stage they will be removed, but the next stage will also be moved down. i.e. If you have Gastly and Gengar favorited, but not Haunter. Then Gastly will be updated so that when it would evolve into Haunter it will instead evolve into Gengar.
+* Randomize competition pokemon
+* Randomize world pokemon (i.e. static fights, bought, npc traded)
+* Add item LINKING_CABLE to the Department Store (to be able to evolve pokemon that require trading)
+* Start with Running Shoes
+* Use National PokeDex
 * No other changes have been made (i.e. Moves, Stats, Items... etc.)
 
 ### Export and build FireRed ROM
@@ -90,7 +97,7 @@ If you want to play a custom ROM of  of your selected Favorites there's no easy 
             3. `sudo apt upgrade`
         7. Navigate to your `pokefirered-expansion` folder
     5. Keep this window open (you can get back to your WSL instance in Power Shell by running `wsl`)
-4. Copy the unzipped "data" and "src" folder from FireRedRomFiles into your "pokefirered-expansion" folder and replace all 23 files.
+4. Copy the unzipped "data" and "src" folder from FireRedRomFiles into your "pokefirered-expansion" folder and replace all files.
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokefirered.gba" and "pokefirered.elf" files. This takes between 5 - 10 minutes to compile.
 
 ### Export and build Emerald ROM
@@ -113,7 +120,7 @@ If you want to play a custom ROM of  of your selected Favorites there's no easy 
             3. `sudo apt upgrade`
         7. Navigate to your `pokefirered-expansion` folder
     5. Keep this window open (you can get back to your WSL instance in Power Shell by running `wsl`)
-4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 26 files.
+4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all files.
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokeemerald.gba" and "pokeemerald.elf" files. This takes between 5 - 10 minutes to compile.
 
 And you should be good to go! Have fun playing your custom Pokemon Rom in your favorite emulator.
