@@ -34,7 +34,7 @@ Steps:
             3. `sudo apt upgrade`
         7. Navigate to your `pokefirered-expansion` folder
     5. Keep this window open (you can get back to your WSL instance in Power Shell by running `wsl`)
-4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all 26 files.
+4. Copy the unzipped "data" and "src" folder from EmeraldRomFiles into your "pokeemerald-expansion" folder and replace all files.
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokeemerald.gba" and "pokeemerald.gba" files. This takes between 5 - 10 minutes to compile.
 
 And you should be good to go! Have fun playing your custom Emerald Rom in your favorite emulator.

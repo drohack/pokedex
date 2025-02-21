@@ -187,18 +187,9 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, favoritePokemon) =>
     zip.file(removeLeadingSlash(basePath) + '/src/field_specials.c', field_specials_text, { date: localDate });
 };
 
-const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, uniqueWildEncounters) => {
+const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, filteredFavorites, uniqueWildEncounters) => {
     // Read the original wild_encounters_text.json file (from public/ folder)
     let wild_encounters_text = await fetch(basePath + '/src/data/wild_encounters.json').then(response => response.text());
-
-    // Combine all IDs to be excluded
-    const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
-    const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
-    const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
-    const exclusionIds = [...chosenStarterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
-
-    // Filter out the excluded Pokémon from the favorites list
-    const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
 
     // Shuffle the list of unique wild encounters
     shuffleArray(uniqueWildEncounters);
@@ -228,18 +219,9 @@ const modifyAndZipWildEncountersText = async (zip, basePath, favoritePokemon, un
     zip.file(removeLeadingSlash(basePath) + '/src/data/wild_encounters.json', wild_encounters_text, { date: localDate });
 };
 
-const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, uniqueIngameTrades, requestedUniqueIngameTrades, uniqueWildEncounters) => {
+const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, filteredFavorites, uniqueIngameTrades, requestedUniqueIngameTrades, uniqueWildEncounters) => {
     // Read the original ingame_trades.json file (from public/ folder)
     let ingame_trades_text = await fetch(path).then(response => response.text());
-
-    // Combine all IDs to be excluded
-    const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
-    const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
-    const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
-    const exclusionIds = [...chosenStarterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
-
-    // Filter out the excluded Pokémon from the favorites list
-    const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
 
     // Shuffle the list of unique ingame trades
     shuffleArray(uniqueIngameTrades);
@@ -296,6 +278,105 @@ const modifyAndZipIngameTradesText = async (zip, path, favoritePokemon, uniqueIn
     }
 
     zip.file(removeLeadingSlash(path), ingame_trades_text, { date: localDate });
+};
+
+const modifyAndZipFireRedOtherPokemonText = async (zip, basePath, favoritePokemon, filteredFavorites, startingId) => {
+    // Read the different shop files (from public/ folder)
+    let celedon_condominiums_roofroom_text = await fetch(basePath + '/data/maps/CeladonCity_Condominiums_RoofRoom/scripts.inc').then(response => response.text());
+    let celedon_gamecorner_prizeroom_text = await fetch(basePath + '/data/maps/CeladonCity_GameCorner_PrizeRoom/scripts.inc').then(response => response.text());
+    let cinnabar_pokemonlab_experimentroom_text = await fetch(basePath + '/data/maps/CinnabarIsland_PokemonLab_ExperimentRoom/scripts.inc').then(response => response.text());
+    let pokemontower_6f_text = await fetch(basePath + '/data/maps/PokemonTower_6F/scripts.inc').then(response => response.text());
+    let powerplant_text = await fetch(basePath + '/data/maps/PowerPlant/scripts.inc').then(response => response.text());
+    let route4_pokemoncenter_1f_script_text = await fetch(basePath + '/data/maps/Route4_PokemonCenter_1F/scripts.inc').then(response => response.text());
+    let route4_pokemoncenter_1f_text = await fetch(basePath + '/data/maps/Route4_PokemonCenter_1F/text.inc').then(response => response.text());
+    let route12_text = await fetch(basePath + '/data/maps/Route12/scripts.inc').then(response => response.text());
+    let route12_fishinghouse_script_text = await fetch(basePath + '/data/maps/Route12_FishingHouse/scripts.inc').then(response => response.text());
+    let route12_fishinghouse_text = await fetch(basePath + '/data/maps/Route12_FishingHouse/text.inc').then(response => response.text());
+    let route16_text = await fetch(basePath + '/data/maps/Route16/scripts.inc').then(response => response.text());
+    let route25_seacottage_text = await fetch(basePath + '/data/maps/Route25_SeaCottage/scripts.inc').then(response => response.text());
+    let saffroncity_dojo_script_text = await fetch(basePath + '/data/maps/SaffronCity_Dojo/scripts.inc').then(response => response.text());
+    let saffroncity_dojo_text = await fetch(basePath + '/data/maps/SaffronCity_Dojo/text.inc').then(response => response.text());
+    let silphco_7f_script_text = await fetch(basePath + '/data/maps/SilphCo_7F/scripts.inc').then(response => response.text());
+    let silphco_7f_text = await fetch(basePath + '/data/maps/SilphCo_7F/text.inc').then(response => response.text());
+    let ssanne_2f_room1_text = await fetch(basePath + '/data/maps/SSAnne_2F_Room1/scripts.inc').then(response => response.text());
+    let threeisland_berryforest_text = await fetch(basePath + '/data/maps/ThreeIsland_BerryForest/scripts.inc').then(response => response.text());
+    let battle_setup_text = await fetch(basePath + '/src/battle_setup.c').then(response => response.text());
+
+    // Replace unique wild encounters with favorite Pokémon species
+    const getSpeciesWithOffset = (favoritePokemon, filteredFavorites, offset) => {
+        if (offset < filteredFavorites.length) {
+            // Use a unique favorite Pokémon
+            const favorite = filteredFavorites[j];
+            const speciesEntry = speciesConversionArray[favorite.name.toLowerCase()];
+            const speciesName = speciesEntry ? speciesEntry.species : null;
+            return speciesName;
+        } else if (filteredFavorites.length > 0) {
+            // Use a random filtered favorite Pokémon for remaining encounters
+            return getRandomSpecies(filteredFavorites);
+        } else {
+            // Use a random favorite Pokémon for remaining encounters
+            return getRandomSpecies(favoritePokemon);
+        }
+    }
+
+    celedon_condominiums_roofroom_text = celedon_condominiums_roofroom_text.replace(/SPECIES_EEVEE/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_ABRA/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 1));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_CLEFAIRY/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 2));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_DRATINI/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 3));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_PINSIR/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 4));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_SCYTHER/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 5));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_DRATINI/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 6));
+    celedon_gamecorner_prizeroom_text = celedon_gamecorner_prizeroom_text.replace(/SPECIES_PORYGON/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 7));
+    cinnabar_pokemonlab_experimentroom_text = cinnabar_pokemonlab_experimentroom_text.replace(/SPECIES_OMANYTE/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 8));
+    cinnabar_pokemonlab_experimentroom_text = cinnabar_pokemonlab_experimentroom_text.replace(/SPECIES_KABUTO/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 9));
+    cinnabar_pokemonlab_experimentroom_text = cinnabar_pokemonlab_experimentroom_text.replace(/SPECIES_AERODACTYL/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 10));
+    pokemontower_6f_text = pokemontower_6f_text.replace(/SPECIES_MAROWAK/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 11));
+    powerplant_text = powerplant_text.replace(/SPECIES_ELECTRODE/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 12));
+    let route4_pokemon_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 13);
+    route4_pokemoncenter_1f_script_text = route4_pokemoncenter_1f_script_text.replace(/SPECIES_MAGIKARP/g, route4_pokemon_species);
+    route4_pokemoncenter_1f_script_text = route4_pokemoncenter_1f_script_text.replace(/MAGIKARP/g, route4_pokemon_species.replace("SPECIES_", ""));
+    route12_text = route12_text.replace(/SPECIES_SNORLAX/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 14));
+    let rout12_pokemon_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 15)
+    route12_fishinghouse_script_text = route12_fishinghouse_script_text.replace(/SPECIES_MAGIKARP/g, rout12_pokemon_species);
+    route12_fishinghouse_text = route12_fishinghouse_text.replace(/MAGIKARP/g, rout12_pokemon_species.replace("SPECIES_", ""));
+    route16_text = route16_text.replace(/SPECIES_SNORLAX/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 16));
+    route25_seacottage_text = route25_seacottage_text.replace(/SPECIES_EEVEE/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 17));
+    route25_seacottage_text = route25_seacottage_text.replace(/SPECIES_FLAREON/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 18));
+    route25_seacottage_text = route25_seacottage_text.replace(/SPECIES_JOLTEON/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 19));
+    route25_seacottage_text = route25_seacottage_text.replace(/SPECIES_VAPOREON/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 20));
+    let dojo_hitmonlee_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 21);
+    let dojo_hitmonchan_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 22);
+    saffroncity_dojo_script_text = saffroncity_dojo_script_text.replace(/SPECIES_HITMONLEE/g, dojo_hitmonlee_species);
+    saffroncity_dojo_script_text = saffroncity_dojo_script_text.replace(/SPECIES_HITMONCHAN/g, dojo_hitmonchan_species);
+    saffroncity_dojo_text = saffroncity_dojo_text.replace(/HITMONLEE/g, dojo_hitmonlee_species.replace("SPECIES_", ""));
+    saffroncity_dojo_text = saffroncity_dojo_text.replace(/HITMONCHAN/g, dojo_hitmonchan_species.replace("SPECIES_", ""));
+    let silphco_7f_pokemon_species = getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 23);
+    silphco_7f_script_text = silphco_7f_script_text.replace(/SPECIES_LAPRAS/g, silphco_7f_pokemon_species);
+    silphco_7f_text = silphco_7f_text.replace(/LAPRAS/g, silphco_7f_pokemon_species.replace("SPECIES_", ""));
+    ssanne_2f_room1_text = ssanne_2f_room1_text.replace(/SPECIES_SNORLAX/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 24));
+    threeisland_berryforest_text = threeisland_berryforest_text.replace(/SPECIES_HYPNO/g, getSpeciesWithOffset(favoritePokemon, filteredFavorites, startingId + 25));
+    battle_setup_text = battle_setup_text.replace(/SPECIES_WEEDLE/g, getRandomSpecies(favoritePokemon));
+    battle_setup_text = battle_setup_text.replace(/SPECIES_MAROWAK/g, getRandomSpecies(favoritePokemon));
+
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/CeladonCity_Condominiums_RoofRoom/scripts.inc', celedon_condominiums_roofroom_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/CeladonCity_GameCorner_PrizeRoom/scripts.inc', celedon_gamecorner_prizeroom_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/CinnabarIsland_PokemonLab_ExperimentRoom/scripts.inc', cinnabar_pokemonlab_experimentroom_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/PokemonTower_6F/scripts.inc', pokemontower_6f_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/PowerPlant/scripts.inc', powerplant_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route4_PokemonCenter_1F/scripts.inc', route4_pokemoncenter_1f_script_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route4_PokemonCenter_1F/text.inc', route4_pokemoncenter_1f_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route12/scripts.inc', route12_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route12_FishingHouse/scripts.inc', route12_fishinghouse_script_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route12_FishingHouse/text.inc', route12_fishinghouse_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route16/scripts.inc', route16_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/Route25_SeaCottage/scripts.inc', route25_seacottage_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SaffronCity_Dojo/scripts.inc', saffroncity_dojo_script_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SaffronCity_Dojo/text.inc', saffroncity_dojo_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SilphCo_7F/scripts.inc', silphco_7f_script_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SilphCo_7F/text.inc', silphco_7f_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/SSAnne_2F_Room1/scripts.inc', ssanne_2f_room1_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/data/maps/ThreeIsland_BerryForest/scripts.inc', threeisland_berryforest_text, { date: localDate });
+    zip.file(removeLeadingSlash(basePath) + '/src/battle_setup.c', battle_setup_text, { date: localDate });
 };
 
 const modifyAndZipEmeraldLegendaries = async (zip, basePath, favoritePokemon) => {
@@ -915,6 +996,16 @@ export const ExportFavorites = () => {
             return;
         }
 
+        // Combine all IDs to be excluded
+        const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
+        const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
+        const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
+        const exclusionIds = [...chosenStarterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+
+        // Filter out the excluded Pokémon from the favorites list
+        const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
+        shuffleArray(filteredFavorites);
+
         const zip = new JSZip();
 
         // Add the README file to the zip
@@ -933,10 +1024,10 @@ export const ExportFavorites = () => {
         await modifyAndZipEmeraldStarterText(zip, baseEmeraldPath, favoritePokemon);
 
         // Modify the wild encounters to use the favorite's pokemon (non base starters or legendaries)
-        await modifyAndZipWildEncountersText(zip, baseEmeraldPath, favoritePokemon, emeraldUniqueWildEncounters);
+        await modifyAndZipWildEncountersText(zip, baseEmeraldPath, favoritePokemon, filteredFavorites, emeraldUniqueWildEncounters);
 
         // Modify the ingame trades to use the favorite's pokemon (non base starters or legendaries)
-        await modifyAndZipIngameTradesText(zip, baseEmeraldPath + '/src/data/trade.h', favoritePokemon, emeraldUniqueIngameTrades, emeraldRequestedUniqueIngameTrades, emeraldUniqueWildEncounters);
+        await modifyAndZipIngameTradesText(zip, baseEmeraldPath + '/src/data/trade.h', favoritePokemon, filteredFavorites, emeraldUniqueIngameTrades, emeraldRequestedUniqueIngameTrades, emeraldUniqueWildEncounters);
 
         // Modify the legendary encounters to use the favorite's pokemon (fill with pseudo legendaries, and duplicates)
         await modifyAndZipEmeraldLegendaries(zip, baseEmeraldPath, favoritePokemon);
@@ -960,6 +1051,16 @@ export const ExportFavorites = () => {
             return;
         }
 
+        // Combine all IDs to be excluded
+        const subLegendaryIds = Object.values(SubLegendaries).map(subLegendary => subLegendary.id);
+        const legendaryIds = Object.values(Legendaries).map(legendary => legendary.id);
+        const mythicalIds = Object.values(Mythical).map(mythical => mythical.id);
+        const exclusionIds = [...chosenStarterIds, ...subLegendaryIds, ...legendaryIds, ...mythicalIds];
+
+        // Filter out the excluded Pokémon from the favorites list
+        const filteredFavorites = favoritePokemon.filter(pokemon => !exclusionIds.includes(pokemon.id));
+        shuffleArray(filteredFavorites);
+
         const zip = new JSZip();
 
         // Add the README file to the zip
@@ -982,10 +1083,14 @@ export const ExportFavorites = () => {
         await modifyAndZipFireRedStarterText(zip, baseFireRedPath, favoritePokemon);
 
         // Modify the wild encounters to use the favorite's pokemon (non base starters or legendaries)
-        await modifyAndZipWildEncountersText(zip, baseFireRedPath, favoritePokemon, fireRedUniqueWildEncounters);
+        await modifyAndZipWildEncountersText(zip, baseFireRedPath, favoritePokemon, filteredFavorites, fireRedUniqueWildEncounters);
 
         // Modify the ingame trades to use the favorite's pokemon (non base starters or legendaries)
-        await modifyAndZipIngameTradesText(zip, baseFireRedPath + '/src/data/ingame_trades.h', favoritePokemon, fireRedUniqueIngameTrades, fireRedRequestedUniqueIngameTrades, fireRedUniqueWildEncounters);
+        await modifyAndZipIngameTradesText(zip, baseFireRedPath + '/src/data/ingame_trades.h', favoritePokemon, filteredFavorites, fireRedUniqueIngameTrades, fireRedRequestedUniqueIngameTrades, fireRedUniqueWildEncounters);
+
+        // Modify the shop pokemon to use the favorite's pokemon (non base starters or legendaries) (start favorite index after already used)
+        let startingId = fireRedUniqueWildEncounters.length + fireRedUniqueIngameTrades.length + fireRedRequestedUniqueIngameTrades.length;
+        await modifyAndZipFireRedOtherPokemonText(zip, baseFireRedPath, favoritePokemon, filteredFavorites, startingId);
 
         // Modify the legendary encounters to use the favorite's pokemon (fill with pseudo legendaries, and duplicates)
         await modifyAndZipFireRedLegendaries(zip, baseFireRedPath, favoritePokemon);
