@@ -1213,11 +1213,11 @@ export const ExportFavorites = () => {
 
     return (
         <div className={styles.filterContainer}>
-            <button onClick={handleExportList} className={styles.clearButton}>Export List</button>
+            <button onClick={handleExportList} className={styles.clearButton}>Export as Text</button>
             <button onClick={handleExportEmeraldROM} className={styles.clearButton}>Export Emerald ROM</button>
             <button onClick={handleExportFireRedROM} className={styles.clearButton}>Export FireRed ROM</button>
         </div>
     );
-};
+}; 
 
 export default ExportFavorites;

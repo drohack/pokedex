@@ -1,0 +1,39 @@
+.titleContainer {
+  display: flex;
+  width: 100%;
+  padding: 0 20px; /* Optional: Add padding to the sides */
+  box-sizing: border-box; /* Include padding in the element's total width */
+}
+
+.titleContainer h2 {
+  flex: 1; /* Each title takes up equal space */
+  text-align: center; /* Centers text inside its column */
+  margin: 0; /* Remove default margin */
+}
+
+.titleContainer p {
+  margin: 0; /* Remove default margin */
+  align-self: center; /* Align the paragraph to the bottom */
+}
+
+.ultimate151Container {
+  display: flex;
+  justify-content: space-between;
+  height: calc(100vh - 207px); /* Adjust the 250px to account for any header or other elements */
+}
+
+.pokemonList, .favoriteList {
+  width: 48%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-grow: 1;
+}
+
+.clearButton {
+  background-color: grey;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, border 0.3s;
+  color: #e5e5e5;
+}

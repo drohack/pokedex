@@ -74,6 +74,13 @@ function NavBar() {
           >
             Favorites {favoriteCount > 0 ? `(${favoriteCount})` : ""}
           </NavLink>
+          <NavLink
+            to="/ultimate151"
+            onClick={() => window.scrollTo(0, 0)}
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+          >
+            Ultimate 151
+          </NavLink>
         </div>
         <div className={styles.navDiv}>
           <ChooseARegion />

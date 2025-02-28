@@ -114,5 +114,6 @@ export const { toggleFavorite, removeFavorite, toggleLock, clearNotLockedFavorit
 
 export const getFavoritePokemon = (state) => state.favorites.favoritePokemon;
 export const getLockedPokemon = (state) => state.favorites.lockedPokemon;
+export const getIsFavoritesLoading = (state) => state.favorites.isLoading;
 
 export default favoritesSlice.reducer;

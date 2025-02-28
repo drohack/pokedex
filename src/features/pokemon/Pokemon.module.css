@@ -9,3 +9,19 @@
     display: inline-block; /* Ensure the box fits the content */
     border-radius: 5px; /* Optional: Add rounded corners */
 }
+
+.pokemon img {
+    max-width: 100%;
+    height: auto;
+}
+  
+.pokemon.small img {
+    max-width: 49%; /* Shrink the image to half size */
+    margin-bottom: 0px !important;
+}
+
+.smallName {
+    font-size: 0.65rem !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
