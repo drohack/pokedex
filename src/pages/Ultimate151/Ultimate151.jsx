@@ -23,6 +23,7 @@ const Ultimate151 = () => {
   const favoritePokemon = useSelector(getFavoritePokemon);
   const isFavoritesLoading = useSelector(getIsFavoritesLoading);
   const [loadingImport, setLoading] = useState(false);
+  const divRef = useRef(null);
 
   const searchTerm = useSelector(selectSearchTerm);
   const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
@@ -173,14 +174,14 @@ const Ultimate151 = () => {
         </p>
         <h2>Ultimate 151</h2>
         <button className={styles.clearButton} onClick={handleClearUltimate151}>Clear List</button>
-        <ExportUltimate151 kantoPokemon={kantoPokemon}/>
+        <ExportUltimate151 kantoPokemon={kantoPokemon} divRef={divRef}/>
         <h2>Favorite Pokemon</h2>
         <p className={`${styles.right}`}>
             Showing: {visibleFavoritePokemon.length}
         </p>
       </div>
       <div className={styles.ultimate151Container}>
-        <div className={styles.pokemonList}>
+        <div ref={divRef} className={styles.pokemonList}>
           <PokemonListUltimateDrop 
             kantoPokemon={kantoPokemon}
             onDrop={handleDrop}

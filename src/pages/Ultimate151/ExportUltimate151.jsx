@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -9,6 +9,8 @@ import { fireRedUniqueWildEncounters } from '../../utils/FireRedUniqueWildEncoun
 import { fireRedUniqueIngameTrades, fireRedRequestedUniqueIngameTrades } from '../../utils/FireRedUniqueIngameTrades';
 import { original151Pokemon } from '../../utils/Original151Pokemon';
 import { getUltimate151, getIsUltimate151Loading } from './ultimate151Slice';
+import html2canvas from "html2canvas";
+import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 
 const baseFireRedPath = '/pokedex/FireRedExportFiles';
 
@@ -411,9 +413,10 @@ const createAndZipFireRedTrainers = async (zip, basePath, sortedUltimate151) => 
 };
 
 
-export const ExportUltimate151 = (kantoPokemon) => {
+export const ExportUltimate151 = ({kantoPokemon, divRef}) => {
     const ultimate151 = useSelector(getUltimate151);
     const isUltimate151Loading = useSelector(getIsUltimate151Loading);
+    const [loadingImage, setLoadingImage] = useState(false);
 
     if (isUltimate151Loading) {
         return <p>Loading...</p>;
@@ -422,11 +425,11 @@ export const ExportUltimate151 = (kantoPokemon) => {
     // Add missing kantoPokemon to ultimate151
     const completeUltimate151 = [...ultimate151];
     // Ensure kantoPokemon is an array
-    if (!Array.isArray(kantoPokemon.kantoPokemon)) {
+    if (!Array.isArray(kantoPokemon)) {
         console.error("kantoPokemon is not an array:", kantoPokemon);
         return <p>Error: kantoPokemon is not an array.</p>;
     }
-    kantoPokemon.kantoPokemon.forEach(kanto => {
+    kantoPokemon.forEach(kanto => {
         if (!ultimate151.some(entry => entry.kanto.id === kanto.id)) {
             completeUltimate151.push({ kanto, favorite: null });
         }
@@ -462,6 +465,99 @@ export const ExportUltimate151 = (kantoPokemon) => {
         // Clean up
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+    };
+
+    const handleExportImage = async () => {
+        if (!divRef.current) return;
+    
+        try {
+            setLoadingImage(true);
+            // Get actual width & height of the div
+            const { width } = divRef.current.getBoundingClientRect();
+            const originalHeight = divRef.current.scrollHeight;
+    
+            // Clone the div
+            const clonedDiv = divRef.current.cloneNode(true);
+            clonedDiv.style.position = "absolute";
+            clonedDiv.style.top = "-9999px";
+            clonedDiv.style.left = "-9999px";
+            clonedDiv.style.width = `${width * 2}px`; // 🔹 Double width
+            clonedDiv.style.minWidth = `${width * 2}px`;
+            clonedDiv.style.maxWidth = "none";
+            clonedDiv.style.height = "auto"; // 🔹 Let height auto-adjust
+            clonedDiv.style.overflow = "visible";
+            clonedDiv.style.background = "white";
+            clonedDiv.style.display = "block";
+    
+            // Append cloned div to the body
+            document.body.appendChild(clonedDiv);
+    
+            // 🔹 Find the grid div dynamically
+            const gridDiv = [...clonedDiv.querySelectorAll("div")].find((el) => {
+                const computedStyle = window.getComputedStyle(el);
+                return computedStyle.display === "grid" && computedStyle.gridTemplateColumns;
+            });
+    
+            let heightMultiplier = 2.2; // Default if needed
+            if (gridDiv) {
+                // Get the original height before changing columns
+                const preAdjustHeight = clonedDiv.scrollHeight;
+    
+                // 🔹 Force 12 columns and update width
+                gridDiv.style.setProperty("grid-template-columns", "repeat(12, 1fr)", "important");
+                gridDiv.style.setProperty("width", "100%", "important");
+    
+                // Allow reflow
+                await new Promise((resolve) => setTimeout(resolve, 100));
+    
+                // 🔹 Get the new height after layout change
+                const postAdjustHeight = clonedDiv.scrollHeight;
+    
+                // 🔹 Determine dynamic multiplier
+                heightMultiplier = postAdjustHeight / preAdjustHeight;
+            }
+    
+            // 🔹 Fix any elements with opacity 0.6
+            clonedDiv.querySelectorAll("*").forEach((el) => {
+                if (window.getComputedStyle(el).opacity === "0.6") {
+                    el.style.opacity = "1.0"; // Override dimming effect
+                }
+            });
+    
+            // Allow time for rendering updates
+            await new Promise((resolve) => setTimeout(resolve, 100));
+    
+            // 🔹 Get final width & height dynamically
+            const finalWidth = clonedDiv.scrollWidth;
+            const finalHeight = (originalHeight * heightMultiplier) + 50; // Use dynamic multiplier
+    
+            // Capture the div as an image
+            const scaleFactor = 3;
+            const canvas = await html2canvas(clonedDiv, {
+                useCORS: true,
+                scale: window.devicePixelRatio * scaleFactor,
+                width: finalWidth,
+                height: finalHeight,
+            });
+    
+            // Remove the cloned div
+            document.body.removeChild(clonedDiv);
+    
+            // Convert canvas to image
+            const imgData = canvas.toDataURL("image/jpeg", 0.8);
+    
+            // Create a download link
+            const link = document.createElement("a");
+            link.href = imgData;
+            link.download = "ultimate151.jpg";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error("Error capturing image:", error);
+        } finally {
+            setLoadingImage(false);
+        }
     };
 
     const handleExportUltimateFireRedROM = async () => {
@@ -516,9 +612,14 @@ export const ExportUltimate151 = (kantoPokemon) => {
         saveAs(content, "Ultimate151FireRedROMFiles.zip");
     };
 
+    if (loadingImage) {
+        return <LoadingOverlay />
+    }
+
     return (
         <div className={styles.filterContainer}>
             <button onClick={handleExportList} className={styles.clearButton}>Export as Text</button>
+            <button onClick={handleExportImage} className={styles.clearButton}>Export as Image</button>
             <button onClick={handleExportUltimateFireRedROM} className={styles.clearButton}>Export Ultimate FireRed ROM</button>
         </div>
     );
