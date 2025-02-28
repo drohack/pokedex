@@ -1,16 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useKantoPokemonData } from '../../hooks/usePokemonData';
 import PokemonListUltimateDrag from '../../components/PokemonListUltimate/PokemonListUltimateDrag';
 import PokemonListUltimateDrop from '../../components/PokemonListUltimate/PokemonListUltimateDrop';
-import { getFavoritePokemon, getIsFavoritesLoading } from "../../features/favorites/favoritesSlice";
+import { getFavoritePokemon, getIsFavoritesLoading, clearAllFavorites, toggleFavorite } from "../../features/favorites/favoritesSlice";
 import { getUltimate151, getIsUltimate151Loading, addUltimate151, updateUltimate151, moveToNewUltimate151, moveToExistingUltimate151, removeUltimate151ByFavPokemon, clearUltimate151 } from './ultimate151Slice';
 import { StartersAndEvolutions, SubLegendaries, Legendaries, Mythical } from "../../utils/index";
 import { selectSearchTerm } from "../../components/SearchTerm/searchTermSlice";
 import styles from './Ultimate151.module.css';
 import ExportUltimate151 from './ExportUltimate151';
+import { fetchPokemonDetails } from "../../api/pokeapi/pokeapi";
+import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 
 const Ultimate151 = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,7 @@ const Ultimate151 = () => {
   const ultimate151Ref = useRef(ultimate151);
   const favoritePokemon = useSelector(getFavoritePokemon);
   const isFavoritesLoading = useSelector(getIsFavoritesLoading);
+  const [loadingImport, setLoading] = useState(false);
 
   const searchTerm = useSelector(selectSearchTerm);
   const selectedTypes = useSelector((state) => state.typeFilter?.selectedTypes || []);
@@ -81,6 +84,43 @@ const Ultimate151 = () => {
     dispatch(clearUltimate151());
   };
 
+  const handleImportUltimate151 = async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+          const userConfirmed = window.confirm("Importing a file will clear all favorite and locked Pokemon. Do you want to continue?");
+          if (userConfirmed) {
+              const file = event.target.files[0];
+              if (file) {
+                  setLoading(true);
+                  const reader = new FileReader();
+                  reader.onload = async (e) => {
+                      const pokemonPairs = e.target.result.split('\n').map(name => name.trim()).filter(name => name);
+                      dispatch(clearAllFavorites());
+                      for (const pair of pokemonPairs) {
+                          const array = pair.split(' => ');
+                          let kantoName = array[0].toLowerCase();
+                          let favoriteName = array[0].toLowerCase();
+                          if (array.length === 2) {
+                              favoriteName = array[1].toLowerCase();
+                          }
+                          const favoritePokemon = await fetchPokemonDetails(favoriteName);
+                          if (favoritePokemon) {
+                              dispatch(toggleFavorite(favoritePokemon));
+                          }
+                          const kantoPokemon = await fetchPokemonDetails(kantoName);
+                          if (kantoPokemon) {
+                              dispatch(addUltimate151({kanto: kantoPokemon, favorite: favoritePokemon}));
+                          }
+                      }
+                      setLoading(false);
+                  };
+                  reader.readAsText(file);
+              }
+          }
+      }
+  };
+  
+
   const filteredFavoritePokemon = favoritePokemon.filter(
     (fav) => !ultimate151.some((p) => p.favorite.id === fav.id)
   );
@@ -118,11 +158,15 @@ const Ultimate151 = () => {
   });
 
   if (isUltimate151Loading || isFavoritesLoading || isLoading || !kantoPokemon) {
-    return <p>Loading...</p>;
+    return <LoadingOverlay />;
   }
 
   return (
     <DndProvider backend={HTML5Backend}>
+      <div>
+        {loadingImport && <LoadingOverlay />}
+        <div style={{ marginBottom: '10px' }}>Import Ultiamte 151: <input type="file" accept=".txt" onClick={(event) => event.target.value = null} onChange={handleImportUltimate151} className={styles.importButton} /></div>
+      </div>
       <div className={styles.titleContainer}>
         <p className={`${styles.left}`}>
             Filled: {ultimate151.length}

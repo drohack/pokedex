@@ -17,6 +17,8 @@ import { StartersAndEvolutions, SubLegendaries, Legendaries, Mythical, PseudoLeg
 // Get the favorite Pokemon from the Redux state
 import { getFavoritePokemon } from "../../features/favorites/favoritesSlice";
 
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay";
+
 const Home = () => {
   const searchTerm = useSelector(selectSearchTerm);
 
@@ -109,7 +111,7 @@ const Home = () => {
   return (
     <div className={styles.homeContainer}>
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <LoadingOverlay />}
 
       {error && <p>An error has occurred: {error.message}</p>}
 

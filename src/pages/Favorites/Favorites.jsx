@@ -5,15 +5,16 @@ import PokemonList from "../../components/PokemonList/PokemonList";
 import ExportFavorites from './ExportFavorites';
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "../../db/db";
-import { getFavoritePokemon, clearNotLockedFavorites, clearAllFavorites, toggleFavorite } from "../../features/favorites/favoritesSlice";
+import { getFavoritePokemon, clearNotLockedFavorites, clearAllFavorites, toggleFavorite, getIsFavoritesLoading } from "../../features/favorites/favoritesSlice";
 import { StartersAndEvolutions, PseudoLegendaries, SubLegendaries, Legendaries, Mythical } from "../../utils/index";
 import { fetchPokemonDetails } from "../../api/pokeapi/pokeapi";
-import LoadingOverlay from './LoadingOverlay';
+import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 
 function Favorites() {
     const dispatch = useDispatch();
     const favoritePokemon = useSelector(getFavoritePokemon);
-    const [loading, setLoading] = useState(false);
+    const isFavoritesLoading = useSelector(getIsFavoritesLoading);
+    const [loadingImport, setLoading] = useState(false);
 
     const emptyFavorites = <p>No favorite Pokemon</p>
 
@@ -100,9 +101,13 @@ function Favorites() {
         return typesMatch && combinedLegendariesPseudoStarterLockedMatches && !isStarterExcluded && !isLegendaryExcluded && !isTypeExcluded && !isLockedExcluded;
     });
 
+    if (isFavoritesLoading) {
+        return <LoadingOverlay />;
+    }
+
     return (
         <div className={styles.favoriteContainer}>
-            {loading && <LoadingOverlay />}
+            {loadingImport && <LoadingOverlay />}
             <div style={{ marginBottom: '10px' }}>Import Favorites: <input type="file" accept=".txt" onClick={(event) => event.target.value = null} onChange={handleImportFavorites} className={styles.importButton} /></div>
             {visibleFavoritePokemon.length > 0 && (
             <div className={styles.favoriteHeader}>

@@ -19,7 +19,7 @@
 .ultimate151Container {
   display: flex;
   justify-content: space-between;
-  height: calc(100vh - 207px); /* Adjust the 250px to account for any header or other elements */
+  height: calc(100vh - 241px); /* Adjust the 250px to account for any header or other elements */
 }
 
 .pokemonList, .favoriteList {
