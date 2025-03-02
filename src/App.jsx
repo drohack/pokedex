@@ -39,7 +39,7 @@ function App() {
       {/* <h1>Pokedex</h1>*/}
         <NavBar />
         <button className="info-btn" onClick={togglePopup}>
-          <FaQuestionCircle />
+          <FaQuestionCircle color="white"/>
         </button>
         {showPopup && <InfoPopup onClose={togglePopup} />}
         <Routes>

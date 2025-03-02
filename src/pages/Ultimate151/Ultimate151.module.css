@@ -9,11 +9,13 @@
   flex: 1; /* Each title takes up equal space */
   text-align: center; /* Centers text inside its column */
   margin: 0; /* Remove default margin */
+  color: #e5e5e5;
 }
 
 .titleContainer p {
   margin: 0; /* Remove default margin */
   align-self: center; /* Align the paragraph to the bottom */
+  color: #e5e5e5;
 }
 
 .ultimate151Container {

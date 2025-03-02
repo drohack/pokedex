@@ -166,7 +166,7 @@ const Ultimate151 = () => {
     <DndProvider backend={HTML5Backend}>
       <div>
         {loadingImport && <LoadingOverlay />}
-        <div style={{ marginBottom: '10px' }}>Import Ultiamte 151: <input type="file" accept=".txt" onClick={(event) => event.target.value = null} onChange={handleImportUltimate151} className={styles.importButton} /></div>
+        <div style={{ marginBottom: '10px', color: '#e5e5e5' }}>Import Ultiamte 151: <input type="file" accept=".txt" onClick={(event) => event.target.value = null} onChange={handleImportUltimate151} className={styles.importButton} /></div>
       </div>
       <div className={styles.titleContainer}>
         <p className={`${styles.left}`}>

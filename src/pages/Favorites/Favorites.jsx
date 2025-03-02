@@ -108,7 +108,7 @@ function Favorites() {
     return (
         <div className={styles.favoriteContainer}>
             {loadingImport && <LoadingOverlay />}
-            <div style={{ marginBottom: '10px' }}>Import Favorites: <input type="file" accept=".txt" onClick={(event) => event.target.value = null} onChange={handleImportFavorites} className={styles.importButton} /></div>
+            <div style={{ marginBottom: '10px', color: '#e5e5e5' }}>Import Favorites: <input type="file" accept=".txt" onClick={(event) => event.target.value = null} onChange={handleImportFavorites} className={styles.importButton} /></div>
             {visibleFavoritePokemon.length > 0 && (
             <div className={styles.favoriteHeader}>
                 <p className={`${styles.favoriteLabel} ${styles.left}`}>
