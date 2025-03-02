@@ -112,7 +112,7 @@ export const favoritesSlice = createSlice(options);
 
 export const { toggleFavorite, removeFavorite, toggleLock, clearNotLockedFavorites, clearAllFavorites } = favoritesSlice.actions;
 
-export const getFavoritePokemon = (state) => state.favorites.favoritePokemon;
+export const getFavoritePokemon = (state) => [...state.favorites.favoritePokemon].sort((a, b) => a.id - b.id);
 export const getLockedPokemon = (state) => state.favorites.lockedPokemon;
 export const getIsFavoritesLoading = (state) => state.favorites.isLoading;
 

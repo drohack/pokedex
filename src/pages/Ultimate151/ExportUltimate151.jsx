@@ -70,7 +70,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, sortedUltimate151) 
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies);
     roamer_text = roamer_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies);
     field_specials_text = field_specials_text.replace(/SPECIES_BULBASAUR/g, grassStarterSpecies);
-    let entei_pokemon_species_replacement = getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_ENTEI");
+    let entei_pokemon_species_replacement = getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_MOLTRES");
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_ENTEI/g, entei_pokemon_species_replacement);
     roamer_text = roamer_text.replace(/SPECIES_ENTEI/g, entei_pokemon_species_replacement);
 
@@ -80,7 +80,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, sortedUltimate151) 
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies);
     roamer_text = roamer_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies);
     field_specials_text = field_specials_text.replace(/SPECIES_CHARMANDER/g, fireStarterSpecies);
-    let suicune_pokemon_species_replacement = getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_SUICUNE");
+    let suicune_pokemon_species_replacement = getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_ARTICUNO");
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_SUICUNE/g, suicune_pokemon_species_replacement);
     roamer_text = roamer_text.replace(/SPECIES_SUICUNE/g, suicune_pokemon_species_replacement);
 
@@ -90,7 +90,7 @@ const modifyAndZipFireRedStarterText = async (zip, basePath, sortedUltimate151) 
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies);
     roamer_text = roamer_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies);
     field_specials_text = field_specials_text.replace(/SPECIES_SQUIRTLE/g, waterStarterSpecies);
-    let raikou_pokemon_species_replacement = getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_RAIKOU");
+    let raikou_pokemon_species_replacement = getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_ZAPDOS");
     wild_pokemon_area_text = wild_pokemon_area_text.replace(/SPECIES_RAIKOU/g, raikou_pokemon_species_replacement);
     roamer_text = roamer_text.replace(/SPECIES_RAIKOU/g, raikou_pokemon_species_replacement);
 
@@ -247,9 +247,9 @@ const modifyAndZipFireRedLegendaries = async (zip, basePath, sortedUltimate151) 
     powerplant_text = powerplant_text.replace(/SPECIES_ZAPDOS/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_ZAPDOS"));
     mtember_summit_text = mtember_summit_text.replace(/SPECIES_MOLTRES/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_MOLTRES"));
     ceruleancave_b1f_text = ceruleancave_b1f_text.replace(/SPECIES_MEWTWO/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_MEWTWO"));
-    navelrock_base_text = navelrock_base_text.replace(/SPECIES_LUGIA/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_LUGIA"));
-    navelrock_summit_text = navelrock_summit_text.replace(/SPECIES_HO_OH/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_HO_OH"));
-    birthisland_exterior_text = birthisland_exterior_text.replace(/SPECIES_DEOXYS/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_DEOXYS"));
+    navelrock_base_text = navelrock_base_text.replace(/SPECIES_LUGIA/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_MEW"));
+    navelrock_summit_text = navelrock_summit_text.replace(/SPECIES_HO_OH/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_MEW"));
+    birthisland_exterior_text = birthisland_exterior_text.replace(/SPECIES_DEOXYS/g, getUltimateReplacementSpecies(sortedUltimate151, "SPECIES_MEWTWO"));
 
     zip.file(removeLeadingSlash(basePath) + '/data/maps/SeafoamIslands_B4F/scripts.inc', seafoam_ilsands_b4f_text, { date: localDate });
     zip.file(removeLeadingSlash(basePath) + '/data/maps/PowerPlant/scripts.inc', powerplant_text, { date: localDate });
