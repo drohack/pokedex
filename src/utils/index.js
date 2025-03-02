@@ -16,16 +16,22 @@ const entryRange = (limit, offset) => {
 
 export const getEvolutions = (name, depth = 1) => {
   let result = [];
-  for (const evolution of evolutions) {
-    if (evolution[name]) {
-      const nextEvolutions = Object.keys(evolution[name]);
-      result = result.concat(nextEvolutions.map(evo => ({ name: evo, depth })));
-      nextEvolutions.forEach(nextEvolution => {
-        result = result.concat(getEvolutions(nextEvolution, depth + 1));
-      });
+    for (const evolution of evolutions) {
+        for (const species in evolution) {
+            if (species === name) {
+                for (const nextSpecies in evolution[species]) {
+                    const conditions = evolution[species][nextSpecies];
+                    const depth = conditions[0]?.depth || 1; // Get depth from JSON
+
+                    if (depth > maxDepth) continue;
+
+                    result.push({ name: nextSpecies, depth });
+                    result = result.concat(getEvolutions(nextSpecies, maxDepth));
+                }
+            }
+        }
     }
-  }
-  return result;
+    return result;
 };
 
 export const Regions = {

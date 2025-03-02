@@ -8184,7 +8184,18 @@
     "baxcalibur": {}
 },
 {
-    "gimmighoul": {
+    "gimmighoul-chest": {
+        "gholdengo": [
+            {
+                "trigger": {
+                    "name": "other",
+                    "url": "https://pokeapi.co/api/v2/evolution-trigger/10/"
+                },
+                "depth": 1
+            }
+        ]
+    },
+    "gimmighoul-roaming": {
         "gholdengo": [
             {
                 "trigger": {
@@ -8312,4 +8323,30 @@
     "gourgeist-small": {},
     "gourgeist-lage": {},
     "gourgeist-super": {}
+},
+{
+    "basculin-red-striped": {},
+    "basculin-blue-striped": {},
+    "basculin-white-striped": {
+        "basculegion-male": [
+            {
+                "trigger": {
+                    "name": "recoil-damage",
+                    "url": "https://pokeapi.co/api/v2/evolution-trigger/13/"
+                },
+                "depth": 1
+            }
+        ],
+        "basculegion-female": [
+            {
+                "trigger": {
+                    "name": "recoil-damage",
+                    "url": "https://pokeapi.co/api/v2/evolution-trigger/13/"
+                },
+                "depth": 1
+            }
+        ]
+    },
+    "basculegion-male": {},
+    "basculegion-female": {}
 }]
