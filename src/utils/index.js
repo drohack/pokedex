@@ -14,7 +14,7 @@ const entryRange = (limit, offset) => {
   };
 };
 
-export const getEvolutions = (name, depth = 1) => {
+export const getEvolutions = (name, maxDepth = 1) => {
   let result = [];
     for (const evolution of evolutions) {
         for (const species in evolution) {
