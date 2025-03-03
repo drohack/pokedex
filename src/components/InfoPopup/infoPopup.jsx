@@ -14,7 +14,10 @@ const InfoPopup = ({ onClose }) => {
             <p>
                 Enhanced by <strong>drohack</strong>, this tool provides advanced Pokémon filtering, <br/>
                 an expanded search list, and the ability to export your <strong>Favorites list</strong> as a text file <br/>
-                or for use in a <strong>semi-randomized Pokémon FireRed or Emerald Expanded ROM</strong>.
+                or for use in a <strong>semi-randomized Pokémon FireRed or Emerald Expanded ROM</strong>. <br/>
+                And for the final challege create your own <strong>Ultimate 151 Pokémon</strong> list swapping out <br/>
+                the original Kanto Pokémon 1 to 1 with your own. Do you want all Legendaries, just Little Guys, <br/>
+                or have you and your friends decied. It's up to you.
             </p>
             
             <h3>Key Features:</h3>

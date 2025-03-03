@@ -585,8 +585,8 @@ export const ExportUltimate151 = ({kantoPokemon, divRef}) => {
         const zip = new JSZip();
 
         // Add the README file to the zip
-        const readme_text = await fetch('/pokedex/FireRedExportREADME.txt').then(response => response.text());
-        zip.file(removeLeadingSlash('/pokedex/FireRedExportREADME.txt'), readme_text, { date: localDate });
+        const readme_text = await fetch('/pokedex/Ultimate151FireRedExportREADME.txt').then(response => response.text());
+        zip.file(removeLeadingSlash('/pokedex/Ultimate151FireRedExportREADME.txt'), readme_text, { date: localDate });
 
         // Add the general.h config file to the zip
         const general_config_text = await fetch(baseFireRedPath + '/include/config/general.h').then(response => response.text());
