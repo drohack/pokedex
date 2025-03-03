@@ -469,6 +469,41 @@ export const ExportUltimate151 = ({kantoPokemon, divRef}) => {
 
     const handleExportImage = async () => {
         if (!divRef.current) return;
+
+        const waitForImagesToLoad = (clonedDiv) => {
+            return new Promise((resolve) => {
+                const images = clonedDiv.querySelectorAll("img");
+                if (images.length === 0) {
+                    resolve(); // No images to wait for
+                    return;
+                }
+        
+                let loadedCount = 0;
+                images.forEach((img) => {
+                    if (img.complete) {
+                        loadedCount++;
+                    } else {
+                        img.addEventListener("load", () => {
+                            loadedCount++;
+                            if (loadedCount === images.length) {
+                                resolve();
+                            }
+                        });
+                        img.addEventListener("error", () => {
+                            loadedCount++; // Treat errored images as "loaded"
+                            if (loadedCount === images.length) {
+                                resolve();
+                            }
+                        });
+                    }
+                });
+        
+                // If all images were already loaded, resolve immediately
+                if (loadedCount === images.length) {
+                    resolve();
+                }
+            });
+        };
     
         try {
             setLoadingImage(true);
@@ -509,9 +544,9 @@ export const ExportUltimate151 = ({kantoPokemon, divRef}) => {
                 }
             });
     
-            // Allow time for rendering updates
-            await new Promise((resolve) => setTimeout(resolve, 100));
-    
+            // 🔹 Wait until all images inside clonedDiv are loaded
+            await waitForImagesToLoad(clonedDiv);
+
             // Capture the div as an image
             const scaleFactor = 3;
             const canvas = await html2canvas(clonedDiv, {
