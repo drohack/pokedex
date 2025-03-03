@@ -497,25 +497,10 @@ export const ExportUltimate151 = ({kantoPokemon, divRef}) => {
                 const computedStyle = window.getComputedStyle(el);
                 return computedStyle.display === "grid" && computedStyle.gridTemplateColumns;
             });
-    
-            let heightMultiplier = 2.2; // Default if needed
-            if (gridDiv) {
-                // Get the original height before changing columns
-                const preAdjustHeight = clonedDiv.scrollHeight;
-    
-                // 🔹 Force 12 columns and update width
-                gridDiv.style.setProperty("grid-template-columns", "repeat(12, 1fr)", "important");
-                gridDiv.style.setProperty("width", "100%", "important");
-    
-                // Allow reflow
-                await new Promise((resolve) => setTimeout(resolve, 100));
-    
-                // 🔹 Get the new height after layout change
-                const postAdjustHeight = clonedDiv.scrollHeight;
-    
-                // 🔹 Determine dynamic multiplier
-                heightMultiplier = postAdjustHeight / preAdjustHeight;
-            }
+
+            // 🔹 Force 12 columns and update width
+            gridDiv.style.setProperty("grid-template-columns", "repeat(12, 1fr)", "important");
+            gridDiv.style.setProperty("width", "100%", "important");
     
             // 🔹 Fix any elements with opacity 0.6
             clonedDiv.querySelectorAll("*").forEach((el) => {
@@ -527,17 +512,13 @@ export const ExportUltimate151 = ({kantoPokemon, divRef}) => {
             // Allow time for rendering updates
             await new Promise((resolve) => setTimeout(resolve, 100));
     
-            // 🔹 Get final width & height dynamically
-            const finalWidth = clonedDiv.scrollWidth;
-            const finalHeight = (originalHeight * heightMultiplier) + 50; // Use dynamic multiplier
-    
             // Capture the div as an image
             const scaleFactor = 3;
             const canvas = await html2canvas(clonedDiv, {
                 useCORS: true,
                 scale: window.devicePixelRatio * scaleFactor,
-                width: finalWidth,
-                height: finalHeight,
+                width: clonedDiv.scrollWidth,
+                height: clonedDiv.scrollHeight,
             });
     
             // Remove the cloned div
