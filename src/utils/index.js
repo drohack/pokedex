@@ -14,19 +14,16 @@ const entryRange = (limit, offset) => {
   };
 };
 
-export const getEvolutions = (name, maxDepth = 1) => {
+export const getEvolutions = (name, maxDepth = 1, currentDepth = 0) => {
   let result = [];
     for (const evolution of evolutions) {
         for (const species in evolution) {
             if (species === name) {
                 for (const nextSpecies in evolution[species]) {
-                    const conditions = evolution[species][nextSpecies];
-                    const depth = conditions[0]?.depth || 1; // Get depth from JSON
+                    if (currentDepth > maxDepth) continue; // Only look so deep
 
-                    if (depth > maxDepth) continue;
-
-                    result.push({ name: nextSpecies, depth });
-                    result = result.concat(getEvolutions(nextSpecies, maxDepth));
+                    result.push({ name: nextSpecies, currentDepth });
+                    result = result.concat(getEvolutions(nextSpecies, maxDepth, currentDepth + 1));
                 }
             }
         }
