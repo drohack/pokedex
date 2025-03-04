@@ -1,10 +1,10 @@
 # Pokedex App
 
-https://drohack.github.io/pokedex/
+Hosted here: https://drohack.github.io/pokedex/
 
-A simple Pokedex application built with React, React Query, Redux Toolkit, React Router, and Dexie.js for persistent data. Uses data from PokeAPI https://pokeapi.co/.
+A simple Pokedex application built with React, React Query, Redux Toolkit, React Router, and Dexie.js for persistent data. Uses data from PokeAPI https://pokeapi.co/. Forked from https://github.com/kevveth/pokedex.
 
-This has been updated by drohack to allow a more detailed filtering of pokemon. A larger list of pokemon to search. And to export the Favorites list to either a text file OR for a semi randomized Pokemon Emerald Extended ROM or semi randomized Pokemon FireRed Extended ROM. This was made for GACKcon 2025 panel "Narrowing down to the ultimate 151 pokemon" (There are so many pokemon, there must be some good ones in every generation. During this panel we will narrow down the 1000+ pokemon into the perfect 151. Come let your voice and terrible opinions be heard).
+This has been updated by drohack to allow a more detailed filtering of pokemon. A larger list of pokemon to search. And to export the Favorites list to either a text file OR for a semi randomized Pokemon FireRed or Emerald Extended ROM. And for the final challege create your own Ultimate 151 Pokémon list swapping out the original Kanto Pokémon 1 to 1 with your own. Do you want all Legendaries, just Little Guys, or have you and your friends decied. It's up to you. This was made for GACKcon 2025 panel "Narrowing down to the ultimate 151 pokemon" (There are so many pokemon, there must be some good ones in every generation. During this panel we will narrow down the 1000+ pokemon into the perfect 151. Come let your voice and terrible opinions be heard).
 
 ## Screenshots
 
@@ -132,7 +132,7 @@ If you want to play a custom ROM of  of your selected Favorites there's no easy 
 
 And you should be good to go! Have fun playing your custom Pokemon Rom in your favorite emulator.
 
-## Export FireRed or Emerald ROM
+## Export Ultimate 151 FireRed Expansion ROM
 
 Intended for use with:
 * Pokemon FireRed (Expansion) (https://github.com/cawtds/pokefirered-expansion)
@@ -178,6 +178,14 @@ Steps:
 5. Build your ROM: Back in the Command Promp / WSL instance run the command `make`. This will build your custom "pokefirered.gba" and "pokefirered.elf" files. This takes between 5 - 20 minutes to compile.
 
 And you should be good to go! Have fun playing your custom FireRed Rom in your favorite emulator.
+
+#### Ultimate 151 Screenshots
+
+![Sreenshot of the ultiamte 151 page](images/ultimate.png)
+
+![Sreenshot of the ultiamte 151 chosen by GACKcon 2025](images/ultimate151_GACKcon2025.jpg)
+
+[GACKcon 2025 Ultimate 151 chosen](images/ultimate151_pokemon_GACKcon2025.txt)
 
 ## Technologies Used
 

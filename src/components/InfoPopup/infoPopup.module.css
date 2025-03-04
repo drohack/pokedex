@@ -18,6 +18,7 @@
   position: relative;
   z-index: 1001; /* Ensure the content is above the dimmed background */
   text-align: left; /* Ensure text is left-aligned */
+  max-width: 50%;
 }
 
 .infoPopupContent p,
